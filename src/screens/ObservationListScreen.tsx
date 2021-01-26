@@ -3,15 +3,13 @@ import styled from "../styled";
 import { useDispatch } from "react-redux";
 import { setActiveScreen } from "../store/slices/ui";
 
-import UploadImage from "../components/UploadImage";
-
-export default function TabThreeScreen() {
+export default function ObservationListScreen() {
   const dispatch = useDispatch();
-  dispatch(setActiveScreen("map"));
+  dispatch(setActiveScreen("list"));
 
   return (
     <Screen>
-      <UploadImage path="/screens/TabThreeScreen.tsx" />
+      <Text>Here goes a list</Text>
     </Screen>
   );
 }
@@ -20,4 +18,9 @@ const Screen = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
+`;
+
+const Text = styled.Text`
+  font-family: ${(props) => props.theme.typography.primaryBold};
+  font-size: ${(props) => props.theme.fontSize.large}px;
 `;

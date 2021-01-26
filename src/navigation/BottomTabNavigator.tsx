@@ -3,49 +3,50 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 
-import TabOneScreen from "../screens/TabOneScreen";
-import TabThreeScreen from "../screens/TabThreeScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
-import {
-  BottomTabParamList,
-  TabOneParamList,
-  TabTwoParamList,
-  TabThreeParamList,
-} from "./types";
+import ObservationListScreen from "../screens/ObservationListScreen";
+import ObservationMapScreen from "../screens/ObservationMapScreen";
+import NewObservationScreen from "../screens/NewObservationScreen";
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const BottomTab = createBottomTabNavigator<{
+  ObservationList: undefined;
+  ObservationMap: undefined;
+  NewObservation: undefined;
+}>();
 
 export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="ObservationList"
       tabBarOptions={{ activeTintColor: "#2f95dc" }}
     >
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="ObservationList"
+        component={ObservationListNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-list" color={color} />
           ),
+          tabBarLabel: "List",
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="ObservationMap"
+        component={ObservationMapNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-map" color={color} />
           ),
+          tabBarLabel: "Map",
         }}
       />
       <BottomTab.Screen
-        name="TabThree"
-        component={TabThreeNavigator}
+        name="NewObservation"
+        component={NewObservationNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-add-circle" color={color} />
           ),
+          tabBarLabel: "Add",
         }}
       />
     </BottomTab.Navigator>
@@ -63,44 +64,50 @@ function TabBarIcon(props: {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const ObservationListStack = createStackNavigator<{
+  ObservationListScreen: undefined;
+}>();
 
-function TabOneNavigator() {
+function ObservationListNavigator() {
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: "Tab One Title" }}
+    <ObservationListStack.Navigator>
+      <ObservationListStack.Screen
+        name="ObservationListScreen"
+        component={ObservationListScreen}
+        options={{ headerTitle: "My observations list" }}
       />
-    </TabOneStack.Navigator>
+    </ObservationListStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const ObservationMapStack = createStackNavigator<{
+  ObservationMapScreen: undefined;
+}>();
 
-function TabTwoNavigator() {
+function ObservationMapNavigator() {
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: "Tab Two Title" }}
+    <ObservationMapStack.Navigator>
+      <ObservationMapStack.Screen
+        name="ObservationMapScreen"
+        component={ObservationMapScreen}
+        options={{ headerTitle: "My observations map" }}
       />
-    </TabTwoStack.Navigator>
+    </ObservationMapStack.Navigator>
   );
 }
 
-const TabThreeStack = createStackNavigator<TabThreeParamList>();
+const NewObservationStack = createStackNavigator<{
+  NewObservationScreen: undefined;
+}>();
 
-function TabThreeNavigator() {
+function NewObservationNavigator() {
   return (
-    <TabThreeStack.Navigator>
-      <TabThreeStack.Screen
-        name="TabThreeScreen"
-        component={TabThreeScreen}
-        options={{ headerTitle: "Tab Three Title" }}
+    <NewObservationStack.Navigator>
+      <NewObservationStack.Screen
+        name="NewObservationScreen"
+        component={NewObservationScreen}
+        options={{ headerTitle: "Add new observation" }}
       />
-    </TabThreeStack.Navigator>
+    </NewObservationStack.Navigator>
   );
 }

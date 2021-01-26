@@ -36,10 +36,10 @@ export default function UploadImage({ path }: { path: string }) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      <Button title="Upload an image" onPress={pickImage} />
       {image && (
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
       )}
+      <Button title="Upload an image" onPress={pickImage} />
     </View>
   );
 }
