@@ -24,14 +24,14 @@ $ yarn start
 You can debug using the standalone [react-native debugger](https://github.com/jhen0409/react-native-debugger) by starting it attached to the right port:
 
 ```
-open "rndebugger://set-debugger-loc?host=localhost&port=19003"
+open "rndebugger://set-debugger-loc?host=localhost&port=19000"
 ```
 
 ## Understanding the code base
 
 The app source code is located in the `./src` directory.
 
-#### React components - `.srccomponents`
+#### React components - `./src/components`
 
 This is where our React components live.
 
