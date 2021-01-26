@@ -1,0 +1,5 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": ["source.fixAll.prettier", "source.fixAll.eslint"],
+  "typescript.tsdk": "node_modules/typescript/lib"
+}
