@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="src/assets/images/icon.png" width="128" height="128" />
+  <img src="src/assets/images/icon_w_background.png" height="80" />
 </p>
 <h1 align="center">Ocean Scan App</h1>
 
