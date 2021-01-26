@@ -3,7 +3,7 @@ import styled from "../styled";
 import { useDispatch } from "react-redux";
 import { setActiveScreen } from "../store/slices/ui";
 
-import UploadImage from "../components/UploadImage";
+import NewObservationForm from "../components/NewObservationForm";
 
 export default function NewObservationScreen() {
   const dispatch = useDispatch();
@@ -11,7 +11,7 @@ export default function NewObservationScreen() {
 
   return (
     <Screen>
-      <UploadImage path="/screens/NewObservationScreen.tsx" />
+      <NewObservationForm />
     </Screen>
   );
 }

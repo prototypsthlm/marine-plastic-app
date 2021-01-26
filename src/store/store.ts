@@ -1,7 +1,9 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import observationsReducer from "./slices/observations";
 import uiReducer from "./slices/ui";
 
 const rootReducer = combineReducers({
+  observations: observationsReducer,
   ui: uiReducer,
 });
 

@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Image, View, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
-export default function UploadImage({ path }: { path: string }) {
+interface UploadImageProps {
+  onChange?: (image: string) => void;
+}
+
+export default function UploadImage({ onChange }: UploadImageProps) {
   const [image, setImage] = useState<string>();
 
   useEffect(() => {
@@ -31,6 +35,7 @@ export default function UploadImage({ path }: { path: string }) {
 
     if (!result.cancelled) {
       setImage(result.uri);
+      onChange && onChange(result.uri);
     }
   };
 
