@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import { InputField } from "./InputField";
 import { Button } from "react-native";
 import { Formik } from "formik";
@@ -27,10 +27,14 @@ const validation = Yup.object().shape({
   image: Yup.string(),
 });
 
-const NewObservationForm = () => {
+interface NewObservationFormProps {
+  onSubmit?: () => void;
+}
+
+const NewObservationForm: FC<NewObservationFormProps> = ({ onSubmit }) => {
   const dispatch = useDispatch();
 
-  const onSubmit = (values: any) => {
+  const handleSubmit = (values: any) => {
     dispatch(
       addNewObservation({
         observer: values.observer,
@@ -38,12 +42,13 @@ const NewObservationForm = () => {
         image: values.image,
       })
     );
+    onSubmit && onSubmit();
   };
 
   return (
     <Formik
       initialValues={InitialFormValues}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       validationSchema={validation}
     >
       {({
@@ -56,33 +61,31 @@ const NewObservationForm = () => {
         errors,
         touched,
       }) => (
-        <>
+        <StyledWrapper>
           <UploadImage onChange={handleChange("image")} />
-          <StyledWrapper>
-            <InputField
-              label="Observer*"
-              preset="default"
-              stylePreset="rounded"
-              onChangeText={handleChange("observer")}
-              onBlur={handleBlur("observer")}
-              value={values.observer}
-              error={touched.observer ? errors.observer : ""}
-            />
-            <InputField
-              label="Comment"
-              preset="default"
-              stylePreset="rounded"
-              onChangeText={handleChange("comment")}
-              onBlur={handleBlur("comment")}
-              value={values.comment}
-            />
-            <Button
-              disabled={!(isValid && dirty)}
-              title="Submit"
-              onPress={handleSubmit as any}
-            />
-          </StyledWrapper>
-        </>
+          <InputField
+            label="Observer*"
+            preset="default"
+            stylePreset="rounded"
+            onChangeText={handleChange("observer")}
+            onBlur={handleBlur("observer")}
+            value={values.observer}
+            error={touched.observer ? errors.observer : ""}
+          />
+          <InputField
+            label="Comment"
+            preset="default"
+            stylePreset="rounded"
+            onChangeText={handleChange("comment")}
+            onBlur={handleBlur("comment")}
+            value={values.comment}
+          />
+          <Button
+            disabled={!(isValid && dirty)}
+            title="Submit"
+            onPress={handleSubmit as any}
+          />
+        </StyledWrapper>
       )}
     </Formik>
   );
@@ -90,9 +93,10 @@ const NewObservationForm = () => {
 
 const StyledWrapper = styled.View`
   justify-content: center;
-  padding-horizontal: ${spacing.large}px;
+  padding-horizontal: ${(props) => props.theme.spacing.large}px;
   width: 100%;
-  margin-bottom: ${spacing.xlarge}px;
+  margin-bottom: ${(props) => props.theme.spacing.xlarge}px;
+  margin-top: ${(props) => props.theme.spacing.medium}px;
 `;
 
 const Text = styled.Text`
