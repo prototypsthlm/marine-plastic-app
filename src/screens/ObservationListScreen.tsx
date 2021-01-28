@@ -7,6 +7,8 @@ import { Observation } from "../store/slices/observations/types";
 
 import { Image } from "react-native";
 
+import { Screen } from "../components/Screen";
+
 export default function ObservationListScreen() {
   const dispatch = useDispatch();
   dispatch(setActiveScreen("list"));
@@ -16,16 +18,21 @@ export default function ObservationListScreen() {
   );
 
   return (
-    <Screen>
+    <Screen
+      scroll
+      scrollViewProps={{
+        contentContainerStyle: { alignItems: "center" },
+      }}
+    >
       <Title>Image/Observer</Title>
       {observations.map((observation, index) => (
         <Item key={index}>
-          {observation.image && (
+          {observation.image ? (
             <Image
               source={{ uri: observation.image }}
               style={{ width: 50, height: 50 }}
             />
-          )}
+          ) : null}
           <Text>{observation.observer}</Text>
           <Text>{observation.comment}</Text>
         </Item>
@@ -34,13 +41,8 @@ export default function ObservationListScreen() {
   );
 }
 
-const Screen = styled.View`
-  flex: 1;
-  align-items: center;
-  margin-top: ${(props) => props.theme.spacing.medium}px;
-`;
-
 const Title = styled.Text`
+  margin-top: ${(props) => props.theme.spacing.medium}px;
   font-family: ${(props) => props.theme.typography.primaryBold};
   font-size: ${(props) => props.theme.fontSize.large}px;
 `;
