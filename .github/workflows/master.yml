@@ -3,12 +3,21 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        required: true
+        description: "Log level"
+        default: "warning"
+      tags:
+        required: false
+        description: "Test scenario tags"
 env:
+  DEBUG_LOGGING: "ON"
   RELEASE_CHANNEL: "default"
 jobs:
   publish:
     name: Build and publish
-    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
