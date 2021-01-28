@@ -7,7 +7,7 @@ interface UploadImageProps {
 }
 
 export default function UploadImage({ onChange }: UploadImageProps) {
-  const [image, setImage] = useState<string>();
+  const [image, setImage] = useState<string>("");
 
   useEffect(() => {
     (async () => {
@@ -41,9 +41,9 @@ export default function UploadImage({ onChange }: UploadImageProps) {
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      {image && (
+      {image ? (
         <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      )}
+      ) : null}
       <Button title="Upload an image" onPress={pickImage} />
     </View>
   );

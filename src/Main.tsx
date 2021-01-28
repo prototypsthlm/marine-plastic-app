@@ -1,6 +1,9 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import {
+  SafeAreaProvider,
+  initialWindowMetrics,
+} from "react-native-safe-area-context";
 import { ThemeProvider } from "./styled";
 import { theme } from "./theme";
 import { Provider } from "react-redux";
@@ -17,7 +20,7 @@ export default function App() {
   } else {
     return (
       <Provider store={store}>
-        <SafeAreaProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
           <ThemeProvider theme={theme}>
             <Navigation />
             <StatusBar />
