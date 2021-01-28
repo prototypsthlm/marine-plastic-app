@@ -54,4 +54,4 @@ jobs:
           name: ocean-scan-app-master.ipa
           path: ./ocean-scan-app-master.ipa
       - name: Upload IPA to TestFlight
-        run: fastlane pilot upload --app_identifier se.prototyp.oceanscanapp --team_id VZTTYX2VUC --api_key ${{ secrets.APP_STORE_CONNECT_API_KEY }}
+        run: fastlane pilot upload --app_identifier se.prototyp.oceanscanapp --team_id VZTTYX2VUC --api_key_path ./.fastlane/apple-connect.json
