@@ -68,3 +68,19 @@ This is the entry point to the app. It's the main component which renders the re
 - [Expo](https://docs.expo.io/)
 - [React Navigation](https://reactnavigation.org/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
+
+## Continuous integration & delivery
+
+The GitHub Actions workflows can be found inside the `.github/workflows` directory.
+
+### Master - `master.yml`
+
+For every commit made to the `master` branch it will build a JavaScript bundle that is then published to the dev app on Expo.
+
+## Build and upload native app to Apple Connect and TestFlight
+
+We use workflows in GitHub Actions to build and upload IPA packages to Apple Connect. These workflows are triggered manually from the [Actions tab](https://github.com/prototypsthlm/marine-plastic-app/actions). Select the workflow you want to run and then click the "Run workflow" dropdown on the right and choose which branch to base it off.
+
+Available actions:
+
+- Upload native master build to TestFlight - `upload-master-ios.yml`
