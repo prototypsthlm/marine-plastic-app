@@ -10,12 +10,15 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 
 import useCachedResources from "./hooks/useCachedResources";
+import { useOverTheAirUpdate } from "./hooks/useOverTheAirUpdate";
 import Navigation from "./navigation";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
+  // Check and apply OTA updates
+  const isUpdated = useOverTheAirUpdate();
 
-  if (!isLoadingComplete) {
+  if (!isLoadingComplete || !isUpdated) {
     return null;
   } else {
     return (
