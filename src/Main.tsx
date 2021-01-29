@@ -8,6 +8,7 @@ import { ThemeProvider } from "./styled";
 import { theme } from "./theme";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import AppLoading from "expo-app-loading";
 
 import useCachedResources from "./hooks/useCachedResources";
 import { useOverTheAirUpdate } from "./hooks/useOverTheAirUpdate";
@@ -19,7 +20,7 @@ export default function App() {
   const isUpdated = useOverTheAirUpdate();
 
   if (!isLoadingComplete || !isUpdated) {
-    return null;
+    return <AppLoading />;
   } else {
     return (
       <Provider store={store}>
