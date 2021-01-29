@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, Image, View, Platform } from "react-native";
+import React, { useEffect } from "react";
+import { Button, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 interface UploadImageProps {
@@ -7,8 +7,6 @@ interface UploadImageProps {
 }
 
 export default function UploadImage({ onChange }: UploadImageProps) {
-  const [image, setImage] = useState<string>("");
-
   useEffect(() => {
     (async () => {
       if (Platform.OS !== "web") {
@@ -34,17 +32,9 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     console.log(result);
 
     if (!result.cancelled) {
-      setImage(result.uri);
       onChange && onChange(result.uri);
     }
   };
 
-  return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      {image ? (
-        <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
-      ) : null}
-      <Button title="Upload an image" onPress={pickImage} />
-    </View>
-  );
+  return <Button title="Upload an image" onPress={pickImage} />;
 }

@@ -1,21 +1,24 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import styled from "../styled";
-import { useDispatch, useSelector } from "react-redux";
-import { setActiveScreen } from "../store/slices/ui";
-import { RootState } from "../store/store";
+import { useSelector } from "react-redux";
+import { RootState, useThunkDispatch } from "../store/store";
 import { Observation } from "../store/slices/observations/types";
 
 import { Image } from "react-native";
 
 import { Screen } from "../components/Screen";
+import { fetchAllObservations } from "../store/slices/observations";
 
 export default function ObservationListScreen() {
-  const dispatch = useDispatch();
-  dispatch(setActiveScreen("list"));
+  const dispatch = useThunkDispatch();
 
-  const observations = useSelector<RootState, Array<Observation>>(
-    (state) => state.observations.observations
+  const observationsEntries = useSelector<RootState, Array<Observation>>(
+    (state) => state.observations.entries
   );
+
+  useEffect(() => {
+    dispatch(fetchAllObservations());
+  }, []);
 
   return (
     <Screen
@@ -25,16 +28,16 @@ export default function ObservationListScreen() {
       }}
     >
       <Title>Image/Observer</Title>
-      {observations.map((observation, index) => (
+      {observationsEntries.map((observationEntry, index) => (
         <Item key={index}>
-          {observation.image ? (
+          {observationEntry.image ? (
             <Image
-              source={{ uri: observation.image }}
+              source={{ uri: observationEntry.image }}
               style={{ width: 50, height: 50 }}
             />
           ) : null}
-          <Text>{observation.observer}</Text>
-          <Text>{observation.comment}</Text>
+          <Text>{observationEntry.observer}</Text>
+          <Text>{observationEntry.comment}</Text>
         </Item>
       ))}
     </Screen>
