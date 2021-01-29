@@ -32,13 +32,14 @@ const validation = Yup.object().shape({
 const NewObservationForm = () => {
   const dispatch = useThunkDispatch();
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = (values: any, actions: any) => {
     const newObservationEntry: Observation = {
       observer: values.observer,
       comment: values.comment,
       image: values.image,
     };
     dispatch(submitNewObservation(newObservationEntry));
+    actions.resetForm(InitialFormValues);
   };
 
   return (
@@ -58,6 +59,12 @@ const NewObservationForm = () => {
         touched,
       }) => (
         <StyledWrapper>
+          {values.image ? (
+            <Image
+              source={{ uri: values.image }}
+              style={{ width: 200, height: 200 }}
+            />
+          ) : null}
           <UploadImage onChange={handleChange("image")} />
           <InputField
             label="Observer*"
@@ -95,10 +102,8 @@ const StyledWrapper = styled.View`
   margin-top: ${(props) => props.theme.spacing.medium}px;
 `;
 
-const Text = styled.Text`
-  font-family: ${(props) => props.theme.typography.primary};
-  font-size: ${(props) => props.theme.fontSize.small}px;
-  color: ${(props) => props.theme.color.palette.gray};
+const Image = styled.Image`
+  align-self: center;
 `;
 
 export default NewObservationForm;

@@ -1,17 +1,24 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import styled from "../styled";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
+import { RootState, useThunkDispatch } from "../store/store";
 import { Observation } from "../store/slices/observations/types";
 
 import { Image } from "react-native";
 
 import { Screen } from "../components/Screen";
+import { fetchAllObservations } from "../store/slices/observations";
 
 export default function ObservationListScreen() {
+  const dispatch = useThunkDispatch();
+
   const observationsEntries = useSelector<RootState, Array<Observation>>(
     (state) => state.observations.entries
   );
+
+  useEffect(() => {
+    dispatch(fetchAllObservations());
+  }, []);
 
   return (
     <Screen

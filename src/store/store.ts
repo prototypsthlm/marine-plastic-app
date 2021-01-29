@@ -7,6 +7,8 @@ import {
 import { useDispatch } from "react-redux";
 
 // Services
+import api from "../services/api";
+import localStorage from "../services/localStorage";
 import * as navigation from "../services/navigation";
 
 // Slices
@@ -24,6 +26,8 @@ const store = configureStore({
     getDefaultMiddleware({
       thunk: {
         extraArgument: {
+          api,
+          localStorage,
           navigation,
         },
       },
@@ -36,6 +40,8 @@ export type RootState = ReturnType<typeof rootReducer>;
 export default store;
 
 interface Services {
+  api: typeof api;
+  localStorage: typeof localStorage;
   navigation: typeof navigation;
 }
 
