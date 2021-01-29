@@ -1,13 +1,15 @@
-import React, { FC } from "react";
+import React from "react";
 import { InputField } from "./InputField";
 import { Button } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
-import { addNewObservation } from "../store/slices/observations";
-import { spacing } from "../theme/spacing";
-import { useDispatch } from "react-redux";
 import UploadImage from "./UploadImage";
+import { useThunkDispatch } from "../store/store";
+import {
+  Observation,
+  submitNewObservation,
+} from "../store/slices/observations";
 
 interface InitialFormValuesShape {
   observer: string;
@@ -27,22 +29,17 @@ const validation = Yup.object().shape({
   image: Yup.string(),
 });
 
-interface NewObservationFormProps {
-  onSubmit?: () => void;
-}
+const NewObservationForm = () => {
+  const dispatch = useThunkDispatch();
 
-const NewObservationForm: FC<NewObservationFormProps> = ({ onSubmit }) => {
-  const dispatch = useDispatch();
-
-  const handleSubmit = (values: any) => {
-    dispatch(
-      addNewObservation({
-        observer: values.observer,
-        comment: values.comment,
-        image: values.image,
-      })
-    );
-    onSubmit && onSubmit();
+  const handleSubmit = (values: any, actions: any) => {
+    const newObservationEntry: Observation = {
+      observer: values.observer,
+      comment: values.comment,
+      image: values.image,
+    };
+    dispatch(submitNewObservation(newObservationEntry));
+    actions.resetForm(InitialFormValues);
   };
 
   return (
@@ -62,6 +59,12 @@ const NewObservationForm: FC<NewObservationFormProps> = ({ onSubmit }) => {
         touched,
       }) => (
         <StyledWrapper>
+          {values.image ? (
+            <Image
+              source={{ uri: values.image }}
+              style={{ width: 200, height: 200 }}
+            />
+          ) : null}
           <UploadImage onChange={handleChange("image")} />
           <InputField
             label="Observer*"
@@ -99,10 +102,8 @@ const StyledWrapper = styled.View`
   margin-top: ${(props) => props.theme.spacing.medium}px;
 `;
 
-const Text = styled.Text`
-  font-family: ${(props) => props.theme.typography.primary};
-  font-size: ${(props) => props.theme.fontSize.small}px;
-  color: ${(props) => props.theme.color.palette.gray};
+const Image = styled.Image`
+  align-self: center;
 `;
 
 export default NewObservationForm;

@@ -1,18 +1,8 @@
 import * as React from "react";
-import { useDispatch } from "react-redux";
-import { setActiveScreen } from "../store/slices/ui";
-
 import { Screen } from "../components/Screen";
 import NewObservationForm from "../components/NewObservationForm";
-import { NavigationProps } from "../navigation/types";
 
-export default function NewObservationScreen({ navigation }: NavigationProps) {
-  const dispatch = useDispatch();
-  dispatch(setActiveScreen("add"));
-
-  const handleNewObservationFormSubmit = () =>
-    navigation.navigate("ObservationList");
-
+export default function NewObservationScreen() {
   return (
     <Screen
       scroll
@@ -20,7 +10,7 @@ export default function NewObservationScreen({ navigation }: NavigationProps) {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      <NewObservationForm onSubmit={handleNewObservationFormSubmit} />
+      <NewObservationForm />
     </Screen>
   );
 }
