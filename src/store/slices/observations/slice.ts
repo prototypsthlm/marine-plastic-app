@@ -17,9 +17,18 @@ export const observationsSlice = createSlice({
     addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
       state.entries = [...state.entries, payload];
     },
+    addFetchedObservations: (
+      state,
+      { payload }: PayloadAction<Array<Observation>>
+    ) => {
+      state.entries = payload;
+    },
   },
 });
 
-export const { addNewObservation } = observationsSlice.actions;
+export const {
+  addNewObservation,
+  addFetchedObservations,
+} = observationsSlice.actions;
 
 export default observationsSlice.reducer;
