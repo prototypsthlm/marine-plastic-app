@@ -1,13 +1,15 @@
-import React, { FC } from "react";
+import React from "react";
 import { InputField } from "./InputField";
 import { Button } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
-import { addNewObservation } from "../store/slices/observations";
-import { spacing } from "../theme/spacing";
-import { useDispatch } from "react-redux";
 import UploadImage from "./UploadImage";
+import { useThunkDispatch } from "../store/store";
+import {
+  Observation,
+  submitNewObservation,
+} from "../store/slices/observations";
 
 interface InitialFormValuesShape {
   observer: string;
@@ -27,22 +29,16 @@ const validation = Yup.object().shape({
   image: Yup.string(),
 });
 
-interface NewObservationFormProps {
-  onSubmit?: () => void;
-}
-
-const NewObservationForm: FC<NewObservationFormProps> = ({ onSubmit }) => {
-  const dispatch = useDispatch();
+const NewObservationForm = () => {
+  const dispatch = useThunkDispatch();
 
   const handleSubmit = (values: any) => {
-    dispatch(
-      addNewObservation({
-        observer: values.observer,
-        comment: values.comment,
-        image: values.image,
-      })
-    );
-    onSubmit && onSubmit();
+    const newObservationEntry: Observation = {
+      observer: values.observer,
+      comment: values.comment,
+      image: values.image,
+    };
+    dispatch(submitNewObservation(newObservationEntry));
   };
 
   return (
