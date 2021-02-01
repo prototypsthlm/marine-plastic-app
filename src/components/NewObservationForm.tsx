@@ -27,6 +27,13 @@ const validation = Yup.object().shape({
   comment: Yup.string(),
 });
 
+function formatGPSLocation(dd: number, ref: string) {
+  if (ref == "S" || ref == "W") {
+    dd = dd * -1;
+  }
+  return dd;
+}
+
 const NewObservationForm = () => {
   const dispatch = useThunkDispatch();
 
@@ -38,8 +45,14 @@ const NewObservationForm = () => {
 
   const handleSubmit = (values: any, actions: any) => {
     const imageLocation: GPSLocation = {
-      longitude: image?.exif?.GPSLongitude,
-      latitude: image?.exif?.GPSLatitude,
+      longitude:
+        image &&
+        image.exif &&
+        formatGPSLocation(image.exif.GPSLongitude, image.exif.GPSLongitudeRef),
+      latitude:
+        image &&
+        image.exif &&
+        formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef),
     };
     const newObservationEntry: Observation = {
       observer: values.observer,
