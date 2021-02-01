@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { InputField } from "./InputField";
 import { Button } from "react-native";
 import { Formik } from "formik";
@@ -7,6 +7,7 @@ import styled from "../styled";
 import UploadImage from "./UploadImage";
 import { useThunkDispatch } from "../store/store";
 import {
+  GPSLocation,
   Observation,
   submitNewObservation,
 } from "../store/slices/observations";
@@ -14,29 +15,38 @@ import {
 interface InitialFormValuesShape {
   observer: string;
   comment: string;
-  image: string;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
   observer: "",
   comment: "",
-  image: "",
 };
 
 const validation = Yup.object().shape({
   observer: Yup.string().required("Observer is required"),
   comment: Yup.string(),
-  image: Yup.string(),
 });
 
 const NewObservationForm = () => {
   const dispatch = useThunkDispatch();
 
+  const [image, setImage] = useState<any>();
+
+  const handleImageChange = (image: object) => {
+    setImage(image);
+  };
+
   const handleSubmit = (values: any, actions: any) => {
+    const imageLocation: GPSLocation = {
+      longitude: image?.exif?.GPSLongitude,
+      latitude: image?.exif?.GPSLatitude,
+    };
     const newObservationEntry: Observation = {
       observer: values.observer,
       comment: values.comment,
-      image: values.image,
+      image: image?.uri,
+      timestamp: Date.now(),
+      location: imageLocation,
     };
     dispatch(submitNewObservation(newObservationEntry));
     actions.resetForm(InitialFormValues);
@@ -59,13 +69,13 @@ const NewObservationForm = () => {
         touched,
       }) => (
         <StyledWrapper>
-          {values.image ? (
+          {image ? (
             <Image
-              source={{ uri: values.image }}
+              source={{ uri: image.uri }}
               style={{ width: 200, height: 200 }}
             />
           ) : null}
-          <UploadImage onChange={handleChange("image")} />
+          <UploadImage onChange={handleImageChange} />
           <InputField
             label="Observer*"
             preset="default"
