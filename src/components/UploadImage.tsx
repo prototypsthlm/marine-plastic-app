@@ -10,9 +10,10 @@ interface UploadImageProps {
 }
 
 export default function UploadImage({ onChange }: UploadImageProps) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [canUseMediaLibrary, setCanUseMediaLibrary] = useState<boolean>(false);
   const [canUseCamera, setCanUseCamera] = useState<boolean>(false);
-  const [location, setLocation] = useState<LocationObject>();
+  const [location, setLocation] = useState<LocationObject | null>();
 
   const requestMediaLibrary = async () => {
     if (Platform.OS !== "web") {
@@ -44,7 +45,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         return;
       }
 
-      const loc = await Location.getCurrentPositionAsync({});
+      const loc = await Location.getLastKnownPositionAsync();
       setLocation(loc);
     }
   };
@@ -62,6 +63,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       await requestMediaLibrary();
       return;
     }
+    setIsLoading(true);
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -74,6 +76,8 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     if (!result.cancelled) {
       onChange && onChange(result);
     }
+
+    setIsLoading(false);
   };
 
   const takePhoto = async () => {
@@ -82,11 +86,10 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       await requestLocation();
       return;
     }
+    setIsLoading(true);
 
-    if (!location) {
-      const loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc);
-    }
+    const loc = await Location.getLastKnownPositionAsync();
+    setLocation(loc);
 
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -99,13 +102,19 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     if (!result.cancelled) {
       onChange && onChange({ ...result, location });
     }
+
+    setIsLoading(false);
   };
 
   return (
     <>
-      <Button title="Upload an image" onPress={pickImage} />
+      <Button
+        disabled={isLoading}
+        title="Upload an image"
+        onPress={pickImage}
+      />
       <Text>or</Text>
-      <Button title="Take photo" onPress={takePhoto} />
+      <Button disabled={isLoading} title="Take photo" onPress={takePhoto} />
     </>
   );
 }
