@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as Location from "expo-location";
 import styled from "../styled";
+import { LocationObject } from "expo-location";
 
 interface UploadImageProps {
   onChange?: (image: object) => void;
@@ -10,6 +12,7 @@ interface UploadImageProps {
 export default function UploadImage({ onChange }: UploadImageProps) {
   const [canUseMediaLibrary, setCanUseMediaLibrary] = useState<boolean>(false);
   const [canUseCamera, setCanUseCamera] = useState<boolean>(false);
+  const [location, setLocation] = useState<LocationObject>();
 
   const requestMediaLibrary = async () => {
     if (Platform.OS !== "web") {
@@ -33,10 +36,24 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     }
   };
 
+  const requestLocation = async () => {
+    if (Platform.OS !== "web") {
+      const { status } = await Location.requestPermissionsAsync();
+      if (status !== "granted") {
+        alert("Permission to access location was denied");
+        return;
+      }
+
+      const loc = await Location.getCurrentPositionAsync({});
+      setLocation(loc);
+    }
+  };
+
   useEffect(() => {
     (async () => {
       await requestMediaLibrary();
       await requestCamera();
+      await requestLocation();
     })();
   }, []);
 
@@ -54,8 +71,6 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       exif: true,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
       onChange && onChange(result);
     }
@@ -64,7 +79,13 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   const takePhoto = async () => {
     if (!canUseCamera) {
       await requestCamera();
+      await requestLocation();
       return;
+    }
+
+    if (!location) {
+      const loc = await Location.getCurrentPositionAsync({});
+      setLocation(loc);
     }
 
     let result = await ImagePicker.launchCameraAsync({
@@ -75,10 +96,8 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       exif: true,
     });
 
-    console.log(result);
-
     if (!result.cancelled) {
-      onChange && onChange(result);
+      onChange && onChange({ ...result, location });
     }
   };
 
