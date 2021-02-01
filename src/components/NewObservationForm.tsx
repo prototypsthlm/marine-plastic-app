@@ -34,6 +34,23 @@ function formatGPSLocation(dd: number, ref: string) {
   return dd;
 }
 
+function getImageLocation(image: any) {
+  if (!image.exif?.GPSLongitude && image.location)
+    return {
+      longitude: image.location.coords.longitude,
+      latitude: image.location.coords.latitude,
+    };
+  else
+    return {
+      longitude:
+        image.exif &&
+        formatGPSLocation(image.exif.GPSLongitude, image.exif.GPSLongitudeRef),
+      latitude:
+        image.exif &&
+        formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef),
+    };
+}
+
 const NewObservationForm = () => {
   const dispatch = useThunkDispatch();
 
@@ -44,16 +61,7 @@ const NewObservationForm = () => {
   };
 
   const handleSubmit = (values: any, actions: any) => {
-    const imageLocation: GPSLocation = {
-      longitude:
-        image &&
-        image.exif &&
-        formatGPSLocation(image.exif.GPSLongitude, image.exif.GPSLongitudeRef),
-      latitude:
-        image &&
-        image.exif &&
-        formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef),
-    };
+    const imageLocation: GPSLocation = getImageLocation(image);
     const newObservationEntry: Observation = {
       observer: values.observer,
       comment: values.comment,
