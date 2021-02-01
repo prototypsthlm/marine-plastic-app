@@ -8,21 +8,10 @@ import { ThemeProvider } from "./styled";
 import { theme } from "./theme";
 import { Provider } from "react-redux";
 import store from "./store/store";
-import AppLoading from "expo-app-loading";
 
-import useCachedResources from "./hooks/useCachedResources";
-import { useOverTheAirUpdate } from "./hooks/useOverTheAirUpdate";
 import Navigation from "./navigation";
 
 export default function Main() {
-  const isLoadingComplete = useCachedResources();
-  // Check and apply OTA updates
-  const isUpdated = useOverTheAirUpdate();
-
-  if (!isLoadingComplete || !isUpdated) {
-    return <AppLoading />;
-  }
-
   return (
     <Provider store={store}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
