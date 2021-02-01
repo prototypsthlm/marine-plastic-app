@@ -13,6 +13,10 @@ import AppLoading from "expo-app-loading";
 import useCachedResources from "./hooks/useCachedResources";
 import { useOverTheAirUpdate } from "./hooks/useOverTheAirUpdate";
 import Navigation from "./navigation";
+import * as SplashScreen from "expo-splash-screen";
+
+// Ensure Splash isn't automatically hidden
+SplashScreen.preventAutoHideAsync().catch(console.warn);
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
