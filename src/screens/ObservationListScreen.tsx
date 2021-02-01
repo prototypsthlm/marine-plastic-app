@@ -27,7 +27,7 @@ export default function ObservationListScreen() {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      <Title>Image/Observer/LongLat</Title>
+      <Title>Image/Observer/LatLong</Title>
       {observationsEntries.map((observationEntry, index) => (
         <Item key={index}>
           {observationEntry.image ? (
@@ -47,8 +47,8 @@ export default function ObservationListScreen() {
             </Text>
           </Col>
           <Col>
-            <Text>{observationEntry.location?.longitude}</Text>
             <Text>{observationEntry.location?.latitude}</Text>
+            <Text>{observationEntry.location?.longitude}</Text>
           </Col>
         </Item>
       ))}
