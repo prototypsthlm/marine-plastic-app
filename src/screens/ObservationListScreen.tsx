@@ -27,7 +27,7 @@ export default function ObservationListScreen() {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      <Title>Image/Observer</Title>
+      <Title>Image/Observer/LongLat</Title>
       {observationsEntries.map((observationEntry, index) => (
         <Item key={index}>
           {observationEntry.image ? (
@@ -36,8 +36,20 @@ export default function ObservationListScreen() {
               style={{ width: 50, height: 50 }}
             />
           ) : null}
-          <Text>{observationEntry.observer}</Text>
-          <Text>{observationEntry.comment}</Text>
+          <Col>
+            <Text>{observationEntry.observer}</Text>
+            <Text>
+              {observationEntry.timestamp
+                ? new Date(observationEntry.timestamp)
+                    .toUTCString()
+                    .slice(5, 17)
+                : ""}
+            </Text>
+          </Col>
+          <Col>
+            <Text>{observationEntry.location?.longitude}</Text>
+            <Text>{observationEntry.location?.latitude}</Text>
+          </Col>
         </Item>
       ))}
     </Screen>
@@ -53,9 +65,15 @@ const Title = styled.Text`
 const Item = styled.View`
   padding: 10px 10px;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+`;
+
+const Col = styled.View`
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Text = styled.Text`
