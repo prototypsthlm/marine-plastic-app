@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../store/store";
-import { Observation } from "../store/slices/observations/types";
+import { Observation } from "../models";
 
 import { Image } from "react-native";
 
@@ -42,14 +42,14 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
           key={index}
           onPress={() => navigateToDetailScreen(observationEntry)}
         >
-          {observationEntry.image ? (
+          {observationEntry.imageUrl ? (
             <Image
-              source={{ uri: observationEntry.image }}
-              style={{ width: 50, height: 50 }}
+              source={{ uri: observationEntry.imageUrl }}
+              style={{ width: 50, height: 50, borderRadius: 6 }}
             />
           ) : null}
           <Col>
-            <Text>{observationEntry.observer}</Text>
+            <Text>John Smith</Text>
             <Text>
               {observationEntry.timestamp
                 ? new Date(observationEntry.timestamp)
@@ -58,10 +58,12 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
                 : ""}
             </Text>
           </Col>
-          <Col>
-            <Text>{observationEntry.location?.latitude}</Text>
-            <Text>{observationEntry.location?.longitude}</Text>
-          </Col>
+          {observationEntry.geometry?.coordinates.length > 0 ? (
+            <Col>
+              <Text>{observationEntry.geometry.coordinates[0]}</Text>
+              <Text>{observationEntry.geometry.coordinates[1]}</Text>
+            </Col>
+          ) : null}
         </Item>
       ))}
     </Screen>
@@ -79,11 +81,11 @@ const Item = styled.TouchableOpacity`
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
 `;
 
 const Col = styled.View`
+  padding: 0 15px;
   flex-direction: column;
   justify-content: space-between;
 `;

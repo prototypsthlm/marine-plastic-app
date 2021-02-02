@@ -4,7 +4,7 @@ import MapView, { Marker } from "react-native-maps";
 import { Dimensions, Image } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { Observation } from "../store/slices/observations";
+import { Observation } from "../models";
 
 export default function ObservationMapScreen() {
   const observationsEntries = useSelector<RootState, Array<Observation>>(
@@ -20,21 +20,17 @@ export default function ObservationMapScreen() {
         }}
       >
         {observationsEntries
-          .filter((o) => o.location && o.location.latitude)
+          .filter((o) => o.geometry && o.geometry.coordinates.length > 0)
           .map((observationEntry, index) => {
-            if (
-              !observationEntry.location ||
-              !observationEntry.location.latitude
-            )
-              return;
             return (
               <Marker
                 key={index}
                 coordinate={{
-                  latitude: observationEntry.location.latitude,
-                  longitude: observationEntry.location.longitude,
+                  latitude: observationEntry.geometry?.coordinates[0] as number,
+                  longitude: observationEntry.geometry
+                    ?.coordinates[1] as number,
                 }}
-                title={`Observer: ${observationEntry.observer}`}
+                title={`Observer: John Smith`}
                 description={
                   observationEntry.timestamp
                     ? new Date(observationEntry.timestamp)
@@ -44,9 +40,9 @@ export default function ObservationMapScreen() {
                 }
               >
                 <MarkerPopup>
-                  {observationEntry.image ? (
+                  {observationEntry.imageUrl ? (
                     <Image
-                      source={{ uri: observationEntry.image }}
+                      source={{ uri: observationEntry.imageUrl }}
                       style={{ width: 50, height: 50, borderRadius: 6 }}
                     />
                   ) : null}
