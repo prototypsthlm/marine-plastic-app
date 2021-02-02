@@ -1,5 +1,5 @@
 import { create } from "apisauce";
-import { Observation } from "../store/slices/observations";
+import { Observation } from "../../store/slices/observations";
 
 const API_URL = "https://petstore.swagger.io/v2";
 

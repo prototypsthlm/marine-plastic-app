@@ -6,21 +6,18 @@ import * as React from "react";
 import ObservationListScreen from "../screens/ObservationListScreen";
 import ObservationMapScreen from "../screens/ObservationMapScreen";
 import NewObservationScreen from "../screens/NewObservationScreen";
+import ObservationDetailScreen from "../screens/ObservationDetailScreen";
 
-const BottomTab = createBottomTabNavigator<{
-  ObservationList: undefined;
-  ObservationMap: undefined;
-  NewObservation: undefined;
-}>();
+const BottomTab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
-      initialRouteName="ObservationList"
+      initialRouteName="observationList"
       tabBarOptions={{ activeTintColor: "#2f95dc" }}
     >
       <BottomTab.Screen
-        name="ObservationList"
+        name="observationList"
         component={ObservationListNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -30,7 +27,7 @@ export default function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="ObservationMap"
+        name="observationMap"
         component={ObservationMapNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -40,7 +37,7 @@ export default function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="NewObservation"
+        name="newObservation"
         component={NewObservationNavigator}
         options={{
           tabBarIcon: ({ color }) => (
@@ -64,50 +61,45 @@ function TabBarIcon(props: {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const ObservationListStack = createStackNavigator<{
-  ObservationListScreen: undefined;
-}>();
+const Stack = createStackNavigator();
 
 function ObservationListNavigator() {
   return (
-    <ObservationListStack.Navigator>
-      <ObservationListStack.Screen
-        name="ObservationListScreen"
+    <Stack.Navigator>
+      <Stack.Screen
+        name="observationListScreen"
         component={ObservationListScreen}
         options={{ headerTitle: "My observations list" }}
       />
-    </ObservationListStack.Navigator>
+      <Stack.Screen
+        name="observationDetailScreen"
+        component={ObservationDetailScreen}
+        options={{ headerTitle: "Observations details" }}
+      />
+    </Stack.Navigator>
   );
 }
-
-const ObservationMapStack = createStackNavigator<{
-  ObservationMapScreen: undefined;
-}>();
 
 function ObservationMapNavigator() {
   return (
-    <ObservationMapStack.Navigator>
-      <ObservationMapStack.Screen
-        name="ObservationMapScreen"
+    <Stack.Navigator>
+      <Stack.Screen
+        name="observationMapScreen"
         component={ObservationMapScreen}
         options={{ headerTitle: "My observations map" }}
       />
-    </ObservationMapStack.Navigator>
+    </Stack.Navigator>
   );
 }
 
-const NewObservationStack = createStackNavigator<{
-  NewObservationScreen: undefined;
-}>();
-
 function NewObservationNavigator() {
   return (
-    <NewObservationStack.Navigator>
-      <NewObservationStack.Screen
-        name="NewObservationScreen"
+    <Stack.Navigator>
+      <Stack.Screen
+        name="newObservationScreen"
         component={NewObservationScreen}
         options={{ headerTitle: "Add new observation" }}
       />
-    </NewObservationStack.Navigator>
+    </Stack.Navigator>
   );
 }
