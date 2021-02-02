@@ -1,12 +1,10 @@
-export type GPSLocation = {
-  longitude: number;
-  latitude: number;
-};
+import { Geometry } from "../../../models";
 
-export type Observation = {
-  observer: string;
-  comment?: string;
-  image: string;
-  timestamp: number;
-  location?: GPSLocation;
+export type NewObservationPayload = {
+  comments?: string;
+  timestamp: Date;
+  geometry: Geometry;
+
+  // Temporal (should be part of a feature)
+  imageUrl?: string;
 };

@@ -7,24 +7,22 @@ import styled from "../styled";
 import UploadImage from "./UploadImage";
 import { useThunkDispatch } from "../store/store";
 import {
-  GPSLocation,
-  Observation,
+  NewObservationPayload,
   submitNewObservation,
 } from "../store/slices/observations";
 
+import { Geometry, Observation } from "../models";
+
 interface InitialFormValuesShape {
-  observer: string;
-  comment: string;
+  comments: string;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
-  observer: "",
-  comment: "",
+  comments: "",
 };
 
 const validation = Yup.object().shape({
-  observer: Yup.string().required("Observer is required"),
-  comment: Yup.string(),
+  comments: Yup.string(),
 });
 
 function formatGPSLocation(dd: number, ref: string) {
@@ -61,15 +59,20 @@ const NewObservationForm = () => {
   };
 
   const handleSubmit = (values: any, actions: any) => {
-    const imageLocation: GPSLocation = getImageLocation(image);
-    const newObservationEntry: Observation = {
-      observer: values.observer,
-      comment: values.comment,
-      image: image?.uri,
-      timestamp: Date.now(),
-      location: imageLocation,
+    const imageLocation = getImageLocation(image);
+    const geometry: Geometry = {
+      type: "Point",
+      coordinates: [imageLocation.latitude, imageLocation.longitude],
     };
-    dispatch(submitNewObservation(newObservationEntry));
+    const newObservation: NewObservationPayload = {
+      comments: values.comments,
+      timestamp: new Date(Date.now()), // TODO: Timestamp from exif
+      geometry,
+
+      // Temporal (should be part of a feature)
+      imageUrl: image.uri,
+    };
+    dispatch(submitNewObservation(newObservation));
     actions.resetForm(InitialFormValues);
   };
 
@@ -98,24 +101,15 @@ const NewObservationForm = () => {
           ) : null}
           <UploadImage onChange={handleImageChange} />
           <InputField
-            label="Observer*"
+            label="Comments"
             preset="default"
             stylePreset="rounded"
-            onChangeText={handleChange("observer")}
-            onBlur={handleBlur("observer")}
-            value={values.observer}
-            error={touched.observer ? errors.observer : ""}
-          />
-          <InputField
-            label="Comment"
-            preset="default"
-            stylePreset="rounded"
-            onChangeText={handleChange("comment")}
-            onBlur={handleBlur("comment")}
-            value={values.comment}
+            onChangeText={handleChange("comments")}
+            onBlur={handleBlur("comments")}
+            value={values.comments}
           />
           <Button
-            disabled={!(isValid && dirty)}
+            disabled={!image}
             title="Submit"
             onPress={handleSubmit as any}
           />

@@ -2,14 +2,18 @@ import React, { useEffect } from "react";
 import styled from "../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../store/store";
-import { Observation } from "../store/slices/observations/types";
+import { Observation } from "../models";
 
 import { Image } from "react-native";
 
 import { Screen } from "../components/Screen";
-import { fetchAllObservations } from "../store/slices/observations";
+import {
+  fetchAllObservations,
+  selectObservation,
+} from "../store/slices/observations";
+import { NavigationProps } from "../navigation/types";
 
-export default function ObservationListScreen() {
+export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
 
   const observationsEntries = useSelector<RootState, Array<Observation>>(
@@ -20,6 +24,11 @@ export default function ObservationListScreen() {
     dispatch(fetchAllObservations());
   }, []);
 
+  const navigateToDetailScreen = (observationEntry: Observation) => {
+    dispatch(selectObservation(observationEntry));
+    navigation.navigate("observationDetailScreen");
+  };
+
   return (
     <Screen
       scroll
@@ -29,15 +38,18 @@ export default function ObservationListScreen() {
     >
       <Title>Image/Observer/LatLong</Title>
       {observationsEntries.map((observationEntry, index) => (
-        <Item key={index}>
-          {observationEntry.image ? (
+        <Item
+          key={index}
+          onPress={() => navigateToDetailScreen(observationEntry)}
+        >
+          {observationEntry.imageUrl ? (
             <Image
-              source={{ uri: observationEntry.image }}
-              style={{ width: 50, height: 50 }}
+              source={{ uri: observationEntry.imageUrl }}
+              style={{ width: 50, height: 50, borderRadius: 6 }}
             />
           ) : null}
           <Col>
-            <Text>{observationEntry.observer}</Text>
+            <Text>John Smith</Text>
             <Text>
               {observationEntry.timestamp
                 ? new Date(observationEntry.timestamp)
@@ -46,10 +58,12 @@ export default function ObservationListScreen() {
                 : ""}
             </Text>
           </Col>
-          <Col>
-            <Text>{observationEntry.location?.latitude}</Text>
-            <Text>{observationEntry.location?.longitude}</Text>
-          </Col>
+          {observationEntry.geometry?.coordinates.length > 0 ? (
+            <Col>
+              <Text>{observationEntry.geometry.coordinates[0]}</Text>
+              <Text>{observationEntry.geometry.coordinates[1]}</Text>
+            </Col>
+          ) : null}
         </Item>
       ))}
     </Screen>
@@ -62,16 +76,16 @@ const Title = styled.Text`
   font-size: ${(props) => props.theme.fontSize.large}px;
 `;
 
-const Item = styled.View`
+const Item = styled.TouchableOpacity`
   padding: 10px 10px;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
 `;
 
 const Col = styled.View`
+  padding: 0 15px;
   flex-direction: column;
   justify-content: space-between;
 `;

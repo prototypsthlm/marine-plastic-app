@@ -1,6 +1,8 @@
+import { CreatorApps, Observation } from "../../../models";
 import { Thunk } from "../../store";
 import { addFetchedObservations, addNewObservation } from "./slice";
-import { Observation } from "./types";
+import { NewObservationPayload } from "./types";
+import { v4 as uuidv4 } from "uuid";
 
 export const fetchAllObservations: Thunk = () => async (
   dispatch,
@@ -17,13 +19,30 @@ export const fetchAllObservations: Thunk = () => async (
   );
 };
 
-export const submitNewObservation: Thunk<Observation> = (observation) => async (
-  dispatch,
-  _,
-  { api, localStorage, navigation }
-) => {
-  const isSuccess: boolean = await api.mockPOSTNewObservation(observation);
-  if (!isSuccess) await localStorage.queueObservation(observation);
-  dispatch(addNewObservation(observation));
-  navigation.navigate("ObservationList");
+export const submitNewObservation: Thunk<NewObservationPayload> = (
+  newObservationPayload
+) => async (dispatch, _, { api, localStorage, navigation }) => {
+  const newObservation: Observation = {
+    id: uuidv4(),
+    creatorId: "CREATOR_ID", // Relation with "creator" (model User)
+    creatorApp: CreatorApps.DATA_COLLECTION_APP,
+    createdAt: new Date(Date.now()).toISOString(),
+    updatedAt: new Date(Date.now()).toISOString(),
+    isDeleted: false,
+    deletedAt: undefined,
+
+    geometry: newObservationPayload.geometry,
+    timestamp: newObservationPayload.timestamp.toISOString(),
+    comments: newObservationPayload.comments,
+    isMatched: false,
+    features: [],
+
+    // Temporal (should be part of a feature)
+    imageUrl: newObservationPayload.imageUrl,
+  };
+
+  const isSuccess: boolean = await api.mockPOSTNewObservation(newObservation);
+  if (!isSuccess) await localStorage.queueObservation(newObservation);
+  dispatch(addNewObservation(newObservation));
+  navigation.navigate("observationList");
 };
