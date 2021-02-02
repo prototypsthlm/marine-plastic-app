@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Observation } from "./types";
+import { Observation } from "../../../models";
 
 interface ObservationsState {
   entries: Array<Observation>;

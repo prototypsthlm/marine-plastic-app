@@ -2,7 +2,7 @@ import React from "react";
 import styled from "../styled";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { Observation } from "../store/slices/observations/types";
+import { Observation } from "../models";
 
 import { Image } from "react-native";
 
@@ -23,22 +23,26 @@ export default function ObservationDetailScreen() {
       <Title>Observation details</Title>
       {observationEntry && (
         <Col>
-          {observationEntry.image ? (
+          {observationEntry.imageUrl ? (
             <Image
-              source={{ uri: observationEntry.image }}
+              source={{ uri: observationEntry.imageUrl }}
               style={{ width: 200, height: 200 }}
             />
           ) : null}
-          <Text>Observer: {observationEntry.observer}</Text>
+          <Text>Observer: John Smith</Text>
           <Text>
             {observationEntry.timestamp
               ? new Date(observationEntry.timestamp).toUTCString().slice(5, 17)
               : ""}
           </Text>
-          <Text>Comment: {observationEntry.comment}</Text>
+          <Text>Comments: {observationEntry.comments}</Text>
           <Text>Geolocation coords:</Text>
-          <Text>{observationEntry.location?.latitude}</Text>
-          <Text>{observationEntry.location?.longitude}</Text>
+          {observationEntry.geometry?.coordinates.length > 0 ? (
+            <Col>
+              <Text>{observationEntry.geometry.coordinates[0]}</Text>
+              <Text>{observationEntry.geometry.coordinates[1]}</Text>
+            </Col>
+          ) : null}
         </Col>
       )}
     </Screen>
