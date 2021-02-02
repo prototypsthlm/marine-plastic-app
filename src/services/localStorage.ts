@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Observation } from "../store/slices/observations";
+import { Observation } from "../models";
+
+const QUEUE_NAME = "observations_queue_V1";
 
 const queueObservation = async (payload: Observation) => {
   try {
-    const localObservationsStr = await AsyncStorage.getItem(
-      "observations_queue"
-    );
+    const localObservationsStr = await AsyncStorage.getItem(QUEUE_NAME);
 
     if (localObservationsStr !== null) {
       const observationsQueue = JSON.parse(localObservationsStr);
@@ -13,10 +13,10 @@ const queueObservation = async (payload: Observation) => {
       const newObservationsQueue = [...observationsQueue, payload];
 
       const jsonPayload = JSON.stringify(newObservationsQueue);
-      await AsyncStorage.setItem("observations_queue", jsonPayload);
+      await AsyncStorage.setItem(QUEUE_NAME, jsonPayload);
     } else {
       const jsonPayload = JSON.stringify([payload]);
-      await AsyncStorage.setItem("observations_queue", jsonPayload);
+      await AsyncStorage.setItem(QUEUE_NAME, jsonPayload);
     }
   } catch (e) {
     console.log("error storing observations entry");
@@ -25,9 +25,7 @@ const queueObservation = async (payload: Observation) => {
 
 const getAllQueuedObservations = async () => {
   try {
-    const localObservationsStr = await AsyncStorage.getItem(
-      "observations_queue"
-    );
+    const localObservationsStr = await AsyncStorage.getItem(QUEUE_NAME);
     if (localObservationsStr !== null) {
       const observationsQueue = JSON.parse(localObservationsStr);
       return observationsQueue;
