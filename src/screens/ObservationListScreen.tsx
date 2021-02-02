@@ -7,9 +7,13 @@ import { Observation } from "../store/slices/observations/types";
 import { Image } from "react-native";
 
 import { Screen } from "../components/Screen";
-import { fetchAllObservations } from "../store/slices/observations";
+import {
+  fetchAllObservations,
+  selectObservation,
+} from "../store/slices/observations";
+import { NavigationProps } from "../navigation/types";
 
-export default function ObservationListScreen() {
+export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
 
   const observationsEntries = useSelector<RootState, Array<Observation>>(
@@ -20,6 +24,11 @@ export default function ObservationListScreen() {
     dispatch(fetchAllObservations());
   }, []);
 
+  const navigateToDetailScreen = (observationEntry: Observation) => {
+    dispatch(selectObservation(observationEntry));
+    navigation.navigate("observationDetailScreen");
+  };
+
   return (
     <Screen
       scroll
@@ -29,7 +38,10 @@ export default function ObservationListScreen() {
     >
       <Title>Image/Observer/LatLong</Title>
       {observationsEntries.map((observationEntry, index) => (
-        <Item key={index}>
+        <Item
+          key={index}
+          onPress={() => navigateToDetailScreen(observationEntry)}
+        >
           {observationEntry.image ? (
             <Image
               source={{ uri: observationEntry.image }}
@@ -62,7 +74,7 @@ const Title = styled.Text`
   font-size: ${(props) => props.theme.fontSize.large}px;
 `;
 
-const Item = styled.View`
+const Item = styled.TouchableOpacity`
   padding: 10px 10px;
   flex-direction: row;
   flex-wrap: wrap;
