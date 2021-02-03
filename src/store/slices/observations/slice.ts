@@ -9,6 +9,8 @@ interface ObservationsState {
 
   // Form related
   featuresToAdd: Array<NewFeaturePayload>;
+
+  error?: any;
 }
 
 const initialState: ObservationsState = {
@@ -46,6 +48,10 @@ export const observationsSlice = createSlice({
     resetFeaturesToAdd: (state) => {
       state.featuresToAdd = [];
     },
+
+    displayError: (state, { payload }: PayloadAction<any>) => {
+      state.error = payload;
+    },
   },
 });
 
@@ -55,6 +61,7 @@ export const {
   addFetchedObservations,
   addNewFeatureToAdd,
   resetFeaturesToAdd,
+  displayError,
 } = observationsSlice.actions;
 
 export default observationsSlice.reducer;
