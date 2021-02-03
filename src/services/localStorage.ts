@@ -5,9 +5,7 @@ const QUEUE_NAME = "observations_queue_V2";
 
 const queueObservation = async (payload: Observation) => {
   try {
-    const localObservationsStr = await AsyncStorage.getItem(
-      "observations_queue_V2"
-    );
+    const localObservationsStr = await AsyncStorage.getItem(QUEUE_NAME);
 
     if (localObservationsStr !== null) {
       const observationsQueue = JSON.parse(localObservationsStr);
@@ -15,23 +13,19 @@ const queueObservation = async (payload: Observation) => {
       const newObservationsQueue = [...observationsQueue, payload];
 
       const jsonPayload = JSON.stringify(newObservationsQueue);
-      await AsyncStorage.setItem("observations_queue_V2", jsonPayload);
+      await AsyncStorage.setItem(QUEUE_NAME, jsonPayload);
     } else {
       const jsonPayload = JSON.stringify([payload]);
-      await AsyncStorage.setItem("observations_queue_V2", jsonPayload);
+      await AsyncStorage.setItem(QUEUE_NAME, jsonPayload);
     }
-    return null;
   } catch (e) {
     console.log("error storing observations entry");
-    return e;
   }
 };
 
 const getAllQueuedObservations = async () => {
   try {
-    const localObservationsStr = await AsyncStorage.getItem(
-      "observations_queue_V2"
-    );
+    const localObservationsStr = await AsyncStorage.getItem(QUEUE_NAME);
     if (localObservationsStr !== null) {
       const observationsQueue = JSON.parse(localObservationsStr);
       return observationsQueue;
