@@ -61,7 +61,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.observations.featuresToAdd
   );
 
-  const handleSubmit = (values: any, actions: any) => {
+  const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
       comments: values.comments,
       timestamp: new Date(Date.now()), // TODO: Timestamp from exif
@@ -75,7 +75,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   return (
     <Formik
       initialValues={InitialFormValues}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       validationSchema={validation}
     >
       {({ handleBlur, handleChange, handleSubmit, values }) => (
