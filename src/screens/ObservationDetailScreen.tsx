@@ -7,8 +7,11 @@ import { Observation } from "../models";
 import { Image } from "react-native";
 
 import { Screen } from "../components/Screen";
+import { NavigationProps } from "../navigation/types";
 
-export default function ObservationDetailScreen() {
+export default function ObservationDetailScreen({
+  navigation,
+}: NavigationProps) {
   const observationEntry = useSelector<RootState, Observation | undefined>(
     (state) => state.observations.selectedEntry
   );
@@ -23,12 +26,6 @@ export default function ObservationDetailScreen() {
       <Title>Observation details</Title>
       {observationEntry && (
         <Col>
-          {observationEntry.imageUrl ? (
-            <Image
-              source={{ uri: observationEntry.imageUrl }}
-              style={{ width: 200, height: 200 }}
-            />
-          ) : null}
           <Text>Observer: John Smith</Text>
           <Text>
             {observationEntry.timestamp
@@ -43,6 +40,20 @@ export default function ObservationDetailScreen() {
               <Text>{observationEntry.geometry.coordinates[1]}</Text>
             </Col>
           ) : null}
+
+          <Title>Features</Title>
+
+          {observationEntry.features.map((feature, index) => (
+            <Item key={index}>
+              {Boolean(feature.imageUrl) && (
+                <Image
+                  source={{ uri: feature.imageUrl }}
+                  style={{ width: 50, height: 50, borderRadius: 6 }}
+                ></Image>
+              )}
+              <Text>{feature.comments}</Text>
+            </Item>
+          ))}
         </Col>
       )}
     </Screen>
@@ -55,13 +66,12 @@ const Title = styled.Text`
   font-size: ${(props) => props.theme.fontSize.large}px;
 `;
 
-const Item = styled.View`
+const Item = styled.TouchableOpacity`
   padding: 10px 10px;
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
 `;
 
 const Col = styled.View`
