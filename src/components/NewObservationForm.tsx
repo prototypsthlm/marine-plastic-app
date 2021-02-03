@@ -61,6 +61,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.observations.featuresToAdd
   );
 
+  const err = useSelector<RootState, any>((state) => state.observations.error);
+
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
       comments: values.comments,
@@ -119,6 +121,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             title="Submit"
             onPress={handleSubmit as any}
           />
+
+          <Text>{err}</Text>
         </StyledWrapper>
       )}
     </Formik>
