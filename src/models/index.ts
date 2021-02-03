@@ -24,7 +24,7 @@ export interface BaseEntity {
   creatorApp: CreatorApps;
   createdAt?: string;
   updatedAt?: string;
-  isDeleted: boolean;
+  isDeleted?: boolean;
   deletedAt?: string;
 }
 
@@ -43,7 +43,7 @@ export interface Observation extends BaseEntity {
   timestamp: string;
   comments?: string;
   extra?: any;
-  isMatched: boolean;
+  isMatched?: boolean;
   features: Array<Feature>;
 
   // Temporal (should be part of a feature)
