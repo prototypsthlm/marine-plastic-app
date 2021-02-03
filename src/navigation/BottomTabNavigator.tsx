@@ -7,6 +7,7 @@ import ObservationListScreen from "../screens/ObservationListScreen";
 import ObservationMapScreen from "../screens/ObservationMapScreen";
 import NewObservationScreen from "../screens/NewObservationScreen";
 import ObservationDetailScreen from "../screens/ObservationDetailScreen";
+import NewFeatureScreen from "../screens/NewFeatureScreen";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -99,6 +100,11 @@ function NewObservationNavigator() {
         name="newObservationScreen"
         component={NewObservationScreen}
         options={{ headerTitle: "Add new observation" }}
+      />
+      <Stack.Screen
+        name="newFeatureScreen"
+        component={NewFeatureScreen}
+        options={{ headerTitle: "Add new feature" }}
       />
     </Stack.Navigator>
   );
