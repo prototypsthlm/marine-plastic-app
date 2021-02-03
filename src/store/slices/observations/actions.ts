@@ -57,7 +57,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     features: newFeatures,
   };
 
-  const isSuccess: boolean = await api.mockPOSTNewObservation(newObservation);
+  const isSuccess: boolean = false; //await api.mockPOSTNewObservation(newObservation);
   if (!isSuccess) await localStorage.queueObservation(newObservation);
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
