@@ -29,7 +29,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 ) => async (dispatch, _, { api, localStorage, navigation }) => {
   const newFeatures: Array<Feature> = newObservationPayload.features.map(
     (featurePayload) => ({
-      id: uuidv4(),
+      id: "uuidv4()",
       creatorId: "CREATOR_ID", // Relation with "creator" (model User)
       creatorApp: CreatorApps.DATA_COLLECTION_APP,
       createdAt: new Date(Date.now()).toISOString(),
@@ -42,7 +42,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     })
   );
   const newObservation: Observation = {
-    id: uuidv4(),
+    id: "uuidv4()",
     creatorId: "CREATOR_ID", // Relation with "creator" (model User)
     creatorApp: CreatorApps.DATA_COLLECTION_APP,
     createdAt: new Date(Date.now()).toISOString(),
@@ -59,8 +59,8 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
   const isSuccess: boolean = false; //await api.mockPOSTNewObservation(newObservation);
   if (!isSuccess) await localStorage.queueObservation(newObservation);
-  // dispatch(addNewObservation(newObservation));
-  // dispatch(resetFeaturesToAdd());
+  dispatch(addNewObservation(newObservation));
+  dispatch(resetFeaturesToAdd());
   navigation.navigate("observationList");
 };
 
