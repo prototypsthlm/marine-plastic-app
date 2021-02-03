@@ -53,7 +53,7 @@ const NewFeatureForm = () => {
     setImage(image);
   };
 
-  const handleSubmit = (values: any, actions: any) => {
+  const handleFormSubmit = (values: any, actions: any) => {
     const imageLocation = getImageLocation(image);
     const newFeature: NewFeaturePayload = {
       comments: values.comments,
@@ -68,7 +68,7 @@ const NewFeatureForm = () => {
   return (
     <Formik
       initialValues={InitialFormValues}
-      onSubmit={handleSubmit}
+      onSubmit={handleFormSubmit}
       validationSchema={validation}
     >
       {({
