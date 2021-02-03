@@ -4,7 +4,6 @@ import {
   addFetchedObservations,
   addNewFeatureToAdd,
   addNewObservation,
-  displayError,
   resetFeaturesToAdd,
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
@@ -36,6 +35,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       createdAt: new Date(Date.now()).toISOString(),
       updatedAt: new Date(Date.now()).toISOString(),
       isDeleted: false,
+      deletedAt: undefined,
 
       comments: featurePayload.comments,
       imageUrl: featurePayload.imageUrl,
@@ -48,6 +48,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     createdAt: new Date(Date.now()).toISOString(),
     updatedAt: new Date(Date.now()).toISOString(),
     isDeleted: false,
+    deletedAt: undefined,
 
     geometry: newObservationPayload.geometry,
     timestamp: newObservationPayload.timestamp.toISOString(),
@@ -57,10 +58,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
   };
 
   const isSuccess: boolean = false; //await api.mockPOSTNewObservation(newObservation);
-  if (!isSuccess) {
-    const e = await localStorage.queueObservation(newObservation);
-    dispatch(displayError(e));
-  }
+  if (!isSuccess) await localStorage.queueObservation(newObservation);
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
   navigation.navigate("observationList");
