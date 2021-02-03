@@ -36,15 +36,15 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      <Title>Image/Observer/LatLong</Title>
+      <Title>Image/Observer</Title>
       {observationsEntries.map((observationEntry, index) => (
         <Item
           key={index}
           onPress={() => navigateToDetailScreen(observationEntry)}
         >
-          {observationEntry.imageUrl ? (
+          {observationEntry.features.length > 0 ? (
             <Image
-              source={{ uri: observationEntry.imageUrl }}
+              source={{ uri: observationEntry.features[0].imageUrl }}
               style={{ width: 50, height: 50, borderRadius: 6 }}
             />
           ) : null}
@@ -58,12 +58,6 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
                 : ""}
             </Text>
           </Col>
-          {observationEntry.geometry?.coordinates.length > 0 ? (
-            <Col>
-              <Text>{observationEntry.geometry.coordinates[0]}</Text>
-              <Text>{observationEntry.geometry.coordinates[1]}</Text>
-            </Col>
-          ) : null}
         </Item>
       ))}
     </Screen>
