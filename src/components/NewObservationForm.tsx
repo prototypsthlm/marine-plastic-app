@@ -1,17 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { InputField } from "./InputField";
 import { Button } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
-import UploadImage from "./UploadImage";
-import { useThunkDispatch } from "../store/store";
+import { RootState, useThunkDispatch } from "../store/store";
 import {
+  NewFeaturePayload,
   NewObservationPayload,
   submitNewObservation,
 } from "../store/slices/observations";
 
-import { Geometry, Observation } from "../models";
+import { Geometry } from "../models";
+import { useSelector } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
+import { NavigationProps } from "../navigation/types";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -25,52 +28,45 @@ const validation = Yup.object().shape({
   comments: Yup.string(),
 });
 
-function formatGPSLocation(dd: number, ref: string) {
-  if (ref == "S" || ref == "W") {
-    dd = dd * -1;
+function getGeometryFromFeatures(features: Array<NewFeaturePayload>): Geometry {
+  if (features.length === 0)
+    return {
+      type: "Point",
+      coordinates: [0, 0],
+    };
+  if (features.length === 1) {
+    return {
+      type: "Point",
+      coordinates: [
+        features[0].imageGPSLatitude as number,
+        features[0].imageGPSLongitude as number,
+      ],
+    };
+  } else {
+    const coords: Array<Array<number>> = features.map((feature) => [
+      feature.imageGPSLatitude as number,
+      feature.imageGPSLongitude as number,
+    ]);
+    return {
+      type: "Polygon",
+      coordinates: coords,
+    };
   }
-  return dd;
 }
 
-function getImageLocation(image: any) {
-  if (!image.exif?.GPSLongitude && image.location)
-    return {
-      longitude: image.location.coords.longitude,
-      latitude: image.location.coords.latitude,
-    };
-  else
-    return {
-      longitude:
-        image.exif &&
-        formatGPSLocation(image.exif.GPSLongitude, image.exif.GPSLongitudeRef),
-      latitude:
-        image.exif &&
-        formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef),
-    };
-}
-
-const NewObservationForm = () => {
+const NewObservationForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
-  const [image, setImage] = useState<any>();
-
-  const handleImageChange = (image: object) => {
-    setImage(image);
-  };
+  const featuresToAdd = useSelector<RootState, Array<NewFeaturePayload>>(
+    (state) => state.observations.featuresToAdd
+  );
 
   const handleSubmit = (values: any, actions: any) => {
-    const imageLocation = getImageLocation(image);
-    const geometry: Geometry = {
-      type: "Point",
-      coordinates: [imageLocation.latitude, imageLocation.longitude],
-    };
     const newObservation: NewObservationPayload = {
       comments: values.comments,
       timestamp: new Date(Date.now()), // TODO: Timestamp from exif
-      geometry,
-
-      // Temporal (should be part of a feature)
-      imageUrl: image.uri,
+      geometry: getGeometryFromFeatures(featuresToAdd),
+      features: featuresToAdd,
     };
     dispatch(submitNewObservation(newObservation));
     actions.resetForm(InitialFormValues);
@@ -82,24 +78,33 @@ const NewObservationForm = () => {
       onSubmit={handleSubmit}
       validationSchema={validation}
     >
-      {({
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isValid,
-        dirty,
-        values,
-        errors,
-        touched,
-      }) => (
+      {({ handleBlur, handleChange, handleSubmit, values }) => (
         <StyledWrapper>
-          {image ? (
-            <Image
-              source={{ uri: image.uri }}
-              style={{ width: 200, height: 200 }}
-            />
-          ) : null}
-          <UploadImage onChange={handleImageChange} />
+          <Row>
+            <Title>Features</Title>
+            <ButtonWithIcon
+              onPress={() => navigation.navigate("newFeatureScreen")}
+            >
+              <Ionicons
+                size={30}
+                style={{ marginBottom: -18, marginLeft: 4, color: "#2f95dc" }}
+                name="ios-add-circle"
+              />
+            </ButtonWithIcon>
+          </Row>
+
+          {featuresToAdd.map((feature, index) => (
+            <Item key={index}>
+              {Boolean(feature.imageUrl) && (
+                <Image
+                  source={{ uri: feature.imageUrl }}
+                  style={{ width: 50, height: 50, borderRadius: 6 }}
+                ></Image>
+              )}
+              <Text>{feature.comments}</Text>
+            </Item>
+          ))}
+
           <InputField
             label="Comments"
             preset="default"
@@ -108,8 +113,9 @@ const NewObservationForm = () => {
             onBlur={handleBlur("comments")}
             value={values.comments}
           />
+
           <Button
-            disabled={!image}
+            disabled={featuresToAdd.length < 1}
             title="Submit"
             onPress={handleSubmit as any}
           />
@@ -127,8 +133,35 @@ const StyledWrapper = styled.View`
   margin-top: ${(props) => props.theme.spacing.medium}px;
 `;
 
-const Image = styled.Image`
-  align-self: center;
+const Title = styled.Text`
+  margin-top: ${(props) => props.theme.spacing.medium}px;
+  font-family: ${(props) => props.theme.typography.primaryBold};
+  font-size: ${(props) => props.theme.fontSize.large}px;
 `;
+
+const Text = styled.Text`
+  font-family: ${(props) => props.theme.typography.primary};
+  font-size: ${(props) => props.theme.fontSize.medium}px;
+`;
+
+const Image = styled.Image`
+  margin-right: 16px;
+`;
+
+const Item = styled.TouchableOpacity`
+  padding: 10px 10px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+`;
+
+const Row = styled.View`
+  padding: 0 15px;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const ButtonWithIcon = styled.TouchableOpacity``;
 
 export default NewObservationForm;

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Observation } from "../models";
 
-const QUEUE_NAME = "observations_queue_V1";
+const QUEUE_NAME = "observations_queue_V2";
 
 const queueObservation = async (payload: Observation) => {
   try {

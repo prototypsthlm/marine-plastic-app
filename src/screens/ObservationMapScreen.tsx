@@ -20,7 +20,12 @@ export default function ObservationMapScreen() {
         }}
       >
         {observationsEntries
-          .filter((o) => o.geometry && o.geometry.coordinates.length > 0)
+          .filter(
+            (o) =>
+              o.geometry &&
+              o.geometry.type === "Point" &&
+              o.geometry.coordinates.length > 0
+          )
           .map((observationEntry, index) => {
             return (
               <Marker
@@ -40,9 +45,9 @@ export default function ObservationMapScreen() {
                 }
               >
                 <MarkerPopup>
-                  {observationEntry.imageUrl ? (
+                  {observationEntry.features ? (
                     <Image
-                      source={{ uri: observationEntry.imageUrl }}
+                      source={{ uri: observationEntry.features[0].imageUrl }}
                       style={{ width: 50, height: 50, borderRadius: 6 }}
                     />
                   ) : null}
