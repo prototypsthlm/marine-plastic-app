@@ -34,8 +34,8 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       creatorApp: CreatorApps.DATA_COLLECTION_APP,
       createdAt: new Date(Date.now()).toISOString(),
       updatedAt: new Date(Date.now()).toISOString(),
-      //isDeleted: false,
-      //deletedAt: undefined,
+      isDeleted: false,
+      deletedAt: undefined,
 
       comments: featurePayload.comments,
       imageUrl: featurePayload.imageUrl,
@@ -47,20 +47,20 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     creatorApp: CreatorApps.DATA_COLLECTION_APP,
     createdAt: new Date(Date.now()).toISOString(),
     updatedAt: new Date(Date.now()).toISOString(),
-    //isDeleted: false,
-    //deletedAt: undefined,
+    isDeleted: false,
+    deletedAt: undefined,
 
     geometry: newObservationPayload.geometry,
-    timestamp: newObservationPayload.timestamp,
+    timestamp: newObservationPayload.timestamp.toISOString(),
     comments: newObservationPayload.comments,
-    //isMatched: false,
+    isMatched: false,
     features: newFeatures,
   };
 
   const isSuccess: boolean = false; //await api.mockPOSTNewObservation(newObservation);
   if (!isSuccess) await localStorage.queueObservation(newObservation);
-  dispatch(addNewObservation(newObservation));
-  dispatch(resetFeaturesToAdd());
+  // dispatch(addNewObservation(newObservation));
+  // dispatch(resetFeaturesToAdd());
   navigation.navigate("observationList");
 };
 

@@ -2,7 +2,7 @@ import { Geometry } from "../../../models";
 
 export type NewObservationPayload = {
   comments?: string;
-  timestamp: string;
+  timestamp: Date;
   geometry: Geometry;
   features: Array<NewFeaturePayload>;
 };
