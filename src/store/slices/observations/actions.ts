@@ -7,7 +7,7 @@ import {
   resetFeaturesToAdd,
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
-import { v4 as uuidv4 } from "uuid";
+import { generateUUIDv4 } from "../../../utils";
 
 export const fetchAllObservations: Thunk = () => async (
   dispatch,
@@ -29,7 +29,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 ) => async (dispatch, _, { api, localStorage, navigation }) => {
   const newFeatures: Array<Feature> = newObservationPayload.features.map(
     (featurePayload) => ({
-      id: "uuidv4()",
+      id: generateUUIDv4(),
       creatorId: "CREATOR_ID", // Relation with "creator" (model User)
       creatorApp: CreatorApps.DATA_COLLECTION_APP,
       createdAt: new Date(Date.now()).toISOString(),
@@ -42,7 +42,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     })
   );
   const newObservation: Observation = {
-    id: "uuidv4()",
+    id: generateUUIDv4(),
     creatorId: "CREATOR_ID", // Relation with "creator" (model User)
     creatorApp: CreatorApps.DATA_COLLECTION_APP,
     createdAt: new Date(Date.now()).toISOString(),
