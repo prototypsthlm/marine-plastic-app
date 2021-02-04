@@ -10,13 +10,16 @@ import { useDispatch } from "react-redux";
 import api from "../services/api";
 import localStorage from "../services/localStorage";
 import * as navigation from "../services/navigation";
+import { firebaseAuth } from "../services/firebaseAuth";
 
 // Slices
 import observationsReducer from "./slices/observations";
+import sessionReducer from "./slices/session";
 import uiReducer from "./slices/ui";
 
 const rootReducer = combineReducers({
   observations: observationsReducer,
+  session: sessionReducer,
   ui: uiReducer,
 });
 
@@ -29,6 +32,7 @@ const store = configureStore({
           api,
           localStorage,
           navigation,
+          firebaseAuth,
         },
       },
     }),
@@ -43,6 +47,7 @@ interface Services {
   api: typeof api;
   localStorage: typeof localStorage;
   navigation: typeof navigation;
+  firebaseAuth: typeof firebaseAuth;
 }
 
 export type Thunk<P = undefined, R = void> = P extends undefined
