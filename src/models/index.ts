@@ -45,9 +45,6 @@ export interface Observation extends BaseEntity {
   extra?: any;
   isMatched: boolean;
   features: Array<Feature>;
-
-  // Temporal (should be part of a feature)
-  imageUrl?: string;
 }
 
 export interface Feature extends BaseEntity {
