@@ -23,6 +23,15 @@ const createBaseApi = () => {
 
 export const baseApi = createBaseApi();
 
+export const addTokenToRequestPayloads = (token: string): void => {
+  // After having a valid auth token we append it to all future requests' payloads
+  baseApi.setHeader("Authorization", `Bearer ${token}`);
+};
+
+export const clearTokenFromRequestPayloads = (): void => {
+  baseApi.setHeader("Authorization", "");
+};
+
 const api = {
   // Mock functions: just returns true if request is successful 200
   async mockGETAllObservations() {

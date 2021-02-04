@@ -3,12 +3,12 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 
-import ObservationListScreen from "../screens/ObservationListScreen";
-import ObservationMapScreen from "../screens/ObservationMapScreen";
-import NewObservationScreen from "../screens/NewObservationScreen";
-import ObservationDetailScreen from "../screens/ObservationDetailScreen";
-import NewFeatureScreen from "../screens/NewFeatureScreen";
-import FeatureDetailScreen from "../screens/FeatureDetailScreen";
+import ObservationListScreen from "../screens/LoggedIn/ObservationListScreen";
+import ObservationMapScreen from "../screens/LoggedIn/ObservationMapScreen";
+import NewObservationScreen from "../screens/LoggedIn/NewObservationScreen";
+import ObservationDetailScreen from "../screens/LoggedIn/ObservationDetailScreen";
+import NewFeatureScreen from "../screens/LoggedIn/NewFeatureScreen";
+import FeatureDetailScreen from "../screens/LoggedIn/FeatureDetailScreen";
 
 const BottomTab = createBottomTabNavigator();
 

@@ -3,6 +3,7 @@ import { TextInputProps } from "react-native";
 import styled from "../styled";
 
 export interface InputFieldProps extends TextInputProps {
+  invertColors: boolean;
   style?: TextInputProps;
   disabled?: boolean;
   label?: string;
@@ -13,12 +14,14 @@ export interface InputFieldProps extends TextInputProps {
 }
 
 interface StyledProps {
+  invertColors?: boolean;
   preset?: StylePresetName;
   disabledStyle?: boolean;
   error?: boolean;
 }
 
 export const InputField: FC<InputFieldProps> = ({
+  invertColors = false,
   style,
   label,
   disabled = false,
@@ -34,7 +37,9 @@ export const InputField: FC<InputFieldProps> = ({
   };
   return (
     <Container disabledStyle={disabled} preset={stylePreset}>
-      <Label preset={stylePreset}>{label}</Label>
+      <Label invertColors={invertColors} preset={stylePreset}>
+        {label}
+      </Label>
       <InputWrapper error={Boolean(error)} preset={stylePreset}>
         <StyledTextInput
           preset={stylePreset}
@@ -43,7 +48,9 @@ export const InputField: FC<InputFieldProps> = ({
           editable={!disabled}
         />
       </InputWrapper>
-      <Error preset={stylePreset}>{error}</Error>
+      <Error invertColors={invertColors} preset={stylePreset}>
+        {error}
+      </Error>
     </Container>
   );
 };
@@ -99,7 +106,8 @@ const StyledTextInput = styled.TextInput<StyledProps>`
 `;
 
 const Error = styled.Text<StyledProps>`
-  color: ${(p) => p.theme.color.palette.black};
+  color: ${(p) =>
+    p.invertColors ? p.theme.color.palette.white : p.theme.color.palette.black};
   font-size: ${(props) => props.theme.fontSize.small}px;
   font-family: ${(props) => props.theme.typography.primary};
   line-height: 17px;
@@ -108,7 +116,8 @@ const Error = styled.Text<StyledProps>`
 `;
 
 const Label = styled.Text<StyledProps>`
-  color: ${(p) => p.theme.color.palette.black};
+  color: ${(p) =>
+    p.invertColors ? p.theme.color.palette.white : p.theme.color.palette.black};
   margin-bottom: ${(p) =>
     p.preset === "codeInput" ? 0 : p.theme.spacing.small}px;
   margin-left: ${(p) => (p.preset === "rounded" ? 22 : 0)}px;
