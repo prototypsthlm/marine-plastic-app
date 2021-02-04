@@ -1,20 +1,28 @@
 import React from "react";
 import styled from "../styled";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { Observation } from "../models";
+import { RootState, useThunkDispatch } from "../store/store";
+import { Feature, Observation } from "../models";
 
 import { Image } from "react-native";
 
 import { Screen } from "../components/Screen";
 import { NavigationProps } from "../navigation/types";
+import { selectFeature } from "../store/slices/observations";
 
 export default function ObservationDetailScreen({
   navigation,
 }: NavigationProps) {
+  const dispatch = useThunkDispatch();
+
   const observationEntry = useSelector<RootState, Observation | undefined>(
     (state) => state.observations.selectedEntry
   );
+
+  const navigateToDetailScreen = (featureEntry: Feature) => {
+    dispatch(selectFeature(featureEntry));
+    navigation.navigate("featureDetailScreen");
+  };
 
   return (
     <Screen
@@ -43,15 +51,18 @@ export default function ObservationDetailScreen({
 
           <Title>Features</Title>
 
-          {observationEntry.features.map((feature, index) => (
-            <Item key={index}>
-              {Boolean(feature.imageUrl) && (
+          {observationEntry.features.map((featureEntry, index) => (
+            <Item
+              key={index}
+              onPress={() => navigateToDetailScreen(featureEntry)}
+            >
+              {Boolean(featureEntry.imageUrl) && (
                 <Image
-                  source={{ uri: feature.imageUrl }}
+                  source={{ uri: featureEntry.imageUrl }}
                   style={{ width: 50, height: 50, borderRadius: 6 }}
                 ></Image>
               )}
-              <Text>{feature.comments}</Text>
+              <Text>{featureEntry.comments}</Text>
             </Item>
           ))}
         </Col>
