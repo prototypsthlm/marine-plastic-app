@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Observation } from "../../../models";
+import { Feature, Observation } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
   entries: Array<Observation>;
   selectedEntry?: Observation;
+  selectedFeatureEntry?: Feature;
 
   // Form related
   featuresToAdd: Array<NewFeaturePayload>;
@@ -14,6 +15,7 @@ interface ObservationsState {
 const initialState: ObservationsState = {
   entries: [],
   selectedEntry: undefined,
+  selectedFeatureEntry: undefined,
 
   // Form related
   featuresToAdd: [],
@@ -28,6 +30,9 @@ export const observationsSlice = createSlice({
     },
     selectObservation: (state, { payload }: PayloadAction<Observation>) => {
       state.selectedEntry = payload;
+    },
+    selectFeature: (state, { payload }: PayloadAction<Feature>) => {
+      state.selectedFeatureEntry = payload;
     },
     addFetchedObservations: (
       state,
@@ -52,6 +57,7 @@ export const observationsSlice = createSlice({
 export const {
   addNewObservation,
   selectObservation,
+  selectFeature,
   addFetchedObservations,
   addNewFeatureToAdd,
   resetFeaturesToAdd,
