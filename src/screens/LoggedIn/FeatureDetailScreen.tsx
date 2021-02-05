@@ -1,12 +1,12 @@
 import React from "react";
-import styled from "../styled";
+import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { Feature } from "../models";
+import { RootState } from "../../store/store";
+import { Feature } from "../../models";
 
 import { Image } from "react-native";
 
-import { Screen } from "../components/Screen";
+import { Screen } from "../../components/Screen";
 
 export default function FeatureDetailScreen() {
   const featureEntry = useSelector<RootState, Feature | undefined>(

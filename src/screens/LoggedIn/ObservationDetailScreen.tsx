@@ -1,14 +1,14 @@
 import React from "react";
-import styled from "../styled";
+import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../store/store";
-import { Feature, Observation } from "../models";
+import { RootState, useThunkDispatch } from "../../store/store";
+import { Feature, Observation } from "../../models";
 
 import { Image } from "react-native";
 
-import { Screen } from "../components/Screen";
-import { NavigationProps } from "../navigation/types";
-import { selectFeature } from "../store/slices/observations";
+import { Screen } from "../../components/Screen";
+import { NavigationProps } from "../../navigation/types";
+import { selectFeature } from "../../store/slices/observations";
 
 export default function ObservationDetailScreen({
   navigation,

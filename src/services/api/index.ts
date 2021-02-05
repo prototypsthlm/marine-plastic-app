@@ -1,5 +1,7 @@
 import { create } from "apisauce";
 import { Observation } from "../../models";
+import { logOut } from "../../store/slices/session";
+import store from "../../store/store";
 
 const API_URL = "https://petstore.swagger.io/v2";
 
@@ -18,10 +20,38 @@ const createBaseApi = () => {
     console.log("MONITORING_RESPONSE: ", response);
   });
 
+  apisauceInstance.axiosInstance.interceptors.response.use(
+    (response) => {
+      return response;
+    },
+    async function (error) {
+      if (error.response.status === 401) store.dispatch(logOut());
+
+      // const originalRequest = error.config;
+
+      // if (error.response.status === 401 && !originalRequest._retry) {
+      //   originalRequest._retry = true;
+      //   // TODO: Refresh token
+      //   return apisauceInstance.axiosInstance(originalRequest);
+      // }
+
+      return Promise.reject(error);
+    }
+  );
+
   return apisauceInstance;
 };
 
 export const baseApi = createBaseApi();
+
+export const addTokenToRequestPayloads = (token: string): void => {
+  // After having a valid auth token we append it to all future requests' payloads
+  baseApi.setHeader("Authorization", `Bearer ${token}`);
+};
+
+export const clearTokenFromRequestPayloads = (): void => {
+  baseApi.setHeader("Authorization", "");
+};
 
 const api = {
   // Mock functions: just returns true if request is successful 200
