@@ -1,7 +1,5 @@
 import { create } from "apisauce";
 import { Observation } from "../../models";
-import { logOut } from "../../store/slices/session";
-import store from "../../store/store";
 
 const API_URL = "https://petstore.swagger.io/v2";
 
@@ -25,7 +23,7 @@ const createBaseApi = () => {
       return response;
     },
     async function (error) {
-      if (error.response.status === 401) store.dispatch(logOut());
+      // if (error.response.status === 401) store.dispatch(logOut());
 
       // const originalRequest = error.config;
 
