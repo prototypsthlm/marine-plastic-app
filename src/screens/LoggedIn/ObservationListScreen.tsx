@@ -1,17 +1,17 @@
 import React, { useEffect } from "react";
-import styled from "../styled";
+import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../store/store";
-import { Observation } from "../models";
+import { RootState, useThunkDispatch } from "../../store/store";
+import { Observation } from "../../models";
 
 import { Image } from "react-native";
 
-import { Screen } from "../components/Screen";
+import { Screen } from "../../components/Screen";
 import {
   fetchAllObservations,
   selectObservation,
-} from "../store/slices/observations";
-import { NavigationProps } from "../navigation/types";
+} from "../../store/slices/observations";
+import { NavigationProps } from "../../navigation/types";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
