@@ -7,6 +7,7 @@ import { Feature } from "../../models";
 import { Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
+import { FlexColumn, Section, Text } from "../../components/elements";
 
 export default function FeatureDetailScreen() {
   const featureEntry = useSelector<RootState, Feature | undefined>(
@@ -20,35 +21,26 @@ export default function FeatureDetailScreen() {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      <Title>Feature details</Title>
       {featureEntry && (
-        <Col>
+        <>
           {Boolean(featureEntry.imageUrl) && (
             <Image
               source={{ uri: featureEntry.imageUrl }}
-              style={{ width: 200, height: 200, borderRadius: 6 }}
+              style={{ width: "100%", height: 400 }}
             ></Image>
           )}
-          <Text>Observer: John Smith</Text>
-          <Text>Comments: {featureEntry.comments}</Text>
-        </Col>
+          <Section>
+            <FlexColumn>
+              <Text>
+                <Text bold>Observer:</Text> John Smith
+              </Text>
+              <Text>
+                <Text bold>Comments:</Text> {featureEntry.comments}
+              </Text>
+            </FlexColumn>
+          </Section>
+        </>
       )}
     </Screen>
   );
 }
-
-const Title = styled.Text`
-  margin-top: ${(props) => props.theme.spacing.medium}px;
-  font-family: ${(props) => props.theme.typography.primaryBold};
-  font-size: ${(props) => props.theme.fontSize.large}px;
-`;
-
-const Col = styled.View`
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const Text = styled.Text`
-  font-family: ${(props) => props.theme.typography.primary};
-  font-size: ${(props) => props.theme.fontSize.medium}px;
-`;

@@ -71,17 +71,8 @@ const NewFeatureForm = () => {
       onSubmit={handleFormSubmit}
       validationSchema={validation}
     >
-      {({
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isValid,
-        dirty,
-        values,
-        errors,
-        touched,
-      }) => (
-        <StyledWrapper>
+      {({ handleBlur, handleChange, handleSubmit, values }) => (
+        <FormSection>
           {image ? (
             <Image
               source={{ uri: image.uri }}
@@ -90,6 +81,7 @@ const NewFeatureForm = () => {
           ) : null}
           <UploadImage onChange={handleImageChange} />
           <InputField
+            invertColors={false}
             label="Comments"
             preset="default"
             stylePreset="rounded"
@@ -102,18 +94,18 @@ const NewFeatureForm = () => {
             title="Add feature to observation"
             onPress={handleSubmit as any}
           />
-        </StyledWrapper>
+        </FormSection>
       )}
     </Formik>
   );
 };
 
-const StyledWrapper = styled.View`
+const FormSection = styled.View`
   justify-content: center;
-  padding-horizontal: ${(props) => props.theme.spacing.large}px;
+  padding-horizontal: ${(props) => props.theme.spacing.medium}px;
   width: 100%;
-  margin-bottom: ${(props) => props.theme.spacing.xlarge}px;
-  margin-top: ${(props) => props.theme.spacing.medium}px;
+  margin-bottom: ${(props) => props.theme.spacing.medium}px;
+  margin-top: ${(props) => props.theme.spacing.xlarge}px;
 `;
 
 const Image = styled.Image`
