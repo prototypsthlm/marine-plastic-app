@@ -1,6 +1,6 @@
 import React from "react";
 import { InputField } from "./InputField";
-import { Button } from "react-native";
+import { Button, Image } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
@@ -15,6 +15,7 @@ import { Geometry } from "../models";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "../navigation/types";
+import { ListItem, Text } from "./elements";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -79,85 +80,92 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       validationSchema={validation}
     >
       {({ handleBlur, handleChange, handleSubmit, values }) => (
-        <StyledWrapper>
+        <>
+          <FormSection>
+            <InputField
+              invertColors={false}
+              label="Observation Name / Comments"
+              preset="default"
+              stylePreset="rounded"
+              onChangeText={handleChange("comments")}
+              onBlur={handleBlur("comments")}
+              value={values.comments}
+            />
+          </FormSection>
+
           <Row>
-            <Title>Features</Title>
+            <Title>Features / Items</Title>
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
             >
               <Ionicons
                 size={30}
-                style={{ marginBottom: -18, marginLeft: 4, color: "#2f95dc" }}
+                style={{ color: "#2f95dc" }}
                 name="ios-add-circle"
               />
             </ButtonWithIcon>
           </Row>
 
+          {!(featuresToAdd.length > 0) && (
+            <ListItem>
+              <CenteredGrayText>
+                You haven't added any feature.
+              </CenteredGrayText>
+            </ListItem>
+          )}
+
           {featuresToAdd.map((feature, index) => (
-            <Item key={index}>
+            <ListItem key={index}>
               {Boolean(feature.imageUrl) && (
                 <Image
                   source={{ uri: feature.imageUrl }}
-                  style={{ width: 50, height: 50, borderRadius: 6 }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 6,
+                    marginRight: 12,
+                  }}
                 ></Image>
               )}
               <Text>{feature.comments}</Text>
-            </Item>
+            </ListItem>
           ))}
 
-          <InputField
-            label="Comments"
-            preset="default"
-            stylePreset="rounded"
-            onChangeText={handleChange("comments")}
-            onBlur={handleBlur("comments")}
-            value={values.comments}
-          />
-
-          <Button
-            disabled={featuresToAdd.length < 1}
-            title="Submit"
-            onPress={handleSubmit as any}
-          />
-        </StyledWrapper>
+          <FormSection>
+            <Button
+              disabled={featuresToAdd.length < 1}
+              title="Submit"
+              onPress={handleSubmit as any}
+            />
+          </FormSection>
+        </>
       )}
     </Formik>
   );
 };
 
-const StyledWrapper = styled.View`
+const FormSection = styled.View`
   justify-content: center;
-  padding-horizontal: ${(props) => props.theme.spacing.large}px;
+  padding-horizontal: ${(props) => props.theme.spacing.medium}px;
   width: 100%;
-  margin-bottom: ${(props) => props.theme.spacing.xlarge}px;
-  margin-top: ${(props) => props.theme.spacing.medium}px;
+  margin-bottom: ${(props) => props.theme.spacing.medium}px;
+  margin-top: ${(props) => props.theme.spacing.xlarge}px;
 `;
 
 const Title = styled.Text`
-  margin-top: ${(props) => props.theme.spacing.medium}px;
+  margin: ${(props) => props.theme.spacing.medium}px;
   font-family: ${(props) => props.theme.typography.primaryBold};
   font-size: ${(props) => props.theme.fontSize.large}px;
 `;
 
-const Text = styled.Text`
+const CenteredGrayText = styled.Text`
+  margin: ${(props) => props.theme.spacing.medium}px;
+  color: ${(props) => props.theme.color.palette.gray};
   font-family: ${(props) => props.theme.typography.primary};
   font-size: ${(props) => props.theme.fontSize.medium}px;
 `;
 
-const Image = styled.Image`
-  margin-right: 16px;
-`;
-
-const Item = styled.TouchableOpacity`
-  padding: 10px 10px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  width: 100%;
-`;
-
 const Row = styled.View`
-  padding: 0 15px;
   flex-direction: row;
   align-items: center;
 `;

@@ -12,6 +12,7 @@ import {
   selectObservation,
 } from "../../store/slices/observations";
 import { NavigationProps } from "../../navigation/types";
+import { FlexColumn, ListItem, Text } from "../../components/elements";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
@@ -36,19 +37,23 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      <Title>Image/Observer</Title>
       {observationsEntries.map((observationEntry, index) => (
-        <Item
+        <ListItem
           key={index}
           onPress={() => navigateToDetailScreen(observationEntry)}
         >
           {observationEntry.features.length > 0 ? (
             <Image
               source={{ uri: observationEntry.features[0].imageUrl }}
-              style={{ width: 50, height: 50, borderRadius: 6 }}
+              style={{
+                width: 50,
+                height: 50,
+                borderRadius: 6,
+                marginRight: 12,
+              }}
             />
           ) : null}
-          <Col>
+          <FlexColumn>
             <Text>John Smith</Text>
             <Text>
               {observationEntry.timestamp
@@ -57,34 +62,9 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
                     .slice(5, 17)
                 : ""}
             </Text>
-          </Col>
-        </Item>
+          </FlexColumn>
+        </ListItem>
       ))}
     </Screen>
   );
 }
-
-const Title = styled.Text`
-  margin-top: ${(props) => props.theme.spacing.medium}px;
-  font-family: ${(props) => props.theme.typography.primaryBold};
-  font-size: ${(props) => props.theme.fontSize.large}px;
-`;
-
-const Item = styled.TouchableOpacity`
-  padding: 10px 10px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  width: 100%;
-`;
-
-const Col = styled.View`
-  padding: 0 15px;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const Text = styled.Text`
-  font-family: ${(props) => props.theme.typography.primary};
-  font-size: ${(props) => props.theme.fontSize.medium}px;
-`;
