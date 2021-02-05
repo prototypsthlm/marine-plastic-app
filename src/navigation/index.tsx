@@ -28,7 +28,7 @@ const Stack = createStackNavigator<{
 function RootNavigator() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
 
-  if (!isLoggedIn) return <LoggedOutStackNavigator />;
+  //if (!isLoggedIn) return <LoggedOutStackNavigator />;
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

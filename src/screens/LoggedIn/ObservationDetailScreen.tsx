@@ -9,6 +9,7 @@ import { Image } from "react-native";
 import { Screen } from "../../components/Screen";
 import { NavigationProps } from "../../navigation/types";
 import { selectFeature } from "../../store/slices/observations";
+import { FlexColumn, ListItem, Section, Text } from "../../components/elements";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -25,72 +26,61 @@ export default function ObservationDetailScreen({
   };
 
   return (
-    <Screen
-      scroll
-      scrollViewProps={{
-        contentContainerStyle: { alignItems: "center" },
-      }}
-    >
-      <Title>Observation details</Title>
+    <Screen scroll>
       {observationEntry && (
-        <Col>
-          <Text>Observer: John Smith</Text>
-          <Text>
-            {observationEntry.timestamp
-              ? new Date(observationEntry.timestamp).toUTCString().slice(5, 17)
-              : ""}
-          </Text>
-          <Text>Comments: {observationEntry.comments}</Text>
-          <Text>Geolocation coords:</Text>
-          {observationEntry.geometry?.coordinates.length > 0 ? (
-            <Col>
-              <Text>{observationEntry.geometry.coordinates[0]}</Text>
-              <Text>{observationEntry.geometry.coordinates[1]}</Text>
-            </Col>
-          ) : null}
-
-          <Title>Features</Title>
+        <>
+          <Section>
+            <Text>
+              <Text bold>Observer:</Text> John Smith
+            </Text>
+            <Text>
+              <Text bold>{"Date: "}</Text>
+              {observationEntry.timestamp
+                ? new Date(observationEntry.timestamp)
+                    .toUTCString()
+                    .slice(5, 17)
+                : ""}
+            </Text>
+            <Text>
+              <Text bold>Comments:</Text> {observationEntry.comments}
+            </Text>
+            <Text bold>Geolocation coords:</Text>
+            {observationEntry.geometry?.coordinates.length > 0 ? (
+              <FlexColumn>
+                <Text>{observationEntry.geometry.coordinates[0]}</Text>
+                <Text>{observationEntry.geometry.coordinates[1]}</Text>
+              </FlexColumn>
+            ) : null}
+          </Section>
+          <Title>Added Features / Items</Title>
 
           {observationEntry.features.map((featureEntry, index) => (
-            <Item
+            <ListItem
               key={index}
               onPress={() => navigateToDetailScreen(featureEntry)}
             >
               {Boolean(featureEntry.imageUrl) && (
                 <Image
                   source={{ uri: featureEntry.imageUrl }}
-                  style={{ width: 50, height: 50, borderRadius: 6 }}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: 6,
+                    marginRight: 12,
+                  }}
                 ></Image>
               )}
-              <Text>{featureEntry.comments}</Text>
-            </Item>
+            </ListItem>
           ))}
-        </Col>
+        </>
       )}
     </Screen>
   );
 }
 
 const Title = styled.Text`
-  margin-top: ${(props) => props.theme.spacing.medium}px;
+  margin: ${(props) => props.theme.spacing.medium}px;
+  margin-left: ${(props) => props.theme.spacing.medium}px;
   font-family: ${(props) => props.theme.typography.primaryBold};
   font-size: ${(props) => props.theme.fontSize.large}px;
-`;
-
-const Item = styled.TouchableOpacity`
-  padding: 10px 10px;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const Col = styled.View`
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const Text = styled.Text`
-  font-family: ${(props) => props.theme.typography.primary};
-  font-size: ${(props) => props.theme.fontSize.medium}px;
 `;
