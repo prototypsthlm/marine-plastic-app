@@ -3,7 +3,6 @@ import styled from "../../styled";
 export const ListItem = styled.TouchableOpacity`
   background-color: ${(p) => p.theme.color.background};
   border-bottom-color: ${(p) => p.theme.color.palette.gray};
-  border-bottom-width: 0.1;
   margin-bottom: 1px;
   padding: ${(props) => props.theme.spacing.small}px
     ${(props) => props.theme.spacing.medium}px;
