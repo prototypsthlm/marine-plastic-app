@@ -30,3 +30,11 @@ export const Text = styled.Text<{ bold?: boolean }>`
       : props.theme.typography.primary};
   font-size: ${(props) => props.theme.fontSize.medium}px;
 `;
+
+export const SectionHeader = styled.Text`
+  margin: ${(props) => props.theme.spacing.small}px
+    ${(props) => props.theme.spacing.medium}px;
+  color: ${(props) => props.theme.color.palette.gray};
+  font-family: ${(props) => props.theme.typography.primary};
+  font-size: ${(props) => props.theme.fontSize.medium}px;
+`;

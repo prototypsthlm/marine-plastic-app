@@ -7,6 +7,8 @@ import styled from "../styled";
 import UploadImage from "./UploadImage";
 import { useThunkDispatch } from "../store/store";
 import { NewFeaturePayload, addNewFeature } from "../store/slices/observations";
+import { ListItem, Text, FlexColumn, SectionHeader } from "./elements";
+import { theme } from "../theme";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -72,29 +74,49 @@ const NewFeatureForm = () => {
       validationSchema={validation}
     >
       {({ handleBlur, handleChange, handleSubmit, values }) => (
-        <FormSection>
+        <>
+          <SectionHeader>FEATURE TYPE</SectionHeader>
+          <ListItem>
+            <Text
+              style={{
+                color: theme.color.palette.gray,
+                paddingTop: theme.spacing.small,
+                paddingBottom: theme.spacing.small,
+              }}
+            >
+              Select feature type...
+            </Text>
+          </ListItem>
+
+          <SectionHeader style={{ marginTop: theme.spacing.large }}>
+            PICTURE
+          </SectionHeader>
           {image ? (
             <Image
               source={{ uri: image.uri }}
-              style={{ width: 200, height: 200 }}
+              style={{ width: "100%", height: 200 }}
             />
           ) : null}
           <UploadImage onChange={handleImageChange} />
-          <InputField
-            invertColors={false}
-            label="Comments"
-            preset="default"
-            stylePreset="rounded"
-            onChangeText={handleChange("comments")}
-            onBlur={handleBlur("comments")}
-            value={values.comments}
-          />
+          <SectionHeader style={{ marginTop: theme.spacing.large }}>
+            EXTRA INFO
+          </SectionHeader>
+          <FormSection>
+            <InputField
+              invertColors={false}
+              label="Comments"
+              preset="default"
+              onChangeText={handleChange("comments")}
+              onBlur={handleBlur("comments")}
+              value={values.comments}
+            />
+          </FormSection>
           <Button
             disabled={!image}
             title="Add feature to observation"
             onPress={handleSubmit as any}
           />
-        </FormSection>
+        </>
       )}
     </Formik>
   );
@@ -105,7 +127,8 @@ const FormSection = styled.View`
   padding-horizontal: ${(props) => props.theme.spacing.medium}px;
   width: 100%;
   margin-bottom: ${(props) => props.theme.spacing.medium}px;
-  margin-top: ${(props) => props.theme.spacing.xlarge}px;
+  padding-top: ${(props) => props.theme.spacing.small}px;
+  background-color: ${(props) => props.theme.color.background};
 `;
 
 const Image = styled.Image`

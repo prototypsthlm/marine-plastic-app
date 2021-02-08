@@ -4,12 +4,7 @@ import NewFeatureForm from "../../components/NewFeatureForm";
 
 export default function NewFeatureScreen() {
   return (
-    <Screen
-      scroll
-      scrollViewProps={{
-        contentContainerStyle: { alignItems: "center" },
-      }}
-    >
+    <Screen scroll>
       <NewFeatureForm />
     </Screen>
   );
