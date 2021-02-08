@@ -9,6 +9,7 @@ import { useThunkDispatch } from "../store/store";
 import { NewFeaturePayload, addNewFeature } from "../store/slices/observations";
 import { ListItem, Text, FlexColumn, SectionHeader } from "./elements";
 import { theme } from "../theme";
+import { NavigationProps } from "../navigation/types";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -46,7 +47,7 @@ function getImageLocation(image: any) {
     };
 }
 
-const NewFeatureForm = () => {
+const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
   const [image, setImage] = useState<any>();
@@ -76,7 +77,9 @@ const NewFeatureForm = () => {
       {({ handleBlur, handleChange, handleSubmit, values }) => (
         <>
           <SectionHeader>FEATURE TYPE</SectionHeader>
-          <ListItem>
+          <ListItem
+            onPress={() => navigation.navigate("featureTypePickerScreen")}
+          >
             <Text
               style={{
                 color: theme.color.palette.gray,

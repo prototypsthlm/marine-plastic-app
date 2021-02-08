@@ -23,6 +23,11 @@ export const FlexColumn = styled.View`
   justify-content: space-between;
 `;
 
+export const FlexRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 export const Text = styled.Text<{ bold?: boolean }>`
   font-family: ${(props) =>
     props.bold
