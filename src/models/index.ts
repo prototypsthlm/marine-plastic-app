@@ -51,3 +51,24 @@ export interface Feature extends BaseEntity {
   imageUrl?: string;
   comments?: string;
 }
+
+export enum EnvCompartmentsEnum {
+  BEACH = "BEACH",
+  SEAFLOOR = "SEAFLOOR",
+  FLOATING = "FLOATING",
+  BIOTA = "BIOTA",
+  MICRO = "MICRO",
+}
+
+export type EnvCompartments = Array<string>;
+
+export interface FeatureType {
+  id: string;
+  name: string;
+  tsgMlCode: string | null;
+  osparCode: string | null;
+  unepCode: string | null;
+  material: string | null;
+  isCore: boolean;
+  environmentalCompartments: EnvCompartments;
+}

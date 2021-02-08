@@ -8,6 +8,7 @@ import { Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import {
+  fetchAllFeatureTypes,
   fetchAllObservations,
   selectObservation,
 } from "../../store/slices/observations";
@@ -22,6 +23,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   );
 
   useEffect(() => {
+    dispatch(fetchAllFeatureTypes());
     dispatch(fetchAllObservations());
   }, []);
 

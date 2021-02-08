@@ -1,6 +1,12 @@
-import { CreatorApps, Feature, Observation } from "../../../models";
+import {
+  CreatorApps,
+  Feature,
+  FeatureType,
+  Observation,
+} from "../../../models";
 import { Thunk } from "../../store";
 import {
+  addFetchedFeatureTypes,
   addFetchedObservations,
   addNewFeatureToAdd,
   addNewObservation,
@@ -22,6 +28,15 @@ export const fetchAllObservations: Thunk = () => async (
       ...localObservationsEntries,
     ])
   );
+};
+
+export const fetchAllFeatureTypes: Thunk = () => async (
+  dispatch,
+  _,
+  { api }
+) => {
+  const featureTypeEntries: Array<FeatureType> = await api.mockGETAllFeatureTypes();
+  dispatch(addFetchedFeatureTypes(featureTypeEntries));
 };
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
