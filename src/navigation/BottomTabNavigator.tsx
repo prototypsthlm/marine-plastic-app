@@ -9,6 +9,7 @@ import NewObservationScreen from "../screens/LoggedIn/NewObservationScreen";
 import ObservationDetailScreen from "../screens/LoggedIn/ObservationDetailScreen";
 import NewFeatureScreen from "../screens/LoggedIn/NewFeatureScreen";
 import FeatureDetailScreen from "../screens/LoggedIn/FeatureDetailScreen";
+import FeatureTypePickerScreen from "../screens/LoggedIn/FeatureTypePickerScreen";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -111,6 +112,11 @@ function NewObservationNavigator() {
         name="newFeatureScreen"
         component={NewFeatureScreen}
         options={{ headerTitle: "Add new feature" }}
+      />
+      <Stack.Screen
+        name="featureTypePickerScreen"
+        component={FeatureTypePickerScreen}
+        options={{ headerTitle: "Feature Type Picker" }}
       />
     </Stack.Navigator>
   );

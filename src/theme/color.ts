@@ -5,6 +5,7 @@ export const palette = {
   cyan: "#03F6FA",
   dark: "#2C3339",
   gray: "#585F65",
+  curiousBlue: "#2f95dc",
 };
 
 export const shadow = {

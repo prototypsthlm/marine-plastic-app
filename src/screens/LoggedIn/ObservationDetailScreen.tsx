@@ -2,7 +2,7 @@ import React from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Feature, Observation } from "../../models";
+import { Feature, FeatureType, Observation } from "../../models";
 
 import { Image } from "react-native";
 
@@ -19,6 +19,13 @@ export default function ObservationDetailScreen({
   const observationEntry = useSelector<RootState, Observation | undefined>(
     (state) => state.observations.selectedEntry
   );
+
+  const featureTypes = useSelector<RootState, Array<FeatureType>>(
+    (state) => state.observations.featureTypes
+  );
+
+  const getFeatureTypeById = (id: string) =>
+    featureTypes.find((ft) => ft.id === id);
 
   const navigateToDetailScreen = (featureEntry: Feature) => {
     dispatch(selectFeature(featureEntry));
@@ -70,6 +77,9 @@ export default function ObservationDetailScreen({
                   }}
                 ></Image>
               )}
+              <Text>
+                {getFeatureTypeById(featureEntry.featureTypeId)?.name}
+              </Text>
             </ListItem>
           ))}
         </>

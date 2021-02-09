@@ -1,24 +1,28 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Feature, Observation } from "../../../models";
+import { Feature, FeatureType, Observation } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
   entries: Array<Observation>;
   selectedEntry?: Observation;
   selectedFeatureEntry?: Feature;
+  featureTypes: Array<FeatureType>;
 
   // Form related
   featuresToAdd: Array<NewFeaturePayload>;
+  selectedFeatureType?: FeatureType;
 }
 
 const initialState: ObservationsState = {
   entries: [],
   selectedEntry: undefined,
   selectedFeatureEntry: undefined,
+  featureTypes: [],
 
   // Form related
   featuresToAdd: [],
+  selectedFeatureType: undefined,
 };
 
 export const observationsSlice = createSlice({
@@ -40,6 +44,12 @@ export const observationsSlice = createSlice({
     ) => {
       state.entries = payload;
     },
+    addFetchedFeatureTypes: (
+      state,
+      { payload }: PayloadAction<Array<FeatureType>>
+    ) => {
+      state.featureTypes = payload;
+    },
 
     // Form related
     addNewFeatureToAdd: (
@@ -48,8 +58,14 @@ export const observationsSlice = createSlice({
     ) => {
       state.featuresToAdd = [...state.featuresToAdd, payload];
     },
+    selectFeatureType: (state, { payload }: PayloadAction<FeatureType>) => {
+      state.selectedFeatureType = payload;
+    },
     resetFeaturesToAdd: (state) => {
       state.featuresToAdd = [];
+    },
+    resetFeatureType: (state) => {
+      state.selectedFeatureType = undefined;
     },
   },
 });
@@ -59,8 +75,11 @@ export const {
   selectObservation,
   selectFeature,
   addFetchedObservations,
+  addFetchedFeatureTypes,
   addNewFeatureToAdd,
+  selectFeatureType,
   resetFeaturesToAdd,
+  resetFeatureType,
 } = observationsSlice.actions;
 
 export default observationsSlice.reducer;
