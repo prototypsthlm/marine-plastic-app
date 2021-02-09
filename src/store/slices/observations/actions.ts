@@ -1,10 +1,18 @@
-import { CreatorApps, Feature, Observation } from "../../../models";
+import {
+  CreatorApps,
+  Feature,
+  FeatureType,
+  Observation,
+} from "../../../models";
 import { Thunk } from "../../store";
 import {
+  addFetchedFeatureTypes,
   addFetchedObservations,
   addNewFeatureToAdd,
   addNewObservation,
   resetFeaturesToAdd,
+  resetFeatureType,
+  selectFeatureType,
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
@@ -24,6 +32,15 @@ export const fetchAllObservations: Thunk = () => async (
   );
 };
 
+export const fetchAllFeatureTypes: Thunk = () => async (
+  dispatch,
+  _,
+  { api }
+) => {
+  const featureTypeEntries: Array<FeatureType> = await api.mockGETAllFeatureTypes();
+  dispatch(addFetchedFeatureTypes(featureTypeEntries));
+};
+
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
 ) => async (dispatch, _, { api, localStorage, navigation }) => {
@@ -37,6 +54,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       isDeleted: false,
       deletedAt: undefined,
 
+      featureTypeId: featurePayload.feaureType.id,
       comments: featurePayload.comments,
       imageUrl: featurePayload.imageUrl,
     })
@@ -70,5 +88,15 @@ export const addNewFeature: Thunk<NewFeaturePayload> = (newFeaturePayload) => (
   { navigation }
 ) => {
   dispatch(addNewFeatureToAdd(newFeaturePayload));
+  dispatch(resetFeatureType());
   navigation.navigate("newObservationScreen");
+};
+
+export const addFeatureType: Thunk<FeatureType> = (featureTypePayload) => (
+  dispatch,
+  _,
+  { navigation }
+) => {
+  dispatch(selectFeatureType(featureTypePayload));
+  navigation.navigate("newFeatureScreen");
 };

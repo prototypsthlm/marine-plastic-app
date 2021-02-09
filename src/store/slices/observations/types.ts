@@ -1,4 +1,4 @@
-import { Geometry } from "../../../models";
+import { FeatureType, Geometry } from "../../../models";
 
 export type NewObservationPayload = {
   comments?: string;
@@ -8,6 +8,7 @@ export type NewObservationPayload = {
 };
 
 export type NewFeaturePayload = {
+  feaureType: FeatureType;
   comments?: string;
   imageUrl?: string;
   imageGPSLatitude?: number;

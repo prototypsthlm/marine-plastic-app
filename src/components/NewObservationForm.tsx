@@ -127,7 +127,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                   }}
                 ></Image>
               )}
-              <Text>{feature.comments}</Text>
+              <Text>{feature.feaureType.name}</Text>
             </ListItem>
           ))}
 
