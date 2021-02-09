@@ -4,6 +4,9 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 import styled from "../styled";
 import { LocationObject } from "expo-location";
+import { ListItem, Text } from "./elements";
+import { theme } from "../theme";
+import { Ionicons } from "@expo/vector-icons";
 
 interface UploadImageProps {
   onChange?: (image: object) => void;
@@ -107,20 +110,47 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   };
 
   return (
-    <>
-      <Button
-        disabled={isLoading}
-        title="Upload an image"
+    <FlexRow>
+      <ListItem
+        style={{
+          width: "50%",
+          borderRightColor: theme.color.palette.gray,
+          marginRight: 1,
+          justifyContent: "center",
+        }}
         onPress={pickImage}
-      />
-      <Text>or</Text>
-      <Button disabled={isLoading} title="Take photo" onPress={takePhoto} />
-    </>
+      >
+        <Text
+          style={{ color: theme.color.palette.curiousBlue, paddingRight: 8 }}
+        >
+          Upload a picture
+        </Text>
+        <Ionicons
+          size={30}
+          style={{ color: theme.color.palette.curiousBlue }}
+          name="ios-image"
+        />
+      </ListItem>
+      <ListItem
+        style={{ width: "50%", justifyContent: "center" }}
+        onPress={takePhoto}
+      >
+        <Text
+          style={{ color: theme.color.palette.curiousBlue, paddingRight: 8 }}
+        >
+          Take photo
+        </Text>
+        <Ionicons
+          size={30}
+          style={{ color: theme.color.palette.curiousBlue }}
+          name="ios-camera"
+        />
+      </ListItem>
+    </FlexRow>
   );
 }
 
-const Text = styled.Text`
-  text-align: center;
-  font-family: ${(props) => props.theme.typography.primary};
-  font-size: ${(props) => props.theme.fontSize.large}px;
+const FlexRow = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
 `;

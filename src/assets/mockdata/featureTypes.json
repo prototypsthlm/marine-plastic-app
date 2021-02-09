@@ -1,0 +1,2174 @@
+{
+  "results": [
+    {
+      "id": "b1743508-2421-4627-9b54-6fc32781a110",
+      "name": "4/6-pack yokes, six-pack rings",
+      "tsgMlCode": "G1",
+      "osparCode": "1",
+      "unepCode": "PL05",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "215b0ab9-a125-47b9-bc20-2ba11b2fea92",
+      "name": "Bags",
+      "tsgMlCode": "G2",
+      "osparCode": null,
+      "unepCode": "PL07",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "ebe79dac-e494-4e94-8448-5a9dd4ec3f4f",
+      "name": "Shopping bags incl. pieces",
+      "tsgMlCode": "G3",
+      "osparCode": "2",
+      "unepCode": "PL07",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "0ed46d91-170e-403b-883d-4f6f55c41e10",
+      "name": "Small plastic bags, e.g. freezer bags, incl. pieces",
+      "tsgMlCode": "G4",
+      "osparCode": "3",
+      "unepCode": "PL07",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "3851eb1c-1688-4861-9601-15e686f887ba",
+      "name": "Plastic bag collective role; what remains from rip-off plastic bags",
+      "tsgMlCode": "G5",
+      "osparCode": "112",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "16865255-6c8d-4e77-a12c-448b12769dc6",
+      "name": "Bottles",
+      "tsgMlCode": "G6",
+      "osparCode": "4",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "982bf6a8-6965-49db-9a94-5599079bf3c6",
+      "name": "Drink bottles <= 0.5 l",
+      "tsgMlCode": "G7",
+      "osparCode": "4",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f73e5e91-4119-4b27-837b-285c0ab8d10a",
+      "name": "Drink bottles > 0.5 l",
+      "tsgMlCode": "G8",
+      "osparCode": "4",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "e3714f9f-a66e-47a2-8eff-2b10ace3a075",
+      "name": "Cleaner bottles & containers",
+      "tsgMlCode": "G9",
+      "osparCode": "5",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b08a51e9-3de9-4436-b459-a3c06a04abfd",
+      "name": "Food containers incl. fast food containers",
+      "tsgMlCode": "G10",
+      "osparCode": "6",
+      "unepCode": "PL06",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "d6454315-0472-478e-8401-43aa3872cba2",
+      "name": "Beach-related cosmetic bottles and containers, e.g. sunblocks, sunscreen",
+      "tsgMlCode": "G11",
+      "osparCode": "7",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "d5bf82eb-9e9e-425a-b73b-2bb126fa0e30",
+      "name": "Non-beach-related cosmetics bottles & containers",
+      "tsgMlCode": "G12",
+      "osparCode": "7",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "591c79c7-dcf2-4a24-81d1-336b6932fdf7",
+      "name": "Non-cosmetics bottles & containers (drums)",
+      "tsgMlCode": "G13",
+      "osparCode": "12",
+      "unepCode": "PL02",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "e2df51fc-206b-4300-bd2c-c6c75bfa65a8",
+      "name": "Engine oil bottles & containers < 50 cm",
+      "tsgMlCode": "G14",
+      "osparCode": "8",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "63410185-6e9b-432d-ab76-08afd005e399",
+      "name": "Engine oil bottles & containers >= 50 cm",
+      "tsgMlCode": "G15",
+      "osparCode": "9",
+      "unepCode": "PL03",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "86333bd9-a5ee-4cec-8391-60311c20867c",
+      "name": "Jerry cans (square plastic containers with handle)",
+      "tsgMlCode": "G16",
+      "osparCode": "10",
+      "unepCode": "PL03",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "bb6629d1-9532-4833-8fe2-20092631ac37",
+      "name": "Injection gun containers",
+      "tsgMlCode": "G17",
+      "osparCode": "11",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "4b4eea0c-3595-4c71-82d8-c12c1115313d",
+      "name": "Crates and containers, baskets",
+      "tsgMlCode": "G18",
+      "osparCode": "13",
+      "unepCode": "PL13",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "3b66676c-dce1-458e-b627-137e7e98a950",
+      "name": "Car parts",
+      "tsgMlCode": "G19",
+      "osparCode": "14",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "4f1f0145-6170-4a77-9f27-cb020fefba9d",
+      "name": "Plastic caps/lids",
+      "tsgMlCode": "G20",
+      "osparCode": null,
+      "unepCode": "PL01",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "92d85a95-f100-4f8a-8293-2e8ff589de95",
+      "name": "Plastic caps/lids: drinks",
+      "tsgMlCode": "G21",
+      "osparCode": "15",
+      "unepCode": "PL01",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b6f2aac6-03f0-4627-99f8-391fbaa6126b",
+      "name": "Plastic caps/lids: chemicals, detergents (non-food)",
+      "tsgMlCode": "G22",
+      "osparCode": "15",
+      "unepCode": "PL01",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "3cd5c522-8f8f-4061-a3fb-f88ddd6a1bb9",
+      "name": "Plastic caps/lids: unidentified",
+      "tsgMlCode": "G23",
+      "osparCode": "15",
+      "unepCode": "PL01",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b62ae014-6aef-4e2c-a999-6b5b61106b1c",
+      "name": "Plastic rings from bottle caps/lids",
+      "tsgMlCode": "G24",
+      "osparCode": "15",
+      "unepCode": "PL01",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "e09fa6d6-490e-49ce-aa85-99f0c2dfd15b",
+      "name": "Tobacco pouches, plastic cigarette box packaging",
+      "tsgMlCode": "G25",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "5a4e6671-9117-4006-9fde-d81022ea6e3c",
+      "name": "Cigarette lighters",
+      "tsgMlCode": "G26",
+      "osparCode": "16",
+      "unepCode": "PL10",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "294d487d-43da-4832-8c76-2b05745760b3",
+      "name": "Cigarette butts, filters",
+      "tsgMlCode": "G27",
+      "osparCode": "64",
+      "unepCode": "PL11",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "97ed434f-1b4e-4f87-a9d8-0de8a178ab2f",
+      "name": "Pens and pen lids",
+      "tsgMlCode": "G28",
+      "osparCode": "17",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "8521026e-f99d-4104-b52e-96eda42fe76a",
+      "name": "Combs, hair brushes, sunglasses",
+      "tsgMlCode": "G29",
+      "osparCode": "18",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "0910d7b4-c3f9-46e0-9b35-ba8c6d9664d8",
+      "name": "Crisps packets, sweets wrappers",
+      "tsgMlCode": "G30",
+      "osparCode": "19",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "5e557466-f16a-4ebd-a212-9104112991d5",
+      "name": "Lolly sticks",
+      "tsgMlCode": "G31",
+      "osparCode": "19",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "32abd42a-d00f-4971-9517-987507040a79",
+      "name": "Toys and party poppers",
+      "tsgMlCode": "G32",
+      "osparCode": "20",
+      "unepCode": "PL08",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b060d334-1f86-4ef5-b61f-922963b794a9",
+      "name": "Cups and cup lids",
+      "tsgMlCode": "G33",
+      "osparCode": "21",
+      "unepCode": "PL06",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "efc215bd-72a2-47cb-b969-89f9cc424fe6",
+      "name": "Cutlery and trays",
+      "tsgMlCode": "G34",
+      "osparCode": "22",
+      "unepCode": "PL04",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "231d17d5-91af-4795-8f96-4a45b505c246",
+      "name": "Straws and stirrers",
+      "tsgMlCode": "G35",
+      "osparCode": "22",
+      "unepCode": "PL04",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "861fee05-95c6-4de3-82d9-b40611fb52e6",
+      "name": "Fertiliser, animal feed bags",
+      "tsgMlCode": "G36",
+      "osparCode": "23",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "d79a4e18-4868-4d39-bb67-e070efce5dbc",
+      "name": "Mesh vegetable bags",
+      "tsgMlCode": "G37",
+      "osparCode": "24",
+      "unepCode": "PL15",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "1c8e59c9-1e49-4553-be9f-3db47bb0a187",
+      "name": "Cover, packaging",
+      "tsgMlCode": "G38",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "5b36aeb5-cb0b-4e22-88a6-702fcacea9da",
+      "name": "Gloves",
+      "tsgMlCode": "G39",
+      "osparCode": null,
+      "unepCode": "PL09",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "3c1d72f5-0048-4217-8d55-da90c808e81d",
+      "name": "Gloves: washing up",
+      "tsgMlCode": "G40",
+      "osparCode": "25",
+      "unepCode": "PL09",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "173ba9d2-731a-4850-b3ed-32ceb0d3372e",
+      "name": "Gloves: industrial/professional rubber gloves",
+      "tsgMlCode": "G41",
+      "osparCode": "113",
+      "unepCode": "RB03",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "318139d5-ae3b-4545-943d-1d014903afad",
+      "name": "Crab/lobster pots and tops",
+      "tsgMlCode": "G42",
+      "osparCode": "26",
+      "unepCode": "PL17",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "128894ce-df5d-4a58-8655-6002ccd3b105",
+      "name": "Tags (fishing and industry)",
+      "tsgMlCode": "G43",
+      "osparCode": "114",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "77422fe9-67ae-4105-bd31-4ee059c17fa4",
+      "name": "Octopus pots",
+      "tsgMlCode": "G44",
+      "osparCode": "27",
+      "unepCode": "PL17",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "76eeaf6b-f4db-4d1f-8f8a-e0c8e57040c6",
+      "name": "Mussels nets, oyster nets",
+      "tsgMlCode": "G45",
+      "osparCode": "28",
+      "unepCode": "PL15",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "4a59ac12-f6d4-441a-86bf-da3b895f5a62",
+      "name": "Oyster trays (round from oyster cultures)",
+      "tsgMlCode": "G46",
+      "osparCode": "29",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "56ee9f5b-9be1-4eff-908d-5feea65248f3",
+      "name": "Plastic sheeting from mussel culture (Tahitians)",
+      "tsgMlCode": "G47",
+      "osparCode": "30",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "09380d30-3910-47ba-9142-689e2a67eac8",
+      "name": "Synthetic rope",
+      "tsgMlCode": "G48",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "26074f11-e75d-49a0-923a-7b4248d22bc9",
+      "name": "Rope (diameter >= 1 cm)",
+      "tsgMlCode": "G49",
+      "osparCode": "31",
+      "unepCode": "PL19",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "02f86034-0393-4b8e-80ec-42d609a9de7a",
+      "name": "String and cord (diameter < 1 cm)",
+      "tsgMlCode": "G50",
+      "osparCode": "32",
+      "unepCode": "PL19",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "d0b65cfa-3e42-454f-9b34-f06de4841787",
+      "name": "Fishing net",
+      "tsgMlCode": "G51",
+      "osparCode": null,
+      "unepCode": "PL20",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "a64ecc51-6c2f-43ae-9255-802d1ac37a59",
+      "name": "Nets and pieces of net",
+      "tsgMlCode": "G52",
+      "osparCode": null,
+      "unepCode": "PL20",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "2842ed87-f09a-40f9-a59d-54c236499435",
+      "name": "Nets and pieces of net < 50 cm",
+      "tsgMlCode": "G53",
+      "osparCode": "115",
+      "unepCode": "PL20",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "7b9b3162-6d3b-4935-a0c1-4419cfe8b7f8",
+      "name": "Nets and pieces of net >= 50 cm",
+      "tsgMlCode": "G54",
+      "osparCode": "116",
+      "unepCode": "PL20",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f7e46eb9-0b54-4d6c-93df-3557678f09bf",
+      "name": "Fishing line (entangled)",
+      "tsgMlCode": "G55",
+      "osparCode": null,
+      "unepCode": "PL18",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "a44814c4-6656-408b-ac1a-2361782fd46b",
+      "name": "Tangled nets/cord",
+      "tsgMlCode": "G56",
+      "osparCode": "33",
+      "unepCode": "PL20",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "d8fb79db-f62a-4949-856c-21125a08aa4a",
+      "name": "Fish boxes: plastic",
+      "tsgMlCode": "G57",
+      "osparCode": "34",
+      "unepCode": "PL17",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "1f9ba651-61cb-4ce0-bd30-31b05f66c7a9",
+      "name": "Fish boxes: expanded polystyrene",
+      "tsgMlCode": "G58",
+      "osparCode": "34",
+      "unepCode": "PL17",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "c27a71ca-48d0-44c8-a1e4-b216ecd05d0d",
+      "name": "Fishing line/monofilament (angling)",
+      "tsgMlCode": "G59",
+      "osparCode": "35",
+      "unepCode": "PL18",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "7e98aecc-3014-407c-b892-21925bbde7fe",
+      "name": "Light sticks (tubes with fluid) incl. packaging",
+      "tsgMlCode": "G60",
+      "osparCode": "36",
+      "unepCode": "PL17",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b8135e43-751c-4961-8b75-01544a841c81",
+      "name": "Other fishing-related",
+      "tsgMlCode": "G61",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "c836af03-cbd3-4b01-9a86-d15770909615",
+      "name": "Floats for fishing nets",
+      "tsgMlCode": "G62",
+      "osparCode": "37",
+      "unepCode": "PL14",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "32aa125a-1e44-4661-bdca-c384c5f30ad5",
+      "name": "Buoys",
+      "tsgMlCode": "G63",
+      "osparCode": "37",
+      "unepCode": "PL14",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "812b072e-6e39-4823-841f-e73613092d51",
+      "name": "Fenders",
+      "tsgMlCode": "G64",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "76f81b7a-4705-413a-ad87-86ded289471f",
+      "name": "Buckets",
+      "tsgMlCode": "G65",
+      "osparCode": "38",
+      "unepCode": "PL03",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "79ba982a-75a2-412c-8fde-32f4b0568c7a",
+      "name": "Strapping bands",
+      "tsgMlCode": "G66",
+      "osparCode": "39",
+      "unepCode": "PL21",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "f1c795b2-4008-4143-9faf-5c7303b4eab5",
+      "name": "Sheets, industrial packaging, plastic sheeting",
+      "tsgMlCode": "G67",
+      "osparCode": "40",
+      "unepCode": "PL16",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "6bc26c63-684c-4805-bcdd-84ffaa334486",
+      "name": "Fibre glass/fragments",
+      "tsgMlCode": "G68",
+      "osparCode": "41",
+      "unepCode": "PL22",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "004f669f-96f5-41b1-8763-c25788f1180c",
+      "name": "Hard hats, helmets",
+      "tsgMlCode": "G69",
+      "osparCode": "42",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "e7f7f104-6a99-4aef-af5a-28ae6eafbe05",
+      "name": "Shotgun cartridges",
+      "tsgMlCode": "G70",
+      "osparCode": "43",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "3cbefbb7-0df2-4562-86cc-61a266a4c309",
+      "name": "Shoes, sandals",
+      "tsgMlCode": "G71",
+      "osparCode": "44",
+      "unepCode": "CL01",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "bec41667-0c9c-47dc-b37f-c911368336b5",
+      "name": "Traffic cones",
+      "tsgMlCode": "G72",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "18b2d135-f687-492a-9646-9405c66a6b19",
+      "name": "Foam sponge",
+      "tsgMlCode": "G73",
+      "osparCode": "45",
+      "unepCode": "FP01",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "9cd7d51a-af99-48e5-878d-bf3805b30540",
+      "name": "Foam packaging, insulation, polyurethane",
+      "tsgMlCode": "G74",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "ab3f3321-5889-45bc-8910-f7a581ac2e25",
+      "name": "Plastic/polystyrene pieces < 2.5 cm",
+      "tsgMlCode": "G75",
+      "osparCode": "117",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "0114ef2a-0a94-4f2d-b04a-653c23976804",
+      "name": "Plastic/polystyrene pieces 2.5 cm to 50 cm",
+      "tsgMlCode": "G76",
+      "osparCode": "46",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "41004aca-1b5a-479b-8b25-4814fbb86df9",
+      "name": "Plastic/polystyrene pieces >= 50 cm",
+      "tsgMlCode": "G77",
+      "osparCode": "47",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "da364613-e854-4d62-b660-52e524aa7136",
+      "name": "Plastic pieces < 2.5 cm",
+      "tsgMlCode": "G78",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "69e5162a-cabc-4627-858f-f54b5546cc67",
+      "name": "Plastic pieces 2.5 cm to 50 cm",
+      "tsgMlCode": "G79",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "c2090f3e-df66-44b7-9bc7-391ae3c80857",
+      "name": "Plastic pieces >= 50 cm",
+      "tsgMlCode": "G80",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "4c08a2ce-fa4b-4b23-814b-bdf3e94562de",
+      "name": "Polystyrene pieces < 2.5 cm",
+      "tsgMlCode": "G81",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "8b276ce8-4887-4701-86d0-11f531a961d0",
+      "name": "Polystyrene pieces 2.5 cm to 50 cm",
+      "tsgMlCode": "G82",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "b902d5ae-a8dc-4dfd-a3e5-1d268b8ab571",
+      "name": "Polystyrene pieces >= 50 cm",
+      "tsgMlCode": "G83",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "b8acf846-2bed-45f5-a513-2f7a9eff5a75",
+      "name": "CD, CD-box",
+      "tsgMlCode": "G84",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "55890608-8d7c-43df-b474-e41a2401b6df",
+      "name": "Salt packaging",
+      "tsgMlCode": "G85",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f464a6ae-8f7b-40f7-93ac-e736306f31a8",
+      "name": "Fin trees (from fins for scuba diving)",
+      "tsgMlCode": "G86",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "18d896b3-89ef-4c6f-b426-834d8b7e6ece",
+      "name": "Masking tape",
+      "tsgMlCode": "G87",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "15ffe66e-b2d8-465d-b76e-3d36d0b9adeb",
+      "name": "Telephone, incl. parts",
+      "tsgMlCode": "G88",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "ede95594-4265-4345-915b-09bd337ae074",
+      "name": "Plastic construction waste",
+      "tsgMlCode": "G89",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "ec753ed0-202c-452d-9341-8c09a0d328be",
+      "name": "Plastic flower pots",
+      "tsgMlCode": "G90",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "46303640-a13e-4871-a578-104cf73ae1fe",
+      "name": "Biomass holder from sewage treatment plants",
+      "tsgMlCode": "G91",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "de0c9238-88ab-4549-b334-bb08e222910e",
+      "name": "Bait containers/packaging",
+      "tsgMlCode": "G92",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "627cc18c-230b-4a10-82f0-25a8654155ac",
+      "name": "Cable ties",
+      "tsgMlCode": "G93",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "3935fcce-06b5-4f1c-a44d-38b4bb3a57d4",
+      "name": "Table cloth",
+      "tsgMlCode": "G94",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "fc82a490-c169-46f2-9e76-40abd0a38b82",
+      "name": "Cotton bud sticks",
+      "tsgMlCode": "G95",
+      "osparCode": "98",
+      "unepCode": "OT02",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "758efab6-93b5-495a-9637-6586c69f64f2",
+      "name": "Sanitary towels, panty liners, backing strips",
+      "tsgMlCode": "G96",
+      "osparCode": "99",
+      "unepCode": "OT02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "41a53595-9a91-4195-b3f3-7036306b1665",
+      "name": "Toilet fresheners",
+      "tsgMlCode": "G97",
+      "osparCode": "101",
+      "unepCode": "OT02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "c1a9f83d-1643-4c96-ba7b-efc70d1baa11",
+      "name": "Diapers, nappies",
+      "tsgMlCode": "G98",
+      "osparCode": null,
+      "unepCode": "OT02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "563134aa-a4b7-4262-8fc4-9ba5f5152892",
+      "name": "Syringes, needles",
+      "tsgMlCode": "G99",
+      "osparCode": "104",
+      "unepCode": "PL12",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "38b6e390-fcc6-4176-8fd0-b090d8d339a1",
+      "name": "Medical/pharmaceuticals containers/tubes",
+      "tsgMlCode": "G100",
+      "osparCode": "103",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "d54ef0da-0060-4304-b2c8-c77af747f938",
+      "name": "Dog faeces bag",
+      "tsgMlCode": "G101",
+      "osparCode": "121",
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b4a0f7a0-6bf2-4a66-b8d2-8fbbeeb917cf",
+      "name": "Flip-flops",
+      "tsgMlCode": "G102",
+      "osparCode": null,
+      "unepCode": "RB02",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "3d387215-f454-4a2e-b3c1-36942d6281bc",
+      "name": "Plastic fragments: rounded < 5 mm",
+      "tsgMlCode": "G103",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "9d4d7cb9-f604-4185-ae56-81b6cbd9a235",
+      "name": "Plastic fragments: subrounded < 5 mm",
+      "tsgMlCode": "G104",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "3e5cdf27-cc25-4f2d-95fa-7648e0c871e6",
+      "name": "Plastic fragments: subangular < 5 mm",
+      "tsgMlCode": "G105",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "37bb28ce-9dbd-4648-b963-2c150091defc",
+      "name": "Plastic fragments: angular < 5 mm",
+      "tsgMlCode": "G106",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "d21c81a9-bedb-439c-b15d-20ee09b58767",
+      "name": "Cylindrical pellets < 5mm",
+      "tsgMlCode": "G107",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "50c06147-d97b-44a8-b5c3-2e9e45fd4a3c",
+      "name": "Disk pellets < 5 mm",
+      "tsgMlCode": "G108",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "912d5c2f-4a76-4597-88be-d558f4b3b3e8",
+      "name": "Flat pellets < 5 mm",
+      "tsgMlCode": "G109",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "2bda942e-4509-41d1-9cc3-062956e4313a",
+      "name": "Ovoid pellets < 5 mm",
+      "tsgMlCode": "G110",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "c86bf825-7785-4b63-9d96-f8f33980676e",
+      "name": "Spheruloids pellets < 5 mm",
+      "tsgMlCode": "G111",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "71762de3-08cd-4e0a-a957-f27f346a7609",
+      "name": "Industrial pellets",
+      "tsgMlCode": "G112",
+      "osparCode": null,
+      "unepCode": "PL23",
+      "material": "Artificial polymers",
+      "isCore": true,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "222d9448-4a56-4cd8-b263-252c42ee8fb6",
+      "name": "Filament < 5 mm",
+      "tsgMlCode": "G113",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "6c1757d0-dc22-4847-a4a0-b135381a3035",
+      "name": "Films < 5 mm",
+      "tsgMlCode": "G114",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "8ab31c10-f604-40e0-985b-916c5aee1f6d",
+      "name": "Foamed plastic < 5 mm",
+      "tsgMlCode": "G115",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "1c40d6c3-44b1-490f-b584-994d02a53b99",
+      "name": "Granules < 5 mm",
+      "tsgMlCode": "G116",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "681ac81a-4307-4aff-bd9c-74f0b9f3a0ba",
+      "name": "Styrofoam < 5 mm",
+      "tsgMlCode": "G117",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    },
+    {
+      "id": "fbb122e0-d426-4e7b-9335-db253a1d9fd6",
+      "name": "Small industrial spheres (< 5 mm)",
+      "tsgMlCode": "G118",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "a92d0a3d-3315-4b9f-87cc-8176ad450386",
+      "name": "Sheet-like user plastic (> 1 mm)",
+      "tsgMlCode": "G119",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "83be0781-e8f6-4a13-a14f-35488f335b93",
+      "name": "Thread-like user plastic (> 1 mm)",
+      "tsgMlCode": "G120",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "1d220140-db07-4add-a4ed-69b8530e04c7",
+      "name": "Foamed user plastic (> 1 mm)",
+      "tsgMlCode": "G121",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "ec60ba20-44d0-41ad-a4b0-1958c37d280e",
+      "name": "Plastic fragments (> 1 mm)",
+      "tsgMlCode": "G122",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "0a478a5e-3b16-4993-9565-db26634036a2",
+      "name": "Polyurethane granules < 5 mm",
+      "tsgMlCode": "G123",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "319059d3-1bbd-47f0-9d95-d395c1c10890",
+      "name": "Other plastic/polystyrene items (identifiable)",
+      "tsgMlCode": "G124",
+      "osparCode": "48",
+      "unepCode": "PL24",
+      "material": "Artificial polymers",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "81d8281c-6b75-410c-a447-299738835dec",
+      "name": "Balloons, balloon sticks",
+      "tsgMlCode": "G125",
+      "osparCode": "49",
+      "unepCode": "RB01",
+      "material": "Rubber",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "0d8fe326-a011-4353-8f91-df1488973186",
+      "name": "Balls",
+      "tsgMlCode": "G126",
+      "osparCode": null,
+      "unepCode": "RB01",
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "70f64b3e-3621-44f6-8352-3a39f5d030ff",
+      "name": "Rubber boots",
+      "tsgMlCode": "G127",
+      "osparCode": "50",
+      "unepCode": null,
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "5d1cc7b5-ee12-4a7c-90cd-7c6eda0e244a",
+      "name": "Tyres and belts",
+      "tsgMlCode": "G128",
+      "osparCode": "52",
+      "unepCode": "RB04",
+      "material": "Rubber",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "8d5be6ab-2277-45ce-9733-e173b8a3e302",
+      "name": "Inner-tubes and rubber sheet",
+      "tsgMlCode": "G129",
+      "osparCode": null,
+      "unepCode": "RB05",
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "7dcafc7f-f42c-4877-a22f-99df5618970e",
+      "name": "Wheels",
+      "tsgMlCode": "G130",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Rubber",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "42fd71fb-7e42-4562-8cef-db6a918d3bc6",
+      "name": "Rubber bands (small, for kitchen/household/post use)",
+      "tsgMlCode": "G131",
+      "osparCode": null,
+      "unepCode": "RB06",
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "87bce2a2-7a96-4bc2-ac6c-2bd41db38148",
+      "name": "Bobbins (fishing)",
+      "tsgMlCode": "G132",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "1a7c9c72-bb77-49c7-a335-565f47fce0f3",
+      "name": "Condoms incl. packaging",
+      "tsgMlCode": "G133",
+      "osparCode": "97",
+      "unepCode": "RB07",
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "cdbec9ab-034b-4f96-925b-66c21097252f",
+      "name": "Other rubber pieces",
+      "tsgMlCode": "G134",
+      "osparCode": "53",
+      "unepCode": "RB08",
+      "material": "Rubber",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "4b3c6cc9-2423-4bd1-aa14-561eab71f5cf",
+      "name": "Clothing: clothes, shoes",
+      "tsgMlCode": "G135",
+      "osparCode": null,
+      "unepCode": "CL01",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "4bda3d5f-d8dc-4b2e-a030-dc580b4a5c09",
+      "name": "Shoes",
+      "tsgMlCode": "G136",
+      "osparCode": null,
+      "unepCode": "CL01",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "53e1dbf8-fb83-4e5d-9a7c-cf2585402509",
+      "name": "Clothing, rags: clothing, hats, towels",
+      "tsgMlCode": "G137",
+      "osparCode": "54",
+      "unepCode": "CL01",
+      "material": "Cloth/textile",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "0d83107a-9f56-4a83-a668-1634d9bdd2fe",
+      "name": "Shoes, sandals (e.g. leather, cloth)",
+      "tsgMlCode": "G138",
+      "osparCode": "57",
+      "unepCode": "CL01",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f0ada45c-cb95-4ee8-9c56-05213705c3a0",
+      "name": "Backpacks, bags",
+      "tsgMlCode": "G139",
+      "osparCode": null,
+      "unepCode": "CL02",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "eaaa8182-dfa8-41d8-b043-8b54cbbfc079",
+      "name": "Sacking (hessian)",
+      "tsgMlCode": "G140",
+      "osparCode": "56",
+      "unepCode": "CL03",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f0f580ec-3757-458a-8e84-1ed0edc2da1b",
+      "name": "Carpet, furnishing",
+      "tsgMlCode": "G141",
+      "osparCode": "55",
+      "unepCode": "CL05",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "bb1eec85-39bd-4c77-88e0-6ffafc73cf56",
+      "name": "Rope, string, nets",
+      "tsgMlCode": "G142",
+      "osparCode": null,
+      "unepCode": "CL04",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "fb396105-d3bc-4c56-afd8-246351e1654b",
+      "name": "Sails, canvas",
+      "tsgMlCode": "G143",
+      "osparCode": null,
+      "unepCode": "CL03",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "2dd1b23a-2af0-4318-90fd-e9f701abbf99",
+      "name": "Tampons, tampon applicators",
+      "tsgMlCode": "G144",
+      "osparCode": "100",
+      "unepCode": "OT02",
+      "material": "Cloth/textile",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f4311c4c-6b90-4716-8f9a-4e32096bb836",
+      "name": "Other textiles incl. rags",
+      "tsgMlCode": "G145",
+      "osparCode": "59",
+      "unepCode": "CL06",
+      "material": "Cloth/textile",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "f786f05d-741a-4696-be5f-35fc0b822845",
+      "name": "Paper/Cardboard",
+      "tsgMlCode": "G146",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "57400926-d1f8-4c16-b57a-6ece6e4c7e14",
+      "name": "Paper bags",
+      "tsgMlCode": "G147",
+      "osparCode": "60",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "22b6be3a-323f-448a-aa8e-99bba18b967d",
+      "name": "Cardboard: boxes, fragments",
+      "tsgMlCode": "G148",
+      "osparCode": "61",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "79cc5956-be67-40e0-89b3-4b6e1cd50dca",
+      "name": "Paper packaging",
+      "tsgMlCode": "G149",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "36428700-9e41-4272-b5d9-24b61e69e198",
+      "name": "Cartons, Tetrapack milk",
+      "tsgMlCode": "G150",
+      "osparCode": "118",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "fb13f887-7c15-4886-a692-f5771de60bb9",
+      "name": "Cartons, Tetrapack non-milk",
+      "tsgMlCode": "G151",
+      "osparCode": "62",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "e6203f0a-446e-4c20-94a0-f255ced513e3",
+      "name": "Cigarette packets",
+      "tsgMlCode": "G152",
+      "osparCode": "63",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "f3c8f57f-a3f0-4135-8e94-2e1d588d1c5b",
+      "name": "Cups, food trays, food wrappers, drink containers",
+      "tsgMlCode": "G153",
+      "osparCode": "65",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "368ac968-038f-4a1c-8aa3-48b061a422f7",
+      "name": "Newspapers, magazines",
+      "tsgMlCode": "G154",
+      "osparCode": "66",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "42a328b1-a1de-4f3c-b89e-017c3986694b",
+      "name": "Tubes for fireworks",
+      "tsgMlCode": "G155",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "89d5496d-4c3a-4195-a0d3-e16400fa24ff",
+      "name": "Paper fragments",
+      "tsgMlCode": "G156",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "06aa0068-0ea8-4c39-881d-de19ecd0f1bc",
+      "name": "Paper",
+      "tsgMlCode": "G157",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "de7d0669-38c1-4912-a365-c3d09cd248b4",
+      "name": "Other paper items",
+      "tsgMlCode": "G158",
+      "osparCode": "67",
+      "unepCode": null,
+      "material": "Paper/cardboard",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "3dc07a3c-d085-44d6-b0cc-3c87ee8f5b19",
+      "name": "Corks",
+      "tsgMlCode": "G159",
+      "osparCode": "68",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "9415921b-707a-4cb0-8a8b-8d26b8e4c995",
+      "name": "Pallets",
+      "tsgMlCode": "G160",
+      "osparCode": "69",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "77391fb9-9570-4962-9e79-2cc97f8e8a1f",
+      "name": "Processed timber",
+      "tsgMlCode": "G161",
+      "osparCode": "69",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "cf3f5542-7702-4dd3-9d6e-195844b9a072",
+      "name": "Crates",
+      "tsgMlCode": "G162",
+      "osparCode": "70",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "52b8a526-d325-4a6d-bb1a-50cdd223d698",
+      "name": "Crab/lobster pots",
+      "tsgMlCode": "G163",
+      "osparCode": "71",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "aa8e527b-4282-433d-bbf5-0bd8e66d9f8d",
+      "name": "Fish boxes",
+      "tsgMlCode": "G164",
+      "osparCode": "119",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "505b2356-2260-4ff1-b8b8-22ae5c2ff5ff",
+      "name": "Ice-cream sticks, chip forks, chopsticks, toothpicks",
+      "tsgMlCode": "G165",
+      "osparCode": "72",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "07aa5c28-6467-4ec3-b854-be50266768bc",
+      "name": "Paint brushes",
+      "tsgMlCode": "G166",
+      "osparCode": "73",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "a603b39e-bcb1-4f9e-87bb-6dd2fe05bf7b",
+      "name": "Matches, fireworks",
+      "tsgMlCode": "G167",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "0387d19a-c8cc-4433-851a-62a74642f69a",
+      "name": "Wood boards",
+      "tsgMlCode": "G168",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "7474b4d3-c160-4854-a47a-96e077eee3bd",
+      "name": "Beams, dunnage",
+      "tsgMlCode": "G169",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "0cb05f8d-f2a3-4509-99a1-3b08129dc50e",
+      "name": "Wood: processed",
+      "tsgMlCode": "G170",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "b0934344-6feb-4875-8586-163aa9cf7872",
+      "name": "Other wood < 50 cm",
+      "tsgMlCode": "G171",
+      "osparCode": "74",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "8dbecc1b-6b4d-44a7-911f-c442cec91c02",
+      "name": "Other wood >= 50 cm",
+      "tsgMlCode": "G172",
+      "osparCode": "75",
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "18da6863-7e9a-4fd9-b0c6-46df6d68fc3c",
+      "name": "Other wood",
+      "tsgMlCode": "G173",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Processed/worked wood",
+      "isCore": true,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "9e499a28-88f5-4868-b5db-ca18328b977c",
+      "name": "Aerosol/spray cans industry",
+      "tsgMlCode": "G174",
+      "osparCode": "76",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "73549b0c-cda4-447d-950a-5ba7543bb10c",
+      "name": "Cans: beverage",
+      "tsgMlCode": "G175",
+      "osparCode": "78",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "5f7dc866-b044-4684-843a-aa32470098fa",
+      "name": "Cans: food",
+      "tsgMlCode": "G176",
+      "osparCode": "82",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "8790bc89-f79f-43ba-9596-59328582c612",
+      "name": "Foil wrappers, aluminium foil",
+      "tsgMlCode": "G177",
+      "osparCode": "81",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "95f1d6fd-2130-4dea-bd13-90be8be41cdc",
+      "name": "Bottle caps, lids, pull tabs",
+      "tsgMlCode": "G178",
+      "osparCode": "77",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "55c1c26f-3a6d-4125-9806-77db01ee2636",
+      "name": "Disposable BBQ's",
+      "tsgMlCode": "G179",
+      "osparCode": "120",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "2253bc6d-a248-4920-ad5c-23b76c4a1ceb",
+      "name": "Appliances, e.g. refrigerators, washers",
+      "tsgMlCode": "G180",
+      "osparCode": "79",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "62324951-70e9-4d6d-8ba4-e443b849e5bb",
+      "name": "Tableware: plates, cups, cutlery",
+      "tsgMlCode": "G181",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "a177527e-1a55-466c-bca3-135b90a53828",
+      "name": "Fishing-related: weights, sinkers, lures, hooks",
+      "tsgMlCode": "G182",
+      "osparCode": "80",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "a7887404-193b-46c6-8af6-94209d2326fa",
+      "name": "Fish hook remains",
+      "tsgMlCode": "G183",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "e680fffa-3abd-4569-bacd-5d7f3a25833c",
+      "name": "Lobster/crab pots",
+      "tsgMlCode": "G184",
+      "osparCode": "87",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "0d25bde8-7a7e-4c4c-8846-5e85e45e0aa1",
+      "name": "Middle-size containers",
+      "tsgMlCode": "G185",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "d4e83741-63b8-42d5-aa8f-de952b0b12c8",
+      "name": "Industrial scrap",
+      "tsgMlCode": "G186",
+      "osparCode": "83",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "721d2982-775e-4adb-a06b-4df072499b88",
+      "name": "Drums, e.g. oil",
+      "tsgMlCode": "G187",
+      "osparCode": "84",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "10906de6-c773-4943-9686-38f3ac22dcc3",
+      "name": "Other cans (< 4 l)",
+      "tsgMlCode": "G188",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "021961e6-b69d-457a-9898-9a3f9ba6fd92",
+      "name": "Gas bottles, drums, buckets (>= 4 l)",
+      "tsgMlCode": "G189",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "885d85bb-64ff-491d-a5e6-b4059b76c97e",
+      "name": "Paint tins",
+      "tsgMlCode": "G190",
+      "osparCode": "86",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "029fd042-19ba-4a14-9d81-a605a26d12e9",
+      "name": "Wire, wire mesh, barbed wire",
+      "tsgMlCode": "G191",
+      "osparCode": "88",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "FLOATING"]
+    },
+    {
+      "id": "56bbe407-3b3f-464d-88b9-32f88705ae1a",
+      "name": "Barrels",
+      "tsgMlCode": "G192",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["FLOATING"]
+    },
+    {
+      "id": "98cab798-f06a-422d-ade1-831d5bbca399",
+      "name": "Car parts, batteries",
+      "tsgMlCode": "G193",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "f79ca842-da79-49c6-9d84-8f39c90d8d07",
+      "name": "Cables",
+      "tsgMlCode": "G194",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "6868f969-3eee-4ab1-8b31-035d55899d7e",
+      "name": "Household batteries",
+      "tsgMlCode": "G195",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "78ae22a4-8017-4083-896d-d2b5433f7e7b",
+      "name": "Large metallic objects",
+      "tsgMlCode": "G196",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "41b3891f-a1b6-4d16-89f9-596687b3bfe6",
+      "name": "Other metal",
+      "tsgMlCode": "G197",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR", "FLOATING"]
+    },
+    {
+      "id": "12b61343-42f1-425e-87ca-db0f31c252e7",
+      "name": "Other metal pieces < 50 cm",
+      "tsgMlCode": "G198",
+      "osparCode": "89",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "6f0c27f7-8977-4103-8fbe-c97d97810856",
+      "name": "Other metal pieces >= 50 cm",
+      "tsgMlCode": "G199",
+      "osparCode": "90",
+      "unepCode": null,
+      "material": "Metal",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "64d8f47e-b52b-4a04-8aae-46d18aadbef9",
+      "name": "Bottles incl. pieces",
+      "tsgMlCode": "G200",
+      "osparCode": "91",
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "33b9afda-4499-4dda-952c-3aa9d4b21b1c",
+      "name": "Jars incl. pieces",
+      "tsgMlCode": "G201",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "e64f436b-8deb-410e-a1f1-f307b7b696ff",
+      "name": "Light bulbs",
+      "tsgMlCode": "G202",
+      "osparCode": "92",
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "263f09a5-2f95-4f54-8935-00d415b11574",
+      "name": "Tableware: plates, cups",
+      "tsgMlCode": "G203",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "b79c7478-44aa-43b0-bdfd-0da283dd3183",
+      "name": "Construction material (brick, cement, pipes)",
+      "tsgMlCode": "G204",
+      "osparCode": "94",
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "d8a89b04-3be5-40cf-95fa-3b82d3f7eb74",
+      "name": "Fluorescent light tubes",
+      "tsgMlCode": "G205",
+      "osparCode": "92",
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "166e7932-8de9-4316-899a-61565122fe0f",
+      "name": "Glass buoys",
+      "tsgMlCode": "G206",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "32ce0139-0eb0-4651-a687-97027ef9747e",
+      "name": "Octopus pots",
+      "tsgMlCode": "G207",
+      "osparCode": "95",
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "22ee130e-16cc-4f62-a59d-9871d91ac5a2",
+      "name": "Glass or ceramic fragments >= 2.5 cm",
+      "tsgMlCode": "G208",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "b746a88a-abac-4f91-aee7-a275110be039",
+      "name": "Large glass objects",
+      "tsgMlCode": "G209",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": false,
+      "environmentalCompartments": ["SEAFLOOR"]
+    },
+    {
+      "id": "e42c52c0-880e-4b96-a1db-705c0bbd8023",
+      "name": "Other glass items",
+      "tsgMlCode": "G210",
+      "osparCode": "96",
+      "unepCode": null,
+      "material": "Glass/ceramics",
+      "isCore": true,
+      "environmentalCompartments": ["BEACH", "SEAFLOOR"]
+    },
+    {
+      "id": "77dfe9cc-9656-4e12-9cba-a1f682ca411f",
+      "name": "Other medical items (e.g. swabs, bandaging, adhesive plaster)",
+      "tsgMlCode": "G211",
+      "osparCode": "105",
+      "unepCode": null,
+      "material": "Unidentified",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH"]
+    },
+    {
+      "id": "bc07a082-150d-4a4e-ac1b-cd68ba5c4fad",
+      "name": "Slack, coal",
+      "tsgMlCode": "G212",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Slack/coal",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "62155e6b-19bb-4a39-9494-191f3d1776bd",
+      "name": "Paraffin, wax",
+      "tsgMlCode": "G213",
+      "osparCode": "110",
+      "unepCode": null,
+      "material": "Chemicals",
+      "isCore": false,
+      "environmentalCompartments": ["BEACH", "BIOTA"]
+    },
+    {
+      "id": "632495a8-ac83-4364-b1fa-9d67e688975f",
+      "name": "Oil, tar",
+      "tsgMlCode": "G214",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Chemicals",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "8d196967-2b97-497b-985c-b719c7983d45",
+      "name": "Food waste (galley waste)",
+      "tsgMlCode": "G215",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Food waste",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "d6eb655a-d2f1-496f-84ca-60603f4259e7",
+      "name": "Various rubbish (worked wood, metal parts)",
+      "tsgMlCode": "G216",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Undefined",
+      "isCore": false,
+      "environmentalCompartments": ["BIOTA"]
+    },
+    {
+      "id": "95ee9415-59b4-4fa7-b27f-e92052acde8e",
+      "name": "Other (glass, metal, tar) < 5 mm",
+      "tsgMlCode": "G217",
+      "osparCode": null,
+      "unepCode": null,
+      "material": "Unidentified",
+      "isCore": false,
+      "environmentalCompartments": ["MICRO"]
+    }
+  ]
+}
