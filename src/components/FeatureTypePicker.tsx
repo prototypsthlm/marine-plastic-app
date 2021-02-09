@@ -2,14 +2,19 @@ import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { EnvCompartmentsEnum, FeatureType } from "../models";
-import { selectFeatureTypeByMaterial } from "../store/slices/observations";
-import { RootState } from "../store/store";
+import {
+  addFeatureType,
+  selectFeatureTypeByMaterial,
+} from "../store/slices/observations";
+import { RootState, useThunkDispatch } from "../store/store";
 import styled from "../styled";
 import { theme } from "../theme";
 import { ListItem, SectionHeader, Text, FlexColumn, FlexRow } from "./elements";
 import MultiSelectPicker from "./MultiSelectPicker";
 
 export default function FeatureTypePicker() {
+  const dispatch = useThunkDispatch();
+
   const featureTypes = useSelector<RootState, Array<FeatureType>>(
     (state) => state.observations.featureTypes
   );
@@ -91,7 +96,10 @@ export default function FeatureTypePicker() {
       )}
 
       {filteredFeatureTypes.map((featureType, index) => (
-        <ListItem key={index}>
+        <ListItem
+          key={index}
+          onPress={() => dispatch(addFeatureType(featureType))}
+        >
           <FlexColumn style={{ width: "100%" }}>
             <FlexRow>
               <Text bold>{featureType.tsgMlCode}</Text>

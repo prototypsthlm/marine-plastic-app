@@ -11,6 +11,8 @@ import {
   addNewFeatureToAdd,
   addNewObservation,
   resetFeaturesToAdd,
+  resetFeatureType,
+  selectFeatureType,
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
@@ -52,6 +54,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       isDeleted: false,
       deletedAt: undefined,
 
+      featureTypeId: featurePayload.feaureType.id,
       comments: featurePayload.comments,
       imageUrl: featurePayload.imageUrl,
     })
@@ -85,5 +88,15 @@ export const addNewFeature: Thunk<NewFeaturePayload> = (newFeaturePayload) => (
   { navigation }
 ) => {
   dispatch(addNewFeatureToAdd(newFeaturePayload));
+  dispatch(resetFeatureType());
   navigation.navigate("newObservationScreen");
+};
+
+export const addFeatureType: Thunk<FeatureType> = (featureTypePayload) => (
+  dispatch,
+  _,
+  { navigation }
+) => {
+  dispatch(selectFeatureType(featureTypePayload));
+  navigation.navigate("newFeatureScreen");
 };

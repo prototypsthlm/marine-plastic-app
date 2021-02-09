@@ -5,11 +5,13 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
 import UploadImage from "./UploadImage";
-import { useThunkDispatch } from "../store/store";
+import { RootState, useThunkDispatch } from "../store/store";
 import { NewFeaturePayload, addNewFeature } from "../store/slices/observations";
-import { ListItem, Text, FlexColumn, SectionHeader } from "./elements";
+import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
 import { theme } from "../theme";
 import { NavigationProps } from "../navigation/types";
+import { useSelector } from "react-redux";
+import { FeatureType } from "../models";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -50,6 +52,10 @@ function getImageLocation(image: any) {
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
+  const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
+    (state) => state.observations.selectedFeatureType
+  );
+
   const [image, setImage] = useState<any>();
 
   const handleImageChange = (image: object) => {
@@ -57,8 +63,10 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   };
 
   const handleFormSubmit = (values: any, actions: any) => {
+    if (selectedFeatureTypes === undefined) return;
     const imageLocation = getImageLocation(image);
     const newFeature: NewFeaturePayload = {
+      feaureType: selectedFeatureTypes,
       comments: values.comments,
       imageUrl: image.uri,
       imageGPSLatitude: imageLocation.latitude,
@@ -80,15 +88,28 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
           <ListItem
             onPress={() => navigation.navigate("featureTypePickerScreen")}
           >
-            <Text
-              style={{
-                color: theme.color.palette.gray,
-                paddingTop: theme.spacing.small,
-                paddingBottom: theme.spacing.small,
-              }}
-            >
-              Select feature type...
-            </Text>
+            {selectedFeatureTypes === undefined && (
+              <Text
+                style={{
+                  color: theme.color.palette.gray,
+                  paddingTop: theme.spacing.small,
+                  paddingBottom: theme.spacing.small,
+                }}
+              >
+                Select feature type...
+              </Text>
+            )}
+            {selectedFeatureTypes !== undefined && (
+              <FlexColumn style={{ width: "100%" }}>
+                <FlexRow>
+                  <Text bold>{selectedFeatureTypes.tsgMlCode}</Text>
+                  <Text style={{ color: theme.color.palette.gray }}>
+                    {selectedFeatureTypes.material}
+                  </Text>
+                </FlexRow>
+                <Text>{selectedFeatureTypes.name}</Text>
+              </FlexColumn>
+            )}
           </ListItem>
 
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
@@ -115,7 +136,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
             />
           </FormSection>
           <Button
-            disabled={!image}
+            disabled={!image || selectedFeatureTypes === undefined}
             title="Add feature to observation"
             onPress={handleSubmit as any}
           />

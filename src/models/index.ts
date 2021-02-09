@@ -48,6 +48,7 @@ export interface Observation extends BaseEntity {
 }
 
 export interface Feature extends BaseEntity {
+  featureTypeId: string;
   imageUrl?: string;
   comments?: string;
 }

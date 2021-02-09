@@ -11,6 +11,7 @@ interface ObservationsState {
 
   // Form related
   featuresToAdd: Array<NewFeaturePayload>;
+  selectedFeatureType?: FeatureType;
 }
 
 const initialState: ObservationsState = {
@@ -21,6 +22,7 @@ const initialState: ObservationsState = {
 
   // Form related
   featuresToAdd: [],
+  selectedFeatureType: undefined,
 };
 
 export const observationsSlice = createSlice({
@@ -56,8 +58,14 @@ export const observationsSlice = createSlice({
     ) => {
       state.featuresToAdd = [...state.featuresToAdd, payload];
     },
+    selectFeatureType: (state, { payload }: PayloadAction<FeatureType>) => {
+      state.selectedFeatureType = payload;
+    },
     resetFeaturesToAdd: (state) => {
       state.featuresToAdd = [];
+    },
+    resetFeatureType: (state) => {
+      state.selectedFeatureType = undefined;
     },
   },
 });
@@ -69,7 +77,9 @@ export const {
   addFetchedObservations,
   addFetchedFeatureTypes,
   addNewFeatureToAdd,
+  selectFeatureType,
   resetFeaturesToAdd,
+  resetFeatureType,
 } = observationsSlice.actions;
 
 export default observationsSlice.reducer;
