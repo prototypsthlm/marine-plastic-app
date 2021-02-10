@@ -14,6 +14,28 @@ export default function FeatureDetailScreen() {
     (state) => state.observations.selectedFeatureEntry
   );
 
+  const fields = [
+    { label: "Observer: ", value: "John Smith" },
+    { label: "Comments: ", value: featureEntry?.comments },
+    { label: "Quantity: ", value: featureEntry?.quantity },
+    { label: "Quantity units: ", value: featureEntry?.quantityUnits },
+    {
+      label: "Estimated Weight (Kg): ",
+      value: featureEntry?.estimatedWeightKg,
+    },
+    { label: "Estimated Size (m2): ", value: featureEntry?.estimatedSizeM2 },
+    {
+      label: "Estimated Volume (m3): ",
+      value: featureEntry?.estimatedVolumeM3,
+    },
+    { label: "Depth (m): ", value: featureEntry?.depthM },
+    { label: "Is Absence: ", value: featureEntry?.isAbsence ? "Yes" : "No" },
+    {
+      label: "Is Collected: ",
+      value: featureEntry?.isCollected ? "Yes" : "No",
+    },
+  ];
+
   return (
     <Screen
       scroll
@@ -31,12 +53,12 @@ export default function FeatureDetailScreen() {
           )}
           <Section>
             <FlexColumn>
-              <Text>
-                <Text bold>Observer:</Text> John Smith
-              </Text>
-              <Text>
-                <Text bold>Comments:</Text> {featureEntry.comments}
-              </Text>
+              {fields.map((item, index) => (
+                <Text key={index}>
+                  <Text bold>{item.label}</Text>
+                  {item.value}
+                </Text>
+              ))}
             </FlexColumn>
           </Section>
         </>

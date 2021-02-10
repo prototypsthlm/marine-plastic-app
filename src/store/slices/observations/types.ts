@@ -1,16 +1,28 @@
 import { FeatureType, Geometry } from "../../../models";
 
-export type NewObservationPayload = {
+export interface NewObservationPayload {
   comments?: string;
   timestamp: Date;
   geometry: Geometry;
   features: Array<NewFeaturePayload>;
-};
+}
 
-export type NewFeaturePayload = {
+export interface NewFeaturePayload {
   feaureType: FeatureType;
-  comments?: string;
+
   imageUrl?: string;
   imageGPSLatitude?: number;
   imageGPSLongitude?: number;
-};
+
+  quantity?: number;
+  quantityUnits?: string;
+  estimatedWeightKg?: number;
+  estimatedSizeM2?: number;
+  estimatedVolumeM3?: number;
+  depthM?: number;
+
+  isAbsence: boolean;
+  isCollected: boolean;
+
+  comments?: string;
+}
