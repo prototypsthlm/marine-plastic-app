@@ -44,6 +44,7 @@ export const fetchAllFeatureTypes: Thunk = () => async (
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
 ) => async (dispatch, _, { api, localStorage, navigation }) => {
+  const newObservationId: string = generateUUIDv4();
   const newFeatures: Array<Feature> = newObservationPayload.features.map(
     (featurePayload) => ({
       id: generateUUIDv4(),
@@ -54,13 +55,25 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       isDeleted: false,
       deletedAt: undefined,
 
+      observationId: newObservationId,
       featureTypeId: featurePayload.feaureType.id,
-      comments: featurePayload.comments,
       imageUrl: featurePayload.imageUrl,
+
+      quantity: featurePayload.quantity,
+      quantityUnits: featurePayload.quantityUnits,
+      estimatedWeightKg: featurePayload.estimatedWeightKg,
+      estimatedSizeM2: featurePayload.estimatedSizeM2,
+      estimatedVolumeM3: featurePayload.estimatedVolumeM3,
+      depthM: featurePayload.depthM,
+
+      isAbsence: featurePayload.isAbsence,
+      isCollected: featurePayload.isCollected,
+
+      comments: featurePayload.comments,
     })
   );
   const newObservation: Observation = {
-    id: generateUUIDv4(),
+    id: newObservationId,
     creatorId: "CREATOR_ID", // Relation with "creator" (model User)
     creatorApp: CreatorApps.DATA_COLLECTION_APP,
     createdAt: new Date(Date.now()).toISOString(),

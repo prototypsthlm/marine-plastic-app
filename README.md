@@ -7,6 +7,10 @@
 
 Make sure you have [Node.js v14.x](https://nodejs.org/en/download/) and [Yarn v1](https://classic.yarnpkg.com/en/docs/install) installed on your system.
 
+### Set up environment variables (.env)
+
+Create `.env` file at the root of the project. Vars are in 1Password under `Marine-Plastic/Ocean-Scan App Environment Variables` note.
+
 ### Installing dependencies
 
 ```bash
@@ -35,6 +39,10 @@ The app source code is located in the `./src` directory.
 
 This is where our React components live.
 
+#### Models - `./src/models`
+
+Here we declare our models.
+
 #### Navigation - `./src/navigation`
 
 This is where all the navigation is defined, we are using `react-navigation`.
@@ -46,6 +54,10 @@ Screens live here. A screen is a React component which will take up the entire s
 #### Services - `./src/services`
 
 Any services that interface with the outside world will live here (Auth service, APIs, Push Notifications, etc.).
+
+#### Store - `./src/store`
+
+Here lives the redux store.
 
 #### Theme - `./src/theme`
 

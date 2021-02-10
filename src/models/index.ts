@@ -48,8 +48,20 @@ export interface Observation extends BaseEntity {
 }
 
 export interface Feature extends BaseEntity {
+  observationId: string;
   featureTypeId: string;
   imageUrl?: string;
+
+  quantity?: number;
+  quantityUnits?: string;
+  estimatedWeightKg?: number;
+  estimatedSizeM2?: number;
+  estimatedVolumeM3?: number;
+  depthM?: number;
+
+  isAbsence: boolean;
+  isCollected: boolean;
+
   comments?: string;
 }
 
