@@ -3,7 +3,8 @@ import { TextInputProps } from "react-native";
 import styled from "../styled";
 
 export interface InputFieldProps extends TextInputProps {
-  invertColors: boolean;
+  invertColors?: boolean;
+  halfWidth?: boolean;
   style?: TextInputProps;
   disabled?: boolean;
   label?: string;
@@ -15,6 +16,7 @@ export interface InputFieldProps extends TextInputProps {
 
 interface StyledProps {
   invertColors?: boolean;
+  halfWidth?: boolean;
   preset?: StylePresetName;
   disabledStyle?: boolean;
   error?: boolean;
@@ -22,6 +24,7 @@ interface StyledProps {
 
 export const InputField: FC<InputFieldProps> = ({
   invertColors = false,
+  halfWidth = false,
   style,
   label,
   disabled = false,
@@ -36,7 +39,11 @@ export const InputField: FC<InputFieldProps> = ({
     ...rest,
   };
   return (
-    <Container disabledStyle={disabled} preset={stylePreset}>
+    <Container
+      halfWidth={halfWidth}
+      disabledStyle={disabled}
+      preset={stylePreset}
+    >
       <Label invertColors={invertColors} preset={stylePreset}>
         {label}
       </Label>
@@ -77,6 +84,7 @@ const Container = styled.View<StyledProps>`
   opacity: ${(p) => (p.disabledStyle ? 0.6 : 1)};
   align-content: flex-start;
   height: 80px;
+  width: ${(p) => (p.halfWidth ? "48%" : "auto")};
   margin-vertical: ${(p) => p.theme.spacing.small}px;
 `;
 

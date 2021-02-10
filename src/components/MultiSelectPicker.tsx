@@ -132,6 +132,6 @@ export default function MultiSelectPicker({
 
 const DropDownButton = styled(ListItem)`
   background-color: ${theme.color.palette.curiousBlue};
-  margin-bottom: ${theme.spacing.medium};
+  margin-bottom: ${theme.spacing.medium}px;
   justify-content: center;
 `;
