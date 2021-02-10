@@ -13,6 +13,21 @@ import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
 import { FeatureType } from "../models";
 
+type KBType =
+  | "default"
+  | "email-address"
+  | "numeric"
+  | "phone-pad"
+  | "ascii-capable"
+  | "numbers-and-punctuation"
+  | "url"
+  | "number-pad"
+  | "name-phone-pad"
+  | "decimal-pad"
+  | "twitter"
+  | "web-search"
+  | "visible-password";
+
 interface InitialFormValuesShape {
   [key: string]: string | boolean | undefined;
   quantity?: string;
@@ -131,12 +146,24 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     actions.resetForm(InitialFormValues);
   };
 
-  const extraFields: Array<{ field: string; label: string }> = [
-    { field: "estimatedWeightKg", label: "Estimated Weight (Kg)" },
-    { field: "estimatedSizeM2", label: "Estimated Size (m2)" },
-    { field: "estimatedVolumeM3", label: "Estimated Volume (m3)" },
-    { field: "depthM", label: "Depth (m)" },
-    { field: "comments", label: "Comments" },
+  const extraFields: Array<{ field: string; label: string; kbType: KBType }> = [
+    {
+      field: "estimatedWeightKg",
+      label: "Estimated Weight (Kg)",
+      kbType: "numeric",
+    },
+    {
+      field: "estimatedSizeM2",
+      label: "Estimated Size (m2)",
+      kbType: "numeric",
+    },
+    {
+      field: "estimatedVolumeM3",
+      label: "Estimated Volume (m3)",
+      kbType: "numeric",
+    },
+    { field: "depthM", label: "Depth (m)", kbType: "numeric" },
+    { field: "comments", label: "Comments", kbType: "default" },
   ];
 
   return (
@@ -251,7 +278,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                   />
                   <InputField
                     halfWidth
-                    keyboardType="numeric"
                     label="Quantity units"
                     preset="default"
                     onChangeText={handleChange("quantityUnits")}
@@ -268,6 +294,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                   <InputField
                     key={index}
                     label={item.label}
+                    keyboardType={item.kbType}
                     preset="default"
                     onChangeText={handleChange(item.field)}
                     onBlur={handleBlur(item.field)}
