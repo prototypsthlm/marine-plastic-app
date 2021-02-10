@@ -36,9 +36,9 @@ export const loginWithEmailAndPassword: Thunk<
 
     // Temporal
     if (error.code === "auth/invalid-email")
-      throw new ActionError("Invadlid email");
+      throw new ActionError("Invalid email");
     if (error.code === "auth/wrong-password")
-      throw new ActionError("Worng passoword");
+      throw new ActionError("Worng password");
     if (error.code === "auth/user-not-found")
       throw new ActionError("User not found");
 
