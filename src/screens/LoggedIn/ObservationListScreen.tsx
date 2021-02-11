@@ -2,28 +2,39 @@ import React, { useEffect } from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Observation } from "../../models";
+import { Campaign, Observation } from "../../models";
 
 import { Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import {
+  fetchAllCampaigns,
   fetchAllFeatureTypes,
   fetchAllObservations,
+  selectFilteredObservationsByCampaign,
   selectObservation,
 } from "../../store/slices/observations";
 import { NavigationProps } from "../../navigation/types";
-import { FlexColumn, ListItem, Text } from "../../components/elements";
+import {
+  FlexColumn,
+  ListItem,
+  SectionHeader,
+  Text,
+} from "../../components/elements";
+import { theme } from "../../theme";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
 
-  const observationsEntries = useSelector<RootState, Array<Observation>>(
-    (state) => state.observations.entries
+  const observationsEntries = useSelector(selectFilteredObservationsByCampaign);
+
+  const selectedCampaignEntry = useSelector<RootState, Campaign | undefined>(
+    (state) => state.observations.selectedCampaignEntry
   );
 
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
+    dispatch(fetchAllCampaigns());
     dispatch(fetchAllObservations());
   }, []);
 
@@ -33,12 +44,38 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   };
 
   return (
-    <Screen
-      scroll
-      scrollViewProps={{
-        contentContainerStyle: { alignItems: "center" },
-      }}
-    >
+    <Screen scroll>
+      <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
+      <ListItem onPress={() => navigation.navigate("campaignPickerScreen")}>
+        <Text
+          style={{
+            color: theme.color.palette.gray,
+            paddingVertical: theme.spacing.small,
+          }}
+        >
+          {selectedCampaignEntry
+            ? selectedCampaignEntry.name
+            : "Campaign-less observations"}
+        </Text>
+      </ListItem>
+
+      <SectionHeader style={{ marginTop: theme.spacing.large }}>
+        OBSERVATIONS
+      </SectionHeader>
+
+      {!(observationsEntries.length > 0) && (
+        <ListItem>
+          <Text
+            style={{
+              color: theme.color.palette.gray,
+              paddingVertical: theme.spacing.small,
+            }}
+          >
+            There is still no observation added in this campaign.
+          </Text>
+        </ListItem>
+      )}
+
       {observationsEntries.map((observationEntry, index) => (
         <ListItem
           key={index}
