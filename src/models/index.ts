@@ -21,10 +21,10 @@ export enum CreatorApps {
 export interface BaseEntity {
   id: string;
   creatorId: string; // Relation with "creator" (model User)
-  creatorApp: CreatorApps;
+  creatorApp?: CreatorApps;
   createdAt?: string;
   updatedAt?: string;
-  isDeleted: boolean;
+  isDeleted?: boolean;
   deletedAt?: string;
 }
 
@@ -35,10 +35,11 @@ export type GPSLocation = {
 
 export interface Geometry {
   type: string;
-  coordinates: number[] | number[][];
+  coordinates: number[] | number[][] | number[][][];
 }
 
 export interface Observation extends BaseEntity {
+  campaignId: string | null;
   geometry: Geometry;
   timestamp: string;
   comments?: string;
@@ -84,4 +85,23 @@ export interface FeatureType {
   material: string | null;
   isCore: boolean;
   environmentalCompartments: EnvCompartments;
+}
+
+export interface Campaign extends BaseEntity {
+  name: string;
+  isDataPublic?: boolean;
+  environmentalCompartments: EnvCompartments;
+  doi?: string | null;
+  targetGeometry: Geometry;
+  targetStart?: string | null;
+  targetEnd?: string | null;
+  tSort: string;
+  keywords: Array<string>;
+  description?: string | null;
+  comments?: string | null;
+  source?: string | null;
+  isControlled?: boolean;
+  isSynthetic?: boolean;
+  isClosed: boolean;
+  extra?: any;
 }

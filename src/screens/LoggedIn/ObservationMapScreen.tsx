@@ -8,7 +8,7 @@ import { Observation } from "../../models";
 
 export default function ObservationMapScreen() {
   const observationsEntries = useSelector<RootState, Array<Observation>>(
-    (state) => state.observations.entries
+    (state) => state.observations.observationEntries
   );
 
   return (

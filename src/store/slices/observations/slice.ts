@@ -1,13 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Feature, FeatureType, Observation } from "../../../models";
+import { Campaign, Feature, FeatureType, Observation } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
-  entries: Array<Observation>;
-  selectedEntry?: Observation;
-  selectedFeatureEntry?: Feature;
+  campaignsEntries: Array<Campaign>;
+  observationEntries: Array<Observation>;
   featureTypes: Array<FeatureType>;
+
+  selectedCampaignEntry?: Campaign;
+  selectedObservationEntry?: Observation;
+  selectedFeatureEntry?: Feature;
 
   // Form related
   featuresToAdd: Array<NewFeaturePayload>;
@@ -15,10 +18,13 @@ interface ObservationsState {
 }
 
 const initialState: ObservationsState = {
-  entries: [],
-  selectedEntry: undefined,
-  selectedFeatureEntry: undefined,
+  campaignsEntries: [],
+  observationEntries: [],
   featureTypes: [],
+
+  selectedCampaignEntry: undefined,
+  selectedObservationEntry: undefined,
+  selectedFeatureEntry: undefined,
 
   // Form related
   featuresToAdd: [],
@@ -30,19 +36,31 @@ export const observationsSlice = createSlice({
   initialState,
   reducers: {
     addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
-      state.entries = [...state.entries, payload];
+      state.observationEntries = [...state.observationEntries, payload];
+    },
+    selectCampaign: (state, { payload }: PayloadAction<Campaign>) => {
+      state.selectedCampaignEntry = payload;
+    },
+    selectCampaignless: (state) => {
+      state.selectedCampaignEntry = undefined;
     },
     selectObservation: (state, { payload }: PayloadAction<Observation>) => {
-      state.selectedEntry = payload;
+      state.selectedObservationEntry = payload;
     },
     selectFeature: (state, { payload }: PayloadAction<Feature>) => {
       state.selectedFeatureEntry = payload;
+    },
+    addFetchedCampaigns: (
+      state,
+      { payload }: PayloadAction<Array<Campaign>>
+    ) => {
+      state.campaignsEntries = payload;
     },
     addFetchedObservations: (
       state,
       { payload }: PayloadAction<Array<Observation>>
     ) => {
-      state.entries = payload;
+      state.observationEntries = payload;
     },
     addFetchedFeatureTypes: (
       state,
@@ -72,8 +90,11 @@ export const observationsSlice = createSlice({
 
 export const {
   addNewObservation,
+  selectCampaign,
+  selectCampaignless,
   selectObservation,
   selectFeature,
+  addFetchedCampaigns,
   addFetchedObservations,
   addFetchedFeatureTypes,
   addNewFeatureToAdd,
