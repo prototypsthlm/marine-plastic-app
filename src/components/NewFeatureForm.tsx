@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { InputField } from "./InputField";
+import { InputField, KBType } from "./InputField";
 import { Button, Switch } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -12,21 +12,6 @@ import { theme } from "../theme";
 import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
 import { FeatureType } from "../models";
-
-type KBType =
-  | "default"
-  | "email-address"
-  | "numeric"
-  | "phone-pad"
-  | "ascii-capable"
-  | "numbers-and-punctuation"
-  | "url"
-  | "number-pad"
-  | "name-phone-pad"
-  | "decimal-pad"
-  | "twitter"
-  | "web-search"
-  | "visible-password";
 
 interface InitialFormValuesShape {
   [key: string]: string | boolean | undefined;

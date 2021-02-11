@@ -1,4 +1,5 @@
 import {
+  Campaign,
   CreatorApps,
   Feature,
   FeatureType,
@@ -6,16 +7,24 @@ import {
 } from "../../../models";
 import { Thunk } from "../../store";
 import {
+  addFetchedCampaigns,
   addFetchedFeatureTypes,
   addFetchedObservations,
   addNewFeatureToAdd,
   addNewObservation,
   resetFeaturesToAdd,
   resetFeatureType,
+  selectCampaign,
+  selectCampaignless,
   selectFeatureType,
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
+
+export const fetchAllCampaigns: Thunk = () => async (dispatch, _, { api }) => {
+  const campaignEntries: Array<Campaign> = await api.mockGETAllCampaigns();
+  dispatch(addFetchedCampaigns(campaignEntries));
+};
 
 export const fetchAllObservations: Thunk = () => async (
   dispatch,
@@ -43,7 +52,9 @@ export const fetchAllFeatureTypes: Thunk = () => async (
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
-) => async (dispatch, _, { api, localStorage, navigation }) => {
+) => async (dispatch, getState, { api, localStorage, navigation }) => {
+  const campaignId: string | undefined = getState().observations
+    .selectedCampaignEntry?.id;
   const newObservationId: string = generateUUIDv4();
   const newFeatures: Array<Feature> = newObservationPayload.features.map(
     (featurePayload) => ({
@@ -81,6 +92,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     isDeleted: false,
     deletedAt: undefined,
 
+    campaignId: campaignId || null,
     geometry: newObservationPayload.geometry,
     timestamp: newObservationPayload.timestamp.toISOString(),
     comments: newObservationPayload.comments,
@@ -92,7 +104,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
   if (!isSuccess) await localStorage.queueObservation(newObservation);
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
-  navigation.navigate("observationList");
+  navigation.navigate("observationListScreen");
 };
 
 export const addNewFeature: Thunk<NewFeaturePayload> = (newFeaturePayload) => (
@@ -112,4 +124,17 @@ export const addFeatureType: Thunk<FeatureType> = (featureTypePayload) => (
 ) => {
   dispatch(selectFeatureType(featureTypePayload));
   navigation.navigate("newFeatureScreen");
+};
+
+export const setSelectedCampaign: Thunk<{
+  campaignEntryPayload?: Campaign;
+  isCampignless?: boolean;
+}> = ({ campaignEntryPayload, isCampignless = false }) => (
+  dispatch,
+  _,
+  { navigation }
+) => {
+  if (isCampignless) dispatch(selectCampaignless());
+  else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
+  navigation.navigate("observationListScreen");
 };
