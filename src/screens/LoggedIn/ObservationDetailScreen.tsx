@@ -17,7 +17,7 @@ export default function ObservationDetailScreen({
   const dispatch = useThunkDispatch();
 
   const observationEntry = useSelector<RootState, Observation | undefined>(
-    (state) => state.observations.selectedEntry
+    (state) => state.observations.selectedObservationEntry
   );
 
   const featureTypes = useSelector<RootState, Array<FeatureType>>(

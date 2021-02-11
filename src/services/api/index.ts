@@ -1,6 +1,7 @@
 import { create } from "apisauce";
 import { Observation } from "../../models";
 import featureTypes from "../../assets/mockdata/featureTypes.json";
+import campaigns from "../../assets/mockdata/campaigns.json";
 
 const API_URL = "https://petstore.swagger.io/v2";
 
@@ -65,6 +66,9 @@ const api = {
   },
   async mockGETAllFeatureTypes() {
     return featureTypes.results;
+  },
+  async mockGETAllCampaigns() {
+    return campaigns.results;
   },
 };
 

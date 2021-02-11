@@ -2,6 +2,21 @@ import React, { FC } from "react";
 import { TextInputProps } from "react-native";
 import styled from "../styled";
 
+export type KBType =
+  | "default"
+  | "email-address"
+  | "numeric"
+  | "phone-pad"
+  | "ascii-capable"
+  | "numbers-and-punctuation"
+  | "url"
+  | "number-pad"
+  | "name-phone-pad"
+  | "decimal-pad"
+  | "twitter"
+  | "web-search"
+  | "visible-password";
+
 export interface InputFieldProps extends TextInputProps {
   invertColors?: boolean;
   halfWidth?: boolean;
