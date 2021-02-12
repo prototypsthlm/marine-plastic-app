@@ -21,9 +21,21 @@ import {
 import { NewFeaturePayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 
-export const fetchAllCampaigns: Thunk = () => async (dispatch, _, { api }) => {
-  const campaignEntries: Array<Campaign> = await api.mockGETAllCampaigns();
-  dispatch(addFetchedCampaigns(campaignEntries));
+export const fetchCampaigns: Thunk = () => async (
+  dispatch,
+  getState,
+  { api }
+) => {
+  const {
+    results,
+    nextPage,
+  }: {
+    results: Array<Campaign>;
+    nextPage: string | null;
+  } = await api.mockGETCampaigns(
+    getState().observations.campaignNextPageCursor
+  );
+  dispatch(addFetchedCampaigns({ campaigns: results, cursor: nextPage }));
 };
 
 export const fetchAllObservations: Thunk = () => async (

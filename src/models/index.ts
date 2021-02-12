@@ -92,7 +92,7 @@ export interface Campaign extends BaseEntity {
   isDataPublic?: boolean;
   environmentalCompartments: EnvCompartments;
   doi?: string | null;
-  targetGeometry: Geometry;
+  targetGeometry?: Geometry | null;
   targetStart?: string | null;
   targetEnd?: string | null;
   tSort: string;
