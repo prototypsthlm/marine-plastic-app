@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 // Services
 import api from "../services/api";
 import localStorage from "../services/localStorage";
+import { localDB } from "../services/localDB";
 import * as navigation from "../services/navigation";
 import { firebaseAuth } from "../services/firebaseAuth";
 
@@ -31,6 +32,7 @@ const store = configureStore({
         extraArgument: {
           api,
           localStorage,
+          localDB,
           navigation,
           firebaseAuth,
         },
@@ -46,6 +48,7 @@ export default store;
 interface Services {
   api: typeof api;
   localStorage: typeof localStorage;
+  localDB: typeof localDB;
   navigation: typeof navigation;
   firebaseAuth: typeof firebaseAuth;
 }
