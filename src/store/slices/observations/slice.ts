@@ -4,7 +4,9 @@ import { Campaign, Feature, FeatureType, Observation } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
-  campaignsEntries: Array<Campaign>;
+  campaignNextPageCursor: string | null;
+
+  campaignEntries: Array<Campaign>;
   observationEntries: Array<Observation>;
   featureTypes: Array<FeatureType>;
 
@@ -18,7 +20,9 @@ interface ObservationsState {
 }
 
 const initialState: ObservationsState = {
-  campaignsEntries: [],
+  campaignNextPageCursor: null,
+
+  campaignEntries: [],
   observationEntries: [],
   featureTypes: [],
 
@@ -52,9 +56,12 @@ export const observationsSlice = createSlice({
     },
     addFetchedCampaigns: (
       state,
-      { payload }: PayloadAction<Array<Campaign>>
+      {
+        payload,
+      }: PayloadAction<{ campaigns: Array<Campaign>; cursor: string | null }>
     ) => {
-      state.campaignsEntries = payload;
+      state.campaignNextPageCursor = payload.cursor;
+      state.campaignEntries = [...state.campaignEntries, ...payload.campaigns];
     },
     addFetchedObservations: (
       state,

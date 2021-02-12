@@ -8,7 +8,7 @@ import { Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import {
-  fetchAllCampaigns,
+  fetchCampaigns,
   fetchAllFeatureTypes,
   fetchAllObservations,
   selectFilteredObservationsByCampaign,
@@ -34,7 +34,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
-    dispatch(fetchAllCampaigns());
+    dispatch(fetchCampaigns());
     dispatch(fetchAllObservations());
   }, []);
 

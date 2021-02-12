@@ -67,8 +67,8 @@ const api = {
   async mockGETAllFeatureTypes() {
     return featureTypes.results;
   },
-  async mockGETAllCampaigns() {
-    return campaigns.results;
+  async mockGETCampaigns(cursor: string | null) {
+    return campaigns;
   },
 };
 
