@@ -41,8 +41,9 @@ export const fetchCampaigns: Thunk = () => async (
 export const fetchAllObservations: Thunk = () => async (
   dispatch,
   _,
-  { api, localStorage }
+  { api, localStorage, localDB }
 ) => {
+  localDB.getAllOfflineObservations();
   const observationsEntries: Array<Observation> = await api.mockGETAllObservations();
   const localObservationsEntries: Array<Observation> = await localStorage.getAllQueuedObservations();
   dispatch(
@@ -64,7 +65,7 @@ export const fetchAllFeatureTypes: Thunk = () => async (
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
-) => async (dispatch, getState, { api, localStorage, navigation }) => {
+) => async (dispatch, getState, { api, localStorage, localDB, navigation }) => {
   const campaignId: string | undefined = getState().observations
     .selectedCampaignEntry?.id;
   const newObservationId: string = generateUUIDv4();
@@ -114,6 +115,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
   const isSuccess: boolean = false; //await api.mockPOSTNewObservation(newObservation);
   if (!isSuccess) await localStorage.queueObservation(newObservation);
+  localDB.storeOfflineObservation(newObservation);
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
   navigation.navigate("observationListScreen");
