@@ -25,22 +25,27 @@ import { ActionError } from "../../errors/ActionError";
 export const fetchCampaigns: Thunk = () => async (
   dispatch,
   getState,
-  { api }
+  { api, localStorage }
 ) => {
-  if (getState().observations.campaignReachedPageEnd) return;
+  let campaigns: Array<Campaign> = await localStorage.getCampaigns();
+  let cursor: string | null = null;
 
-  const result = await api.getCampaigns(
-    getState().observations.campaignNextPageCursor
-  );
-  if (!result.ok || !result.data?.results)
-    throw new ActionError("Couldn't get campaigns.");
+  if (campaigns.length < 1) {
+    if (getState().observations.campaignReachedPageEnd) return;
 
-  dispatch(
-    addFetchedCampaigns({
-      campaigns: result.data?.results,
-      cursor: result.data?.nextPage,
-    })
-  );
+    const result = await api.getCampaigns(
+      getState().observations.campaignNextPageCursor
+    );
+    if (!result.ok || !result.data?.results)
+      throw new ActionError("Couldn't get campaigns.");
+
+    campaigns = result.data?.results;
+    cursor = result.data?.nextPage;
+
+    await localStorage.saveCampaigns(campaigns);
+  }
+
+  dispatch(addFetchedCampaigns({ campaigns, cursor }));
 };
 
 export const fetchAllObservations: Thunk = () => async (
@@ -62,10 +67,20 @@ export const fetchAllObservations: Thunk = () => async (
 export const fetchAllFeatureTypes: Thunk = () => async (
   dispatch,
   _,
-  { api }
+  { api, localStorage }
 ) => {
-  const featureTypeEntries: Array<FeatureType> = await api.mockGETAllFeatureTypes();
-  dispatch(addFetchedFeatureTypes(featureTypeEntries));
+  let featureTypes: Array<FeatureType> = await localStorage.getFeatureTypes();
+
+  if (featureTypes.length < 1) {
+    const result = await api.getAllFeatureTypes();
+    if (!result.ok || !result.data?.results)
+      throw new ActionError("Couldn't get feature types.");
+
+    featureTypes = result.data?.results;
+
+    await localStorage.saveFeatureTypes(featureTypes);
+  }
+  dispatch(addFetchedFeatureTypes(featureTypes));
 };
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
