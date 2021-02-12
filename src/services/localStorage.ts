@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Observation } from "../models";
+import { Observation, User } from "../models";
 
+const USER = "user";
 const QUEUE_NAME = "observations_queue_V2";
 
 const queueObservation = async (payload: Observation) => {
@@ -36,9 +37,30 @@ const getAllQueuedObservations = async () => {
   }
 };
 
+const saveUser = async (payload: User) => {
+  try {
+    const jsonPayload = JSON.stringify(payload);
+    await AsyncStorage.setItem(USER, jsonPayload);
+  } catch (e) {
+    console.log("error storing user entry");
+  }
+};
+
+const getUser = async () => {
+  try {
+    const jsonPayload = await AsyncStorage.getItem(USER);
+    if (jsonPayload !== null) return JSON.parse(jsonPayload);
+    return null;
+  } catch (e) {
+    console.log("error getting user queue");
+  }
+};
+
 const localStorage = {
   queueObservation,
   getAllQueuedObservations,
+  saveUser,
+  getUser,
 };
 
 export default localStorage;
