@@ -3,11 +3,20 @@ import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
 
 import campaigns from "../../../assets/mockdata/campaigns.json";
+import { CampaignsResponse } from "../types";
 
 const modulePath = "/campaigns";
 
 export const campaignsModule = {
-  async mockGETCampaigns(cursor: string | null) {
-    return campaigns;
+  async getCampaigns(cursor: string | null) {
+    const params = {
+      cursor,
+    };
+    const response: HttpResponse<CampaignsResponse> = await baseApi.get(
+      modulePath,
+      params
+    );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
   },
 };

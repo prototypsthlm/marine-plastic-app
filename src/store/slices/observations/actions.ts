@@ -20,22 +20,27 @@ import {
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
+import { ActionError } from "../../errors/ActionError";
 
 export const fetchCampaigns: Thunk = () => async (
   dispatch,
   getState,
   { api }
 ) => {
-  const {
-    results,
-    nextPage,
-  }: {
-    results: Array<Campaign>;
-    nextPage: string | null;
-  } = await api.mockGETCampaigns(
+  if (getState().observations.campaignReachedPageEnd) return;
+
+  const result = await api.getCampaigns(
     getState().observations.campaignNextPageCursor
   );
-  dispatch(addFetchedCampaigns({ campaigns: results, cursor: nextPage }));
+  if (!result.ok || !result.data?.results)
+    throw new ActionError("Couldn't get campaigns.");
+
+  dispatch(
+    addFetchedCampaigns({
+      campaigns: result.data?.results,
+      cursor: result.data?.nextPage,
+    })
+  );
 };
 
 export const fetchAllObservations: Thunk = () => async (

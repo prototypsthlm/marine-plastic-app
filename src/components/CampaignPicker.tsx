@@ -52,10 +52,7 @@ export default function CampaignPicker() {
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={() => <SectionHeader>SELECT CAMPAIGN</SectionHeader>}
-      onEndReached={() => {
-        // dispatch(fetchCampaigns());
-        console.log("fetch on end reach");
-      }}
+      onEndReached={() => dispatch(fetchCampaigns())}
       onEndReachedThreshold={0.1}
     />
   );

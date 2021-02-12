@@ -28,7 +28,6 @@ export const loginWithEmailAndPassword: Thunk<
     console.log(error);
     dispatch(sessionError(error.message));
 
-    // Temporal
     if (error.code === "auth/invalid-email")
       throw new ActionError("Invalid email");
     if (error.code === "auth/wrong-password")
