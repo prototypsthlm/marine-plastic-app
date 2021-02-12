@@ -14,11 +14,13 @@ import * as navigation from "../services/navigation";
 import { firebaseAuth } from "../services/firebaseAuth";
 
 // Slices
+import accountReducer from "./slices/account";
 import observationsReducer from "./slices/observations";
 import sessionReducer from "./slices/session";
 import uiReducer from "./slices/ui";
 
 const rootReducer = combineReducers({
+  account: accountReducer,
   observations: observationsReducer,
   session: sessionReducer,
   ui: uiReducer,
