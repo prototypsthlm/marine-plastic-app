@@ -1,4 +1,4 @@
-import { Campaign, User } from "../../models";
+import { Campaign, FeatureType, User } from "../../models";
 
 export interface BaseResult<T> {
   ok: boolean;
@@ -13,6 +13,10 @@ export interface UserResponse {
 export interface CampaignsResponse {
   nextPage: string | null;
   results: Array<Campaign>;
+}
+
+export interface FeatureTypesResponse {
+  results: Array<FeatureType>;
 }
 
 export type GetUserInfoResult = BaseResult<UserResponse>;

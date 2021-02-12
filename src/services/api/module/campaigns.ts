@@ -1,8 +1,6 @@
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
-
-import campaigns from "../../../assets/mockdata/campaigns.json";
 import { CampaignsResponse } from "../types";
 
 const modulePath = "/campaigns";
