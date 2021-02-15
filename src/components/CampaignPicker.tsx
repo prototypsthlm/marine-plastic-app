@@ -21,8 +21,8 @@ export default function CampaignPicker() {
     id: "campaignless",
     creatorId: "EMPTY",
     name: "Campaign-less observations",
-    environmentalCompartments: ["SEAFLOOR", "FLOATING"],
-    tSort: "2023-07-27T03:59:42.924Z",
+    environmentalCompartments: [],
+    tSort: "",
     keywords: [],
     isClosed: false,
   };

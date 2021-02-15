@@ -14,11 +14,9 @@ export const observationsModule = {
   ) {
     const insertValues = payloadArray.map(
       (payload) =>
-        `('${payload.id}', ${
-          isSynced ? "1" : "0"
-        }, '${entityType}', '${campaignId}', '${observationId}', '${JSON.stringify(
-          payload
-        )}')`
+        `('${payload.id}', ${isSynced ? "1" : "0"}, '${entityType}', '${
+          campaignId || "null"
+        }', '${observationId || "null"}', '${JSON.stringify(payload)}')`
     );
     return new Promise<void>((resolve, reject) => {
       db.transaction(

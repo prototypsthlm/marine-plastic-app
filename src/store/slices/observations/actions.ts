@@ -32,17 +32,19 @@ export const fetchCampaigns: Thunk = () => async (
   { api, localDB }
 ) => {
   if (!getState().observations.campaignReachedPageEnd) {
+    // 1. Get next page
     const result = await api.getCampaigns(
       getState().observations.campaignNextPageCursor
     );
     if (!result.ok || !result.data?.results)
       throw new ActionError("Couldn't get campaigns.");
 
-    const campaigns: Array<Campaign> = result.data?.results;
+    const campaigns: Array<Campaign> = result.data.results;
     const cursor: string | null = result.data?.nextPage;
 
     // 2. Upsert to localDB
-    await localDB.upsertEntities(campaigns, EntityType.Campaign, true);
+    if (campaigns.length > 0)
+      await localDB.upsertEntities(campaigns, EntityType.Campaign, true);
 
     dispatch(setCampaignCursor(cursor));
   }
@@ -86,12 +88,13 @@ export const fetchObservations: Thunk = () => async (
       const cursor: string | null = response.data?.nextPage;
 
       // 2. Upsert to localDB
-      await localDB.upsertEntities(
-        observationsEntries,
-        EntityType.Observation,
-        true,
-        campaignId
-      );
+      if (observationsEntries.length > 0)
+        await localDB.upsertEntities(
+          observationsEntries,
+          EntityType.Observation,
+          true,
+          campaignId
+        );
 
       dispatch(setObservationCursor(cursor));
     }
