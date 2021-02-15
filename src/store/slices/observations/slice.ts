@@ -6,6 +6,8 @@ import { NewFeaturePayload } from "./types";
 interface ObservationsState {
   campaignNextPageCursor: string | null;
   campaignReachedPageEnd: boolean;
+  observationNextPageCursor: string | null;
+  observationReachedPageEnd: boolean;
 
   campaignEntries: Array<Campaign>;
   observationEntries: Array<Observation>;
@@ -23,6 +25,8 @@ interface ObservationsState {
 const initialState: ObservationsState = {
   campaignNextPageCursor: null,
   campaignReachedPageEnd: false,
+  observationNextPageCursor: null,
+  observationReachedPageEnd: false,
 
   campaignEntries: [],
   observationEntries: [],
@@ -72,6 +76,19 @@ export const observationsSlice = createSlice({
     ) => {
       state.observationEntries = payload;
     },
+    setObservationCursor: (
+      state,
+      { payload }: PayloadAction<string | null>
+    ) => {
+      state.observationReachedPageEnd = payload === null;
+      state.observationNextPageCursor = payload;
+    },
+    setObservationReachedPageEnd: (
+      state,
+      { payload }: PayloadAction<boolean>
+    ) => {
+      state.observationReachedPageEnd = payload;
+    },
     addFetchedFeatureTypes: (
       state,
       { payload }: PayloadAction<Array<FeatureType>>
@@ -106,6 +123,8 @@ export const {
   selectFeature,
   addFetchedCampaigns,
   addFetchedObservations,
+  setObservationCursor,
+  setObservationReachedPageEnd,
   addFetchedFeatureTypes,
   addNewFeatureToAdd,
   selectFeatureType,

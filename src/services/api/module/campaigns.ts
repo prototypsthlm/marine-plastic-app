@@ -1,7 +1,8 @@
+import { Campaign } from "../../../models";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
-import { CampaignsResponse } from "../types";
+import { PagedResponse } from "../types";
 
 const modulePath = "/campaigns";
 
@@ -10,7 +11,7 @@ export const campaignsModule = {
     const params = {
       cursor,
     };
-    const response: HttpResponse<CampaignsResponse> = await baseApi.get(
+    const response: HttpResponse<PagedResponse<Campaign>> = await baseApi.get(
       modulePath,
       params
     );

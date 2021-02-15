@@ -17,51 +17,86 @@ import {
   selectCampaign,
   selectCampaignless,
   selectFeatureType,
+  setObservationCursor,
+  setObservationReachedPageEnd,
 } from "./slice";
 import { NewFeaturePayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
+import { EntityType } from "../../../services/localDB/types";
 
 export const fetchCampaigns: Thunk = () => async (
   dispatch,
   getState,
-  { api, localStorage }
+  { api }
 ) => {
-  let campaigns: Array<Campaign> = await localStorage.getCampaigns();
-  let cursor: string | null = null;
+  if (getState().observations.campaignReachedPageEnd) return;
 
-  if (campaigns.length < 1) {
-    if (getState().observations.campaignReachedPageEnd) return;
+  const result = await api.getCampaigns(
+    getState().observations.campaignNextPageCursor
+  );
+  if (!result.ok || !result.data?.results)
+    throw new ActionError("Couldn't get campaigns.");
 
-    const result = await api.getCampaigns(
-      getState().observations.campaignNextPageCursor
-    );
-    if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get campaigns.");
-
-    campaigns = result.data?.results;
-    cursor = result.data?.nextPage;
-
-    await localStorage.saveCampaigns(campaigns);
-  }
+  const campaigns: Array<Campaign> = result.data?.results;
+  const cursor: string | null = result.data?.nextPage;
 
   dispatch(addFetchedCampaigns({ campaigns, cursor }));
 };
 
-export const fetchAllObservations: Thunk = () => async (
+export const fetchObservations: Thunk = () => async (
   dispatch,
-  _,
-  { api, localStorage, localDB }
+  getState,
+  { api, localDB }
 ) => {
-  localDB.getAllOfflineObservations();
-  const observationsEntries: Array<Observation> = await api.mockGETAllObservations();
-  const localObservationsEntries: Array<Observation> = await localStorage.getAllQueuedObservations();
-  dispatch(
-    addFetchedObservations([
-      ...observationsEntries,
-      ...localObservationsEntries,
-    ])
-  );
+  try {
+    if (!getState().observations.observationReachedPageEnd) {
+      // 1. Get next page
+      const campaignId: string | null =
+        getState().observations.selectedCampaignEntry?.id || null;
+      const nextPage: string | null = getState().observations
+        .observationNextPageCursor;
+      const response = await api.getObservations(campaignId, nextPage);
+
+      if (!response.ok || !response.data?.results)
+        throw new ActionError("Couldn't get observations.");
+
+      const observationsEntries: Array<Observation> = response.data.results;
+      const cursor: string | null = response.data?.nextPage;
+
+      // 2. Upsert to localDB
+      await localDB.upsertEntities(
+        observationsEntries,
+        EntityType.Observation,
+        true,
+        campaignId
+      );
+
+      dispatch(setObservationCursor(cursor));
+    }
+
+    dispatch(fetchAllObservationsFromSelectedCampaign());
+  } catch (e) {
+    console.log({ e });
+  }
+};
+
+export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
+  dispatch,
+  getState,
+  { localDB }
+) => {
+  try {
+    const campaignId: string | null =
+      getState().observations.selectedCampaignEntry?.id || null;
+    const observationEntries: Array<Observation> = await localDB.getEntities<Observation>(
+      EntityType.Observation,
+      campaignId
+    );
+    dispatch(addFetchedObservations(observationEntries));
+  } catch (e) {
+    console.log({ e });
+  }
 };
 
 export const fetchAllFeatureTypes: Thunk = () => async (
@@ -85,14 +120,18 @@ export const fetchAllFeatureTypes: Thunk = () => async (
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
-) => async (dispatch, getState, { api, localStorage, localDB, navigation }) => {
+) => async (dispatch, getState, { api, localDB, navigation }) => {
   const campaignId: string | undefined = getState().observations
     .selectedCampaignEntry?.id;
+
+  const creatorId: string | undefined = getState().account.user?.id;
+  if (creatorId === undefined) return;
+
   const newObservationId: string = generateUUIDv4();
   const newFeatures: Array<Feature> = newObservationPayload.features.map(
     (featurePayload) => ({
       id: generateUUIDv4(),
-      creatorId: "CREATOR_ID", // Relation with "creator" (model User)
+      creatorId: creatorId,
       creatorApp: CreatorApps.DATA_COLLECTION_APP,
       createdAt: new Date(Date.now()).toISOString(),
       updatedAt: new Date(Date.now()).toISOString(),
@@ -118,7 +157,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
   );
   const newObservation: Observation = {
     id: newObservationId,
-    creatorId: "CREATOR_ID", // Relation with "creator" (model User)
+    creatorId: creatorId,
     creatorApp: CreatorApps.DATA_COLLECTION_APP,
     createdAt: new Date(Date.now()).toISOString(),
     updatedAt: new Date(Date.now()).toISOString(),
@@ -133,9 +172,23 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     features: newFeatures,
   };
 
-  const isSuccess: boolean = false; //await api.mockPOSTNewObservation(newObservation);
-  if (!isSuccess) await localStorage.queueObservation(newObservation);
-  localDB.storeOfflineObservation(newObservation);
+  // TODO: Make POST request to submit observations & features
+  const isSuccess: boolean = false;
+  if (!isSuccess) {
+    await localDB.upsertEntities(
+      [newObservation],
+      EntityType.Observation,
+      false,
+      campaignId
+    );
+    await localDB.upsertEntities(
+      newFeatures,
+      EntityType.Feature,
+      false,
+      campaignId,
+      newObservationId
+    );
+  }
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
   navigation.navigate("observationListScreen");
@@ -170,5 +223,7 @@ export const setSelectedCampaign: Thunk<{
 ) => {
   if (isCampignless) dispatch(selectCampaignless());
   else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
+  dispatch(setObservationReachedPageEnd(false));
+  dispatch(fetchObservations());
   navigation.navigate("observationListScreen");
 };

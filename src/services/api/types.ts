@@ -1,4 +1,4 @@
-import { Campaign, FeatureType, User } from "../../models";
+import { FeatureType, User } from "../../models";
 
 export interface BaseResult<T> {
   ok: boolean;
@@ -10,9 +10,9 @@ export interface UserResponse {
   result: User;
 }
 
-export interface CampaignsResponse {
+export interface PagedResponse<T> {
   nextPage: string | null;
-  results: Array<Campaign>;
+  results: Array<T>;
 }
 
 export interface FeatureTypesResponse {
