@@ -2,7 +2,7 @@ import React from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Feature, FeatureType, Observation } from "../../models";
+import { Feature, FeatureType, Observation, User } from "../../models";
 
 import { Image } from "react-native";
 
@@ -15,6 +15,12 @@ export default function ObservationDetailScreen({
   navigation,
 }: NavigationProps) {
   const dispatch = useThunkDispatch();
+
+  const user = useSelector<RootState, User | undefined>(
+    (state) => state.account.user
+  );
+
+  const username = `${user?.givenNames} ${user?.familyName}`;
 
   const observationEntry = useSelector<RootState, Observation | undefined>(
     (state) => state.observations.selectedObservationEntry
@@ -38,7 +44,7 @@ export default function ObservationDetailScreen({
         <>
           <Section>
             <Text>
-              <Text bold>Observer:</Text> John Smith
+              <Text bold>Observer:</Text> {username}
             </Text>
             <Text>
               <Text bold>{"Date: "}</Text>
