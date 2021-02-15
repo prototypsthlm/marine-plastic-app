@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Campaign, Observation } from "../../models";
+import { Campaign, Observation, User } from "../../models";
 
 import { FlatList, Image } from "react-native";
 
@@ -33,6 +33,12 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     (state) => state.observations.selectedCampaignEntry
   );
 
+  const user = useSelector<RootState, User | undefined>(
+    (state) => state.account.user
+  );
+
+  const username = `${user?.givenNames} ${user?.familyName}`;
+
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
     dispatch(fetchCampaigns());
@@ -58,7 +64,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
         />
       ) : null}
       <FlexColumn>
-        <Text>John Smith</Text>
+        <Text>{username}</Text>
         <Text>
           {item.timestamp
             ? new Date(item.timestamp).toUTCString().slice(5, 17)
