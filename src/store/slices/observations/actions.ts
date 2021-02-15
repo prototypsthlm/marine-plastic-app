@@ -17,6 +17,7 @@ import {
   selectCampaign,
   selectCampaignless,
   selectFeatureType,
+  setCampaignCursor,
   setObservationCursor,
   setObservationReachedPageEnd,
 } from "./slice";
@@ -28,20 +29,40 @@ import { EntityType } from "../../../services/localDB/types";
 export const fetchCampaigns: Thunk = () => async (
   dispatch,
   getState,
-  { api }
+  { api, localDB }
 ) => {
-  if (getState().observations.campaignReachedPageEnd) return;
+  if (!getState().observations.campaignReachedPageEnd) {
+    const result = await api.getCampaigns(
+      getState().observations.campaignNextPageCursor
+    );
+    if (!result.ok || !result.data?.results)
+      throw new ActionError("Couldn't get campaigns.");
 
-  const result = await api.getCampaigns(
-    getState().observations.campaignNextPageCursor
-  );
-  if (!result.ok || !result.data?.results)
-    throw new ActionError("Couldn't get campaigns.");
+    const campaigns: Array<Campaign> = result.data?.results;
+    const cursor: string | null = result.data?.nextPage;
 
-  const campaigns: Array<Campaign> = result.data?.results;
-  const cursor: string | null = result.data?.nextPage;
+    // 2. Upsert to localDB
+    await localDB.upsertEntities(campaigns, EntityType.Campaign, true);
 
-  dispatch(addFetchedCampaigns({ campaigns, cursor }));
+    dispatch(setCampaignCursor(cursor));
+  }
+
+  dispatch(fetchAllCampaigns());
+};
+
+export const fetchAllCampaigns: Thunk = () => async (
+  dispatch,
+  _,
+  { localDB }
+) => {
+  try {
+    const campaignEntries: Array<Campaign> = await localDB.getEntities<Campaign>(
+      EntityType.Campaign
+    );
+    dispatch(addFetchedCampaigns(campaignEntries));
+  } catch (e) {
+    console.log({ e });
+  }
 };
 
 export const fetchObservations: Thunk = () => async (
