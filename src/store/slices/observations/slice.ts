@@ -4,15 +4,18 @@ import { Campaign, Feature, FeatureType, Observation } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
+  // Pagination
   campaignNextPageCursor: string | null;
   campaignReachedPageEnd: boolean;
   observationNextPageCursor: string | null;
   observationReachedPageEnd: boolean;
 
+  // Entries
   campaignEntries: Array<Campaign>;
   observationEntries: Array<Observation>;
   featureTypes: Array<FeatureType>;
 
+  // Selection
   selectedCampaignEntry?: Campaign;
   selectedObservationEntry?: Observation;
   selectedFeatureEntry?: Feature;
@@ -23,15 +26,18 @@ interface ObservationsState {
 }
 
 const initialState: ObservationsState = {
+  // Pagination
   campaignNextPageCursor: null,
   campaignReachedPageEnd: false,
   observationNextPageCursor: null,
   observationReachedPageEnd: false,
 
+  // Entries
   campaignEntries: [],
   observationEntries: [],
   featureTypes: [],
 
+  // Selection
   selectedCampaignEntry: undefined,
   selectedObservationEntry: undefined,
   selectedFeatureEntry: undefined,
@@ -45,36 +51,13 @@ export const observationsSlice = createSlice({
   name: "observations",
   initialState,
   reducers: {
-    addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
-      state.observationEntries = [...state.observationEntries, payload];
+    // Pagination
+    setCampaignCursor: (state, { payload }: PayloadAction<string | null>) => {
+      state.campaignReachedPageEnd = payload === null;
+      state.campaignNextPageCursor = payload;
     },
-    selectCampaign: (state, { payload }: PayloadAction<Campaign>) => {
-      state.selectedCampaignEntry = payload;
-    },
-    selectCampaignless: (state) => {
-      state.selectedCampaignEntry = undefined;
-    },
-    selectObservation: (state, { payload }: PayloadAction<Observation>) => {
-      state.selectedObservationEntry = payload;
-    },
-    selectFeature: (state, { payload }: PayloadAction<Feature>) => {
-      state.selectedFeatureEntry = payload;
-    },
-    addFetchedCampaigns: (
-      state,
-      {
-        payload,
-      }: PayloadAction<{ campaigns: Array<Campaign>; cursor: string | null }>
-    ) => {
-      state.campaignReachedPageEnd = payload.cursor === null;
-      state.campaignNextPageCursor = payload.cursor;
-      state.campaignEntries = [...state.campaignEntries, ...payload.campaigns];
-    },
-    addFetchedObservations: (
-      state,
-      { payload }: PayloadAction<Array<Observation>>
-    ) => {
-      state.observationEntries = payload;
+    setCampaignReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.campaignReachedPageEnd = payload;
     },
     setObservationCursor: (
       state,
@@ -89,11 +72,42 @@ export const observationsSlice = createSlice({
     ) => {
       state.observationReachedPageEnd = payload;
     },
+
+    // Entries
+    addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
+      state.observationEntries = [...state.observationEntries, payload];
+    },
+    addFetchedCampaigns: (
+      state,
+      { payload }: PayloadAction<Array<Campaign>>
+    ) => {
+      state.campaignEntries = payload;
+    },
+    addFetchedObservations: (
+      state,
+      { payload }: PayloadAction<Array<Observation>>
+    ) => {
+      state.observationEntries = payload;
+    },
     addFetchedFeatureTypes: (
       state,
       { payload }: PayloadAction<Array<FeatureType>>
     ) => {
       state.featureTypes = payload;
+    },
+
+    // Selection
+    selectCampaign: (state, { payload }: PayloadAction<Campaign>) => {
+      state.selectedCampaignEntry = payload;
+    },
+    selectCampaignless: (state) => {
+      state.selectedCampaignEntry = undefined;
+    },
+    selectObservation: (state, { payload }: PayloadAction<Observation>) => {
+      state.selectedObservationEntry = payload;
+    },
+    selectFeature: (state, { payload }: PayloadAction<Feature>) => {
+      state.selectedFeatureEntry = payload;
     },
 
     // Form related
@@ -116,16 +130,25 @@ export const observationsSlice = createSlice({
 });
 
 export const {
+  // Pagination
+  setCampaignCursor,
+  setCampaignReachedPageEnd,
+  setObservationCursor,
+  setObservationReachedPageEnd,
+
+  // Entries
   addNewObservation,
+  addFetchedCampaigns,
+  addFetchedObservations,
+  addFetchedFeatureTypes,
+
+  // Selection
   selectCampaign,
   selectCampaignless,
   selectObservation,
   selectFeature,
-  addFetchedCampaigns,
-  addFetchedObservations,
-  setObservationCursor,
-  setObservationReachedPageEnd,
-  addFetchedFeatureTypes,
+
+  // Form related
   addNewFeatureToAdd,
   selectFeatureType,
   resetFeaturesToAdd,
