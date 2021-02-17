@@ -2,15 +2,15 @@ import React, { useEffect } from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Campaign, Observation } from "../../models";
+import { Campaign, Observation, User } from "../../models";
 
-import { Image } from "react-native";
+import { FlatList, Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import {
-  fetchAllCampaigns,
+  fetchCampaigns,
   fetchAllFeatureTypes,
-  fetchAllObservations,
+  fetchObservations,
   selectFilteredObservationsByCampaign,
   selectObservation,
 } from "../../store/slices/observations";
@@ -32,10 +32,16 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     (state) => state.observations.selectedCampaignEntry
   );
 
+  const user = useSelector<RootState, User | undefined>(
+    (state) => state.account.user
+  );
+
+  const username = `${user?.givenNames} ${user?.familyName}`;
+
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
-    dispatch(fetchAllCampaigns());
-    dispatch(fetchAllObservations());
+    dispatch(fetchCampaigns());
+    dispatch(fetchObservations());
   }, []);
 
   const navigateToDetailScreen = (observationEntry: Observation) => {
@@ -43,67 +49,77 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     navigation.navigate("observationDetailScreen");
   };
 
-  return (
-    <Screen scroll>
-      <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
-      <ListItem onPress={() => navigation.navigate("campaignPickerScreen")}>
-        <Text
+  const renderItem = ({ item }: { item: Observation }) => (
+    <ListItem onPress={() => navigateToDetailScreen(item)}>
+      {item.features &&
+      item.features.length > 0 &&
+      item.features[0].imageUrl ? (
+        <Image
+          source={{ uri: item.features[0].imageUrl }}
           style={{
-            color: theme.color.palette.gray,
-            paddingVertical: theme.spacing.small,
+            width: 50,
+            height: 50,
+            borderRadius: 6,
+            marginRight: 12,
           }}
-        >
-          {selectedCampaignEntry
-            ? selectedCampaignEntry.name
-            : "Campaign-less observations"}
+        />
+      ) : null}
+      <FlexColumn>
+        <Text>{username}</Text>
+        <Text>
+          {item.timestamp
+            ? new Date(item.timestamp).toUTCString().slice(5, 17)
+            : ""}
         </Text>
-      </ListItem>
+      </FlexColumn>
+    </ListItem>
+  );
 
-      <SectionHeader style={{ marginTop: theme.spacing.large }}>
-        OBSERVATIONS
-      </SectionHeader>
+  return (
+    <Screen>
+      <FlatList
+        data={observationsEntries}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={() => (
+          <>
+            <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
+            <ListItem
+              onPress={() => navigation.navigate("campaignPickerScreen")}
+            >
+              <Text
+                style={{
+                  color: theme.color.palette.gray,
+                  paddingVertical: theme.spacing.small,
+                }}
+              >
+                {selectedCampaignEntry
+                  ? selectedCampaignEntry.name
+                  : "Campaign-less observations"}
+              </Text>
+            </ListItem>
 
-      {!(observationsEntries.length > 0) && (
-        <ListItem>
-          <Text
-            style={{
-              color: theme.color.palette.gray,
-              paddingVertical: theme.spacing.small,
-            }}
-          >
-            There is still no observation added in this campaign.
-          </Text>
-        </ListItem>
-      )}
+            <SectionHeader style={{ marginTop: theme.spacing.large }}>
+              OBSERVATIONS
+            </SectionHeader>
 
-      {observationsEntries.map((observationEntry, index) => (
-        <ListItem
-          key={index}
-          onPress={() => navigateToDetailScreen(observationEntry)}
-        >
-          {observationEntry.features.length > 0 ? (
-            <Image
-              source={{ uri: observationEntry.features[0].imageUrl }}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 6,
-                marginRight: 12,
-              }}
-            />
-          ) : null}
-          <FlexColumn>
-            <Text>John Smith</Text>
-            <Text>
-              {observationEntry.timestamp
-                ? new Date(observationEntry.timestamp)
-                    .toUTCString()
-                    .slice(5, 17)
-                : ""}
-            </Text>
-          </FlexColumn>
-        </ListItem>
-      ))}
+            {!(observationsEntries.length > 0) && (
+              <ListItem>
+                <Text
+                  style={{
+                    color: theme.color.palette.gray,
+                    paddingVertical: theme.spacing.small,
+                  }}
+                >
+                  There is still no observation added in this campaign.
+                </Text>
+              </ListItem>
+            )}
+          </>
+        )}
+        onEndReached={() => dispatch(fetchObservations())}
+        onEndReachedThreshold={0.1}
+      />
     </Screen>
   );
 }

@@ -4,7 +4,7 @@ import { Screen } from "../../components/Screen";
 
 export default function CampaignPickerScreen() {
   return (
-    <Screen scroll>
+    <Screen>
       <CampaignPicker />
     </Screen>
   );

@@ -1,9 +1,10 @@
 import {
   addTokenToRequestPayloads,
   clearTokenFromRequestPayloads,
-} from "../../../services/api";
+} from "../../../services/api/api";
 import { ActionError } from "../../errors/ActionError";
 import { Thunk } from "../../store";
+import { setUserInfo } from "../account";
 import {
   sessionError,
   userLoggedIn,
@@ -21,20 +22,12 @@ export const loginWithEmailAndPassword: Thunk<
   try {
     dispatch(waitingForAuthentication());
     await firebaseAuth.signInWithEmailAndPassword(email, password);
-
-    const token = await firebaseAuth.currentUser?.getIdToken();
-
-    if (token === undefined) throw new ActionError();
-
-    addTokenToRequestPayloads(token);
-    dispatch(userLoggedIn(token));
-    // TODO: Get user info & store it in another slice (account slice?)
+    dispatch(setUserWithNewToken());
     return true;
   } catch (error) {
     console.log(error);
     dispatch(sessionError(error.message));
 
-    // Temporal
     if (error.code === "auth/invalid-email")
       throw new ActionError("Invalid email");
     if (error.code === "auth/wrong-password")
@@ -44,6 +37,20 @@ export const loginWithEmailAndPassword: Thunk<
 
     return false;
   }
+};
+
+export const setUserWithNewToken: Thunk = () => async (
+  dispatch,
+  _,
+  { firebaseAuth }
+) => {
+  const token = await firebaseAuth.currentUser?.getIdToken();
+
+  if (token === undefined) throw new ActionError("User wasn't stored");
+
+  addTokenToRequestPayloads(token);
+  dispatch(userLoggedIn(token));
+  dispatch(setUserInfo());
 };
 
 export const logOut: Thunk = () => (dispatch) => {

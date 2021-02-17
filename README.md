@@ -11,6 +11,12 @@ Make sure you have [Node.js v14.x](https://nodejs.org/en/download/) and [Yarn v1
 
 Create `.env` file at the root of the project. Vars are in 1Password under `Marine-Plastic/Ocean-Scan App Environment Variables` note.
 
+**Note:** If you run into problems like environment changes not being picked up, try clearing the cache ([more info](https://github.com/tusbar/babel-plugin-dotenv-import#caveats)).
+
+```bash
+$ rm -rf node_modules/.cache/babel-loader/*
+```
+
 ### Installing dependencies
 
 ```bash
