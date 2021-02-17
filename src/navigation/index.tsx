@@ -12,6 +12,10 @@ import { useThunkDispatch } from "../store/store";
 import BottomTabNavigator from "./BottomTabNavigator";
 import { LoggedOutStackNavigator } from "./LoggedOutStackNavigator";
 
+import NetInfo from "@react-native-community/netinfo";
+import { setIsOnline } from "../store/slices/ui";
+import { syncOfflineEntries } from "../store/slices/observations";
+
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation() {
@@ -31,13 +35,22 @@ const Stack = createStackNavigator<{
 function RootNavigator() {
   const dispatch = useThunkDispatch();
 
-  useEffect(
-    () =>
-      firebaseAuth.onAuthStateChanged(function (user) {
-        if (user) dispatch(setUserWithNewToken());
-      }),
-    []
-  );
+  useEffect(() => {
+    const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
+      user
+    ) {
+      if (user) dispatch(setUserWithNewToken());
+    });
+    const unsubscribeNetInfo = NetInfo.addEventListener((state) => {
+      if (state.isConnected) dispatch(syncOfflineEntries());
+      dispatch(setIsOnline(state.isConnected));
+    });
+
+    return () => {
+      unsubscribeFirebaseAuth();
+      unsubscribeNetInfo();
+    };
+  }, []);
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
 

@@ -31,7 +31,10 @@ export const fetchCampaigns: Thunk = () => async (
   getState,
   { api, localDB }
 ) => {
-  if (!getState().observations.campaignReachedPageEnd) {
+  if (
+    !getState().observations.campaignReachedPageEnd &&
+    getState().ui.isOnline
+  ) {
     // 1. Get next page
     const result = await api.getCampaigns(
       getState().observations.campaignNextPageCursor
@@ -73,7 +76,10 @@ export const fetchObservations: Thunk = () => async (
   { api, localDB }
 ) => {
   try {
-    if (!getState().observations.observationReachedPageEnd) {
+    if (
+      !getState().observations.observationReachedPageEnd &&
+      getState().ui.isOnline
+    ) {
       // 1. Get next page
       const campaignId: string | null =
         getState().observations.selectedCampaignEntry?.id || null;
@@ -144,7 +150,7 @@ export const fetchAllFeatureTypes: Thunk = () => async (
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
-) => async (dispatch, getState, { api, localDB, navigation }) => {
+) => async (dispatch, getState, { navigation }) => {
   const campaignId: string | undefined = getState().observations
     .selectedCampaignEntry?.id;
 
@@ -157,8 +163,8 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       id: generateUUIDv4(),
       creatorId: creatorId,
       creatorApp: CreatorApps.DATA_COLLECTION_APP,
-      createdAt: new Date(Date.now()).toISOString(),
-      updatedAt: new Date(Date.now()).toISOString(),
+      createdAt: undefined,
+      updatedAt: undefined,
       isDeleted: false,
       deletedAt: undefined,
 
@@ -183,8 +189,8 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     id: newObservationId,
     creatorId: creatorId,
     creatorApp: CreatorApps.DATA_COLLECTION_APP,
-    createdAt: new Date(Date.now()).toISOString(),
-    updatedAt: new Date(Date.now()).toISOString(),
+    createdAt: undefined,
+    updatedAt: undefined,
     isDeleted: false,
     deletedAt: undefined,
 
@@ -196,23 +202,12 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     features: newFeatures,
   };
 
-  // TODO: Make POST request to submit observations & features
-  const isSuccess: boolean = false;
-  if (!isSuccess) {
-    await localDB.upsertEntities(
-      [newObservation],
-      EntityType.Observation,
-      false,
-      campaignId
-    );
-    await localDB.upsertEntities(
-      newFeatures,
-      EntityType.Feature,
-      false,
-      campaignId,
-      newObservationId
-    );
-  }
+  dispatch(
+    submitObservationsAndFeatures({
+      observations: [newObservation],
+      features: newFeatures,
+    })
+  );
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
   navigation.navigate("observationListScreen");
@@ -250,4 +245,96 @@ export const setSelectedCampaign: Thunk<{
   dispatch(setObservationReachedPageEnd(false));
   dispatch(fetchObservations());
   navigation.navigate("observationListScreen");
+};
+
+export const syncOfflineEntries: Thunk = () => async (
+  dispatch,
+  _,
+  { localDB }
+) => {
+  try {
+    const observations: Array<Observation> = await localDB.getEntities<Observation>(
+      EntityType.Observation,
+      null,
+      null,
+      false
+    );
+    const features: Array<Feature> = await localDB.getEntities<Feature>(
+      EntityType.Feature,
+      null,
+      null,
+      false
+    );
+
+    dispatch(submitObservationsAndFeatures({ observations, features }));
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+export const submitObservationsAndFeatures: Thunk<{
+  observations: Array<Observation>;
+  features: Array<Feature>;
+}> = ({ observations, features }) => async (dispatch, _, { api, localDB }) => {
+  try {
+    // 1. Upload observations
+    for (let i = 0; i < observations.length; i++) {
+      // POST endpoint
+      const observation: Observation = observations[i];
+      const response = await api.postObservation(observation);
+
+      if (!response.ok || !response.data?.result) {
+        // Store offline
+        if (response.problem === "cannot-connect")
+          await localDB.upsertEntities(
+            [observation],
+            EntityType.Observation,
+            false,
+            observation.campaignId
+          );
+        else throw new ActionError("Couldn't post observation.");
+      } else {
+        // Upsert if success
+        const syncedObservation: Observation = response.data?.result;
+        await localDB.upsertEntities(
+          [syncedObservation],
+          EntityType.Observation,
+          true,
+          observation.campaignId
+        );
+      }
+    }
+
+    // 2. Upload features
+    for (let i = 0; i < features.length; i++) {
+      // POST endpoint
+      const feature: Feature = features[i];
+      const response = await api.postFeature(feature);
+
+      if (!response.ok || !response.data?.result) {
+        // Store offline
+        if (response.problem === "cannot-connect")
+          await localDB.upsertEntities(
+            [feature],
+            EntityType.Feature,
+            false,
+            null,
+            feature.observationId
+          );
+        else throw new ActionError("Couldn't post feature.");
+      } else {
+        // Upsert if success
+        const syncedFeature: Feature = response.data?.result;
+        await localDB.upsertEntities(
+          [syncedFeature],
+          EntityType.Feature,
+          true,
+          null,
+          feature.observationId
+        );
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
 };
