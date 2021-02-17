@@ -4,10 +4,18 @@ import { Campaign, Feature, FeatureType, Observation } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
-  campaignsEntries: Array<Campaign>;
+  // Pagination
+  campaignNextPageCursor: string | null;
+  campaignReachedPageEnd: boolean;
+  observationNextPageCursor: string | null;
+  observationReachedPageEnd: boolean;
+
+  // Entries
+  campaignEntries: Array<Campaign>;
   observationEntries: Array<Observation>;
   featureTypes: Array<FeatureType>;
 
+  // Selection
   selectedCampaignEntry?: Campaign;
   selectedObservationEntry?: Observation;
   selectedFeatureEntry?: Feature;
@@ -18,10 +26,18 @@ interface ObservationsState {
 }
 
 const initialState: ObservationsState = {
-  campaignsEntries: [],
+  // Pagination
+  campaignNextPageCursor: null,
+  campaignReachedPageEnd: false,
+  observationNextPageCursor: null,
+  observationReachedPageEnd: false,
+
+  // Entries
+  campaignEntries: [],
   observationEntries: [],
   featureTypes: [],
 
+  // Selection
   selectedCampaignEntry: undefined,
   selectedObservationEntry: undefined,
   selectedFeatureEntry: undefined,
@@ -35,26 +51,37 @@ export const observationsSlice = createSlice({
   name: "observations",
   initialState,
   reducers: {
+    // Pagination
+    setCampaignCursor: (state, { payload }: PayloadAction<string | null>) => {
+      state.campaignReachedPageEnd = payload === null;
+      state.campaignNextPageCursor = payload;
+    },
+    setCampaignReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.campaignReachedPageEnd = payload;
+    },
+    setObservationCursor: (
+      state,
+      { payload }: PayloadAction<string | null>
+    ) => {
+      state.observationReachedPageEnd = payload === null;
+      state.observationNextPageCursor = payload;
+    },
+    setObservationReachedPageEnd: (
+      state,
+      { payload }: PayloadAction<boolean>
+    ) => {
+      state.observationReachedPageEnd = payload;
+    },
+
+    // Entries
     addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
       state.observationEntries = [...state.observationEntries, payload];
-    },
-    selectCampaign: (state, { payload }: PayloadAction<Campaign>) => {
-      state.selectedCampaignEntry = payload;
-    },
-    selectCampaignless: (state) => {
-      state.selectedCampaignEntry = undefined;
-    },
-    selectObservation: (state, { payload }: PayloadAction<Observation>) => {
-      state.selectedObservationEntry = payload;
-    },
-    selectFeature: (state, { payload }: PayloadAction<Feature>) => {
-      state.selectedFeatureEntry = payload;
     },
     addFetchedCampaigns: (
       state,
       { payload }: PayloadAction<Array<Campaign>>
     ) => {
-      state.campaignsEntries = payload;
+      state.campaignEntries = payload;
     },
     addFetchedObservations: (
       state,
@@ -67,6 +94,20 @@ export const observationsSlice = createSlice({
       { payload }: PayloadAction<Array<FeatureType>>
     ) => {
       state.featureTypes = payload;
+    },
+
+    // Selection
+    selectCampaign: (state, { payload }: PayloadAction<Campaign>) => {
+      state.selectedCampaignEntry = payload;
+    },
+    selectCampaignless: (state) => {
+      state.selectedCampaignEntry = undefined;
+    },
+    selectObservation: (state, { payload }: PayloadAction<Observation>) => {
+      state.selectedObservationEntry = payload;
+    },
+    selectFeature: (state, { payload }: PayloadAction<Feature>) => {
+      state.selectedFeatureEntry = payload;
     },
 
     // Form related
@@ -89,14 +130,25 @@ export const observationsSlice = createSlice({
 });
 
 export const {
+  // Pagination
+  setCampaignCursor,
+  setCampaignReachedPageEnd,
+  setObservationCursor,
+  setObservationReachedPageEnd,
+
+  // Entries
   addNewObservation,
+  addFetchedCampaigns,
+  addFetchedObservations,
+  addFetchedFeatureTypes,
+
+  // Selection
   selectCampaign,
   selectCampaignless,
   selectObservation,
   selectFeature,
-  addFetchedCampaigns,
-  addFetchedObservations,
-  addFetchedFeatureTypes,
+
+  // Form related
   addNewFeatureToAdd,
   selectFeatureType,
   resetFeaturesToAdd,

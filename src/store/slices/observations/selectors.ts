@@ -19,7 +19,9 @@ export const selectFilteredObservationsByCampaign = (
 ): Array<Observation> => {
   const selecedCampaignId: string | null =
     state.observations.selectedCampaignEntry?.id || null;
-  return state.observations.observationEntries.filter(
-    (observationEntry) => observationEntry.campaignId === selecedCampaignId
-  );
+  return state.observations.observationEntries
+    .filter(
+      (observationEntry) => observationEntry.campaignId === selecedCampaignId
+    )
+    .reverse();
 };
