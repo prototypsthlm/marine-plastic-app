@@ -50,7 +50,7 @@ function getGeometryFromFeatures(features: Array<NewFeaturePayload>): Geometry {
     ]);
     return {
       type: "Polygon",
-      coordinates: coords,
+      coordinates: [coords],
     };
   }
 }
