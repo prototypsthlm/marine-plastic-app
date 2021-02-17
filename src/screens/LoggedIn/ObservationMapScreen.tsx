@@ -1,6 +1,6 @@
 import * as React from "react";
 import styled from "../../styled";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Geojson, Marker } from "react-native-maps";
 import { Dimensions, Image } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
@@ -19,42 +19,21 @@ export default function ObservationMapScreen() {
           height: Dimensions.get("window").height,
         }}
       >
-        {observationsEntries
-          .filter(
-            (o) =>
-              o.geometry &&
-              o.geometry.type === "Point" &&
-              o.geometry.coordinates.length > 0
-          )
-          .map((observationEntry, index) => {
-            return (
-              <Marker
-                key={index}
-                coordinate={{
-                  latitude: observationEntry.geometry?.coordinates[0] as number,
-                  longitude: observationEntry.geometry
-                    ?.coordinates[1] as number,
-                }}
-                title={`Observer: John Smith`}
-                description={
-                  observationEntry.timestamp
-                    ? new Date(observationEntry.timestamp)
-                        .toUTCString()
-                        .slice(5, 17)
-                    : ""
-                }
-              >
-                <MarkerPopup>
-                  {observationEntry.features ? (
-                    <Image
-                      source={{ uri: observationEntry.features[0].imageUrl }}
-                      style={{ width: 50, height: 50, borderRadius: 6 }}
-                    />
-                  ) : null}
-                </MarkerPopup>
-              </Marker>
-            );
-          })}
+        {observationsEntries.map((observationEntry, index) => (
+          <Geojson
+            key={index}
+            geojson={{
+              type: "FeatureCollection",
+              features: [
+                {
+                  type: "Feature",
+                  properties: {},
+                  geometry: observationEntry.geometry,
+                },
+              ],
+            }}
+          />
+        ))}
       </MapView>
     </Screen>
   );
