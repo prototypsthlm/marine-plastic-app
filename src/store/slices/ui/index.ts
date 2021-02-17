@@ -1,23 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface UiState {
-  activeScreen: string;
+  isOnline: boolean;
 }
 
 const initialState: UiState = {
-  activeScreen: "list",
+  isOnline: false,
 };
 
 export const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
-    setActiveScreen: (state, { payload }) => {
-      state.activeScreen = payload;
+    setIsOnline: (state, { payload }) => {
+      state.isOnline = payload;
     },
   },
 });
 
-export const { setActiveScreen } = uiSlice.actions;
+export const { setIsOnline } = uiSlice.actions;
 
 export default uiSlice.reducer;

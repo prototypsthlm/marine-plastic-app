@@ -35,7 +35,8 @@ export const observationsModule = {
   getEntities<T>(
     entityType: EntityType,
     campaignId: string | null = null,
-    observationId: string | null = null
+    observationId: string | null = null,
+    isSynced: boolean | null = null
   ): Promise<Array<T>> {
     return new Promise<Array<T>>((resolve) => {
       db.transaction((tx) => {
@@ -45,8 +46,12 @@ export const observationsModule = {
           observationId !== null
             ? `and observationId = '${observationId}'`
             : "";
+        const filerByIsSynced =
+          isSynced !== null
+            ? `and isSynced = ${observationId ? "true" : "false"}`
+            : "";
         tx.executeSql(
-          `select * from baseEntity where type = ? ${filerByCampaign} ${filerByObservation}`,
+          `select * from baseEntity where type = ? ${filerByCampaign} ${filerByObservation} ${filerByIsSynced}`,
           [entityType, campaignId, observationId],
           (_, { rows }) => {
             let entities: Array<T> = [];
