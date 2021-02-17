@@ -10,6 +10,10 @@ export interface UserResponse {
   result: User;
 }
 
+export interface SingleResponse<T> {
+  result: T;
+}
+
 export interface PagedResponse<T> {
   nextPage: string | null;
   results: Array<T>;

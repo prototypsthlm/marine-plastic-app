@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FeatureType } from "../../../models";
 
-const FEATURE_TYPES = "featureTypes";
+const FEATURE_TYPES = "featureTypes_v2";
 
 export const featureTypesModule = {
   async saveFeatureTypes(payload: Array<FeatureType>) {

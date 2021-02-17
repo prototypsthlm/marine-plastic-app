@@ -13,7 +13,6 @@ import {
   fetchObservations,
   selectFilteredObservationsByCampaign,
   selectObservation,
-  fetchAllObservationsFromSelectedCampaign,
 } from "../../store/slices/observations";
 import { NavigationProps } from "../../navigation/types";
 import {
@@ -52,7 +51,9 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   const renderItem = ({ item }: { item: Observation }) => (
     <ListItem onPress={() => navigateToDetailScreen(item)}>
-      {item.features.length > 0 ? (
+      {item.features &&
+      item.features.length > 0 &&
+      item.features[0].imageUrl ? (
         <Image
           source={{ uri: item.features[0].imageUrl }}
           style={{
