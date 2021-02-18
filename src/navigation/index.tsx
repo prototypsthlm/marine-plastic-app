@@ -13,7 +13,7 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import { LoggedOutStackNavigator } from "./LoggedOutStackNavigator";
 
 import NetInfo from "@react-native-community/netinfo";
-import { setIsOnline } from "../store/slices/ui";
+import { setIsOnline, setOfflineModeNotification } from "../store/slices/ui";
 import { syncOfflineEntries } from "../store/slices/observations";
 
 // If you are not familiar with React Navigation, we recommend going through the
@@ -44,6 +44,7 @@ function RootNavigator() {
     const unsubscribeNetInfo = NetInfo.addEventListener((state) => {
       if (state.isConnected) dispatch(syncOfflineEntries());
       dispatch(setIsOnline(state.isConnected));
+      dispatch(setOfflineModeNotification(false));
     });
 
     return () => {
