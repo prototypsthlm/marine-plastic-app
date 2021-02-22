@@ -10,7 +10,7 @@ import { Screen } from "../../components/Screen";
 import {
   fetchObservations,
   selectFilteredObservationsByCampaign,
-  selectObservation,
+  selectObservationDetails,
 } from "../../store/slices/observations";
 import {
   fetchAllFeatureImages,
@@ -53,7 +53,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   }, []);
 
   const navigateToDetailScreen = (observationEntry: Observation) => {
-    dispatch(selectObservation(observationEntry));
+    dispatch(selectObservationDetails(observationEntry));
     navigation.navigate("observationDetailScreen");
   };
 

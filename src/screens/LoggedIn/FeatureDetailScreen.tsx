@@ -18,9 +18,13 @@ export default function FeatureDetailScreen() {
     (state) => state.features.featureImages
   );
 
-  const image: FeatureImage | undefined = featureImages.find(
-    (fi) => fi.featureId === featureEntry?.id
-  );
+  const onlineImage: FeatureImage | undefined =
+    featureEntry?.featureImages && featureEntry?.featureImages?.length > 0
+      ? featureEntry?.featureImages[0]
+      : undefined;
+  const image: FeatureImage | undefined =
+    onlineImage ||
+    featureImages.find((fi) => fi.featureId === featureEntry?.id);
 
   const fields = [
     { label: "Observer: ", value: "John Smith" },

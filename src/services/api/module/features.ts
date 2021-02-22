@@ -1,9 +1,4 @@
-import {
-  CreatorApps,
-  Feature,
-  FeatureImage,
-  Observation,
-} from "../../../models";
+import { CreatorApps, Feature, FeatureImage } from "../../../models";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
@@ -20,9 +15,10 @@ export const featuresModule = {
       observationId: observationId === null ? "null" : observationId,
       cursor,
     };
-    const response: HttpResponse<
-      PagedResponse<Observation>
-    > = await baseApi.get(featuresPath, params);
+    const response: HttpResponse<PagedResponse<Feature>> = await baseApi.get(
+      featuresPath,
+      params
+    );
     if (!response.ok) return createGenericProblem(response);
     return response;
   },

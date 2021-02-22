@@ -8,13 +8,14 @@ import { Thunk } from "../../store";
 import {
   addFetchedObservations,
   addNewObservation,
+  selectObservation,
   setObservationCursor,
 } from "./slice";
 import { NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
-import { resetFeaturesToAdd } from "../features";
+import { resetFeaturesToAdd, setFeatureReachedPageEnd } from "../features";
 
 export const fetchObservations: Thunk = () => async (
   dispatch,
@@ -269,4 +270,11 @@ export const submitObservationsAndFeatures: Thunk<{
   } catch (e) {
     console.log(e);
   }
+};
+
+export const selectObservationDetails: Thunk<Observation> = (
+  observation
+) => async (dispatch) => {
+  dispatch(selectObservation(observation));
+  dispatch(setFeatureReachedPageEnd(false));
 };

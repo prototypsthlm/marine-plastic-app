@@ -4,7 +4,12 @@ import { Feature, FeatureImage, FeatureType } from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface FeaturesState {
+  // Pagination
+  featureNextPageCursor: string | null;
+  featureReachedPageEnd: boolean;
+
   // Entries
+  featureEntries: Array<Feature>;
   featureImages: Array<FeatureImage>;
   featureTypes: Array<FeatureType>;
 
@@ -17,7 +22,12 @@ interface FeaturesState {
 }
 
 const initialState: FeaturesState = {
+  // Pagination
+  featureNextPageCursor: null,
+  featureReachedPageEnd: false,
+
   // Entries
+  featureEntries: [],
   featureImages: [],
   featureTypes: [],
 
@@ -33,7 +43,19 @@ export const featuresSlice = createSlice({
   name: "features",
   initialState,
   reducers: {
+    // Pagination
+    setFeatureCursor: (state, { payload }: PayloadAction<string | null>) => {
+      state.featureReachedPageEnd = payload === null;
+      state.featureNextPageCursor = payload;
+    },
+    setFeatureReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.featureReachedPageEnd = payload;
+    },
+
     // Entries
+    addFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
+      state.featureEntries = payload;
+    },
     addFetchedFeatureImages: (
       state,
       { payload }: PayloadAction<Array<FeatureImage>>
@@ -72,7 +94,12 @@ export const featuresSlice = createSlice({
 });
 
 export const {
+  // Pagination
+  setFeatureCursor,
+  setFeatureReachedPageEnd,
+
   // Entries
+  addFetchedFeatures,
   addFetchedFeatureImages,
   addFetchedFeatureTypes,
 
