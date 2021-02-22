@@ -8,13 +8,15 @@ import { FlatList, Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import {
-  fetchCampaigns,
-  fetchAllFeatureTypes,
   fetchObservations,
   selectFilteredObservationsByCampaign,
   selectObservation,
-  fetchAllFeatureImages,
 } from "../../store/slices/observations";
+import {
+  fetchAllFeatureImages,
+  fetchAllFeatureTypes,
+} from "../../store/slices/features";
+import { fetchCampaigns } from "../../store/slices/campaigns";
 import { NavigationProps } from "../../navigation/types";
 import {
   FlexColumn,
@@ -30,11 +32,11 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   const observationsEntries = useSelector(selectFilteredObservationsByCampaign);
 
   const selectedCampaignEntry = useSelector<RootState, Campaign | undefined>(
-    (state) => state.observations.selectedCampaignEntry
+    (state) => state.campaigns.selectedCampaignEntry
   );
 
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.observations.featureImages
+    (state) => state.features.featureImages
   );
 
   const user = useSelector<RootState, User | undefined>(

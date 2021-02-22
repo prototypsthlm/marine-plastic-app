@@ -14,7 +14,7 @@ import { Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import { NavigationProps } from "../../navigation/types";
-import { selectFeature } from "../../store/slices/observations";
+import { selectFeature } from "../../store/slices/features";
 import { FlexColumn, ListItem, Section, Text } from "../../components/elements";
 
 export default function ObservationDetailScreen({
@@ -33,11 +33,11 @@ export default function ObservationDetailScreen({
   );
 
   const featureTypes = useSelector<RootState, Array<FeatureType>>(
-    (state) => state.observations.featureTypes
+    (state) => state.features.featureTypes
   );
 
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.observations.featureImages
+    (state) => state.features.featureImages
   );
 
   const getFeatureTypeById = (id: string) =>

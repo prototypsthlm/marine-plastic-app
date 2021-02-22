@@ -11,11 +11,11 @@ import { FlexColumn, Section, Text } from "../../components/elements";
 
 export default function FeatureDetailScreen() {
   const featureEntry = useSelector<RootState, Feature | undefined>(
-    (state) => state.observations.selectedFeatureEntry
+    (state) => state.features.selectedFeatureEntry
   );
 
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.observations.featureImages
+    (state) => state.features.featureImages
   );
 
   const image: FeatureImage | undefined = featureImages.find(

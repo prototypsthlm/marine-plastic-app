@@ -1,76 +1,20 @@
 import {
-  Campaign,
   CreatorApps,
   Feature,
   FeatureImage,
-  FeatureType,
   Observation,
 } from "../../../models";
 import { Thunk } from "../../store";
 import {
-  addFetchedCampaigns,
-  addFetchedFeatureImages,
-  addFetchedFeatureTypes,
   addFetchedObservations,
-  addNewFeatureToAdd,
   addNewObservation,
-  resetFeaturesToAdd,
-  resetFeatureType,
-  selectCampaign,
-  selectCampaignless,
-  selectFeatureType,
-  setCampaignCursor,
   setObservationCursor,
-  setObservationReachedPageEnd,
 } from "./slice";
-import { NewFeaturePayload, NewObservationPayload } from "./types";
+import { NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
-
-export const fetchCampaigns: Thunk = () => async (
-  dispatch,
-  getState,
-  { api, localDB }
-) => {
-  if (
-    !getState().observations.campaignReachedPageEnd &&
-    getState().ui.isOnline
-  ) {
-    // 1. Get next page
-    const result = await api.getCampaigns(
-      getState().observations.campaignNextPageCursor
-    );
-    if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get campaigns.");
-
-    const campaigns: Array<Campaign> = result.data.results;
-    const cursor: string | null = result.data?.nextPage;
-
-    // 2. Upsert to localDB
-    if (campaigns.length > 0)
-      await localDB.upsertEntities(campaigns, EntityType.Campaign, true);
-
-    dispatch(setCampaignCursor(cursor));
-  }
-
-  dispatch(fetchAllCampaigns());
-};
-
-export const fetchAllCampaigns: Thunk = () => async (
-  dispatch,
-  _,
-  { localDB }
-) => {
-  try {
-    const campaignEntries: Array<Campaign> = await localDB.getEntities<Campaign>(
-      EntityType.Campaign
-    );
-    dispatch(addFetchedCampaigns(campaignEntries));
-  } catch (e) {
-    console.log({ e });
-  }
-};
+import { resetFeaturesToAdd } from "../features";
 
 export const fetchObservations: Thunk = () => async (
   dispatch,
@@ -84,7 +28,7 @@ export const fetchObservations: Thunk = () => async (
     ) {
       // 1. Get next page
       const campaignId: string | null =
-        getState().observations.selectedCampaignEntry?.id || null;
+        getState().campaigns.selectedCampaignEntry?.id || null;
       const nextPage: string | null = getState().observations
         .observationNextPageCursor;
       const response = await api.getObservations(campaignId, nextPage);
@@ -120,7 +64,7 @@ export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
 ) => {
   try {
     const campaignId: string | null =
-      getState().observations.selectedCampaignEntry?.id || null;
+      getState().campaigns.selectedCampaignEntry?.id || null;
     const observationEntries: Array<Observation> = await localDB.getEntities<Observation>(
       EntityType.Observation,
       null,
@@ -132,44 +76,10 @@ export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
   }
 };
 
-export const fetchAllFeatureImages: Thunk = () => async (
-  dispatch,
-  getState,
-  { localDB }
-) => {
-  try {
-    const featureImages: Array<FeatureImage> = await localDB.getEntities<FeatureImage>(
-      EntityType.FeatureImage
-    );
-    dispatch(addFetchedFeatureImages(featureImages));
-  } catch (e) {
-    console.log({ e });
-  }
-};
-
-export const fetchAllFeatureTypes: Thunk = () => async (
-  dispatch,
-  _,
-  { api, localStorage }
-) => {
-  let featureTypes: Array<FeatureType> = await localStorage.getFeatureTypes();
-
-  if (featureTypes.length < 1) {
-    const result = await api.getAllFeatureTypes();
-    if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get feature types.");
-
-    featureTypes = result.data?.results;
-
-    await localStorage.saveFeatureTypes(featureTypes);
-  }
-  dispatch(addFetchedFeatureTypes(featureTypes));
-};
-
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
 ) => async (dispatch, getState, { navigation }) => {
-  const campaignId: string | undefined = getState().observations
+  const campaignId: string | undefined = getState().campaigns
     .selectedCampaignEntry?.id;
 
   const creatorId: string | undefined = getState().account.user?.id;
@@ -245,40 +155,6 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
   );
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
-  navigation.navigate("observationListScreen");
-};
-
-export const addNewFeature: Thunk<NewFeaturePayload> = (newFeaturePayload) => (
-  dispatch,
-  _,
-  { navigation }
-) => {
-  dispatch(addNewFeatureToAdd(newFeaturePayload));
-  dispatch(resetFeatureType());
-  navigation.navigate("newObservationScreen");
-};
-
-export const addFeatureType: Thunk<FeatureType> = (featureTypePayload) => (
-  dispatch,
-  _,
-  { navigation }
-) => {
-  dispatch(selectFeatureType(featureTypePayload));
-  navigation.navigate("newFeatureScreen");
-};
-
-export const setSelectedCampaign: Thunk<{
-  campaignEntryPayload?: Campaign;
-  isCampignless?: boolean;
-}> = ({ campaignEntryPayload, isCampignless = false }) => (
-  dispatch,
-  _,
-  { navigation }
-) => {
-  if (isCampignless) dispatch(selectCampaignless());
-  else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
-  dispatch(setObservationReachedPageEnd(false));
-  dispatch(fetchObservations());
   navigation.navigate("observationListScreen");
 };
 
