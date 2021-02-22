@@ -1,4 +1,9 @@
-import { Feature, Observation } from "../../../models";
+import {
+  CreatorApps,
+  Feature,
+  FeatureImage,
+  Observation,
+} from "../../../models";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
@@ -9,6 +14,8 @@ const observationsPath = "/observations";
 
 const featurePath = "/feature";
 const featuresPath = "/features";
+
+const featureImagePath = "/featureImage";
 
 export const observationsModule = {
   async getObservations(campaignId: string | null, cursor: string | null) {
@@ -59,6 +66,35 @@ export const observationsModule = {
       featurePath,
       params
     );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+  async postFeatureImage(featureImage: FeatureImage) {
+    if (featureImage.url === undefined) return;
+
+    const form = new FormData();
+    form.append("id", featureImage.id);
+    form.append(
+      "creatorApp",
+      featureImage.creatorApp || CreatorApps.DATA_COLLECTION_APP
+    );
+    form.append("featureId", featureImage.featureId);
+
+    const imageData = {
+      name: featureImage.id + "-featureImage.jpg",
+      uri: featureImage.url,
+      type: "image/jpg",
+    };
+    form.append("image", imageData);
+
+    const response: HttpResponse<
+      SingleResponse<FeatureImage>
+    > = await baseApi.post(featureImagePath, form, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "multipart/form-data",
+      },
+    });
     if (!response.ok) return createGenericProblem(response);
     return response;
   },

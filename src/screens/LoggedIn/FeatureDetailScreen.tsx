@@ -2,7 +2,7 @@ import React from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { Feature } from "../../models";
+import { Feature, FeatureImage } from "../../models";
 
 import { Image } from "react-native";
 
@@ -12,6 +12,14 @@ import { FlexColumn, Section, Text } from "../../components/elements";
 export default function FeatureDetailScreen() {
   const featureEntry = useSelector<RootState, Feature | undefined>(
     (state) => state.observations.selectedFeatureEntry
+  );
+
+  const featureImages = useSelector<RootState, Array<FeatureImage>>(
+    (state) => state.observations.featureImages
+  );
+
+  const image: FeatureImage | undefined = featureImages.find(
+    (fi) => fi.featureId === featureEntry?.id
   );
 
   const fields = [
@@ -45,9 +53,9 @@ export default function FeatureDetailScreen() {
     >
       {featureEntry && (
         <>
-          {Boolean(featureEntry.imageUrl) && (
+          {Boolean(image) && (
             <Image
-              source={{ uri: featureEntry.imageUrl }}
+              source={{ uri: image?.url }}
               style={{ width: "100%", height: 400 }}
             ></Image>
           )}

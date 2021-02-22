@@ -1,6 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Campaign, Feature, FeatureType, Observation } from "../../../models";
+import {
+  Campaign,
+  Feature,
+  FeatureImage,
+  FeatureType,
+  Observation,
+} from "../../../models";
 import { NewFeaturePayload } from "./types";
 
 interface ObservationsState {
@@ -13,6 +19,7 @@ interface ObservationsState {
   // Entries
   campaignEntries: Array<Campaign>;
   observationEntries: Array<Observation>;
+  featureImages: Array<FeatureImage>;
   featureTypes: Array<FeatureType>;
 
   // Selection
@@ -35,6 +42,7 @@ const initialState: ObservationsState = {
   // Entries
   campaignEntries: [],
   observationEntries: [],
+  featureImages: [],
   featureTypes: [],
 
   // Selection
@@ -89,6 +97,12 @@ export const observationsSlice = createSlice({
     ) => {
       state.observationEntries = payload;
     },
+    addFetchedFeatureImages: (
+      state,
+      { payload }: PayloadAction<Array<FeatureImage>>
+    ) => {
+      state.featureImages = payload;
+    },
     addFetchedFeatureTypes: (
       state,
       { payload }: PayloadAction<Array<FeatureType>>
@@ -140,6 +154,7 @@ export const {
   addNewObservation,
   addFetchedCampaigns,
   addFetchedObservations,
+  addFetchedFeatureImages,
   addFetchedFeatureTypes,
 
   // Selection

@@ -2,7 +2,13 @@ import React from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Feature, FeatureType, Observation, User } from "../../models";
+import {
+  Feature,
+  FeatureImage,
+  FeatureType,
+  Observation,
+  User,
+} from "../../models";
 
 import { Image } from "react-native";
 
@@ -30,8 +36,15 @@ export default function ObservationDetailScreen({
     (state) => state.observations.featureTypes
   );
 
+  const featureImages = useSelector<RootState, Array<FeatureImage>>(
+    (state) => state.observations.featureImages
+  );
+
   const getFeatureTypeById = (id: string) =>
     featureTypes.find((ft) => ft.id === id);
+
+  const getFeatureImage = (featureId: string) =>
+    featureImages.find((f) => f.featureId === featureId);
 
   const navigateToDetailScreen = (featureEntry: Feature) => {
     dispatch(selectFeature(featureEntry));
@@ -72,9 +85,9 @@ export default function ObservationDetailScreen({
               key={index}
               onPress={() => navigateToDetailScreen(featureEntry)}
             >
-              {Boolean(featureEntry.imageUrl) && (
+              {getFeatureImage(featureEntry.id) !== undefined ? (
                 <Image
-                  source={{ uri: featureEntry.imageUrl }}
+                  source={{ uri: getFeatureImage(featureEntry.id)?.url }}
                   style={{
                     width: 50,
                     height: 50,
@@ -82,7 +95,7 @@ export default function ObservationDetailScreen({
                     marginRight: 12,
                   }}
                 ></Image>
-              )}
+              ) : null}
               <Text>
                 {getFeatureTypeById(featureEntry.featureTypeId)?.name}
               </Text>
