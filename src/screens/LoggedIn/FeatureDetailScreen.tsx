@@ -2,7 +2,7 @@ import React from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { Feature } from "../../models";
+import { Feature, FeatureImage } from "../../models";
 
 import { Image } from "react-native";
 
@@ -11,8 +11,26 @@ import { FlexColumn, Section, Text } from "../../components/elements";
 
 export default function FeatureDetailScreen() {
   const featureEntry = useSelector<RootState, Feature | undefined>(
-    (state) => state.observations.selectedFeatureEntry
+    (state) => state.features.selectedFeatureEntry
   );
+
+  const featureImages = useSelector<RootState, Array<FeatureImage>>(
+    (state) => state.features.featureImages
+  );
+
+  const isOnline = useSelector<RootState, boolean>(
+    (state) => state.ui.isOnline
+  );
+
+  const onlineImage: FeatureImage | undefined =
+    isOnline &&
+    featureEntry?.featureImages &&
+    featureEntry?.featureImages?.length > 0
+      ? featureEntry?.featureImages[0]
+      : undefined;
+  const image: FeatureImage | undefined =
+    onlineImage ||
+    featureImages.find((fi) => fi.featureId === featureEntry?.id);
 
   const fields = [
     { label: "Observer: ", value: "John Smith" },
@@ -45,9 +63,9 @@ export default function FeatureDetailScreen() {
     >
       {featureEntry && (
         <>
-          {Boolean(featureEntry.imageUrl) && (
+          {Boolean(image) && (
             <Image
-              source={{ uri: featureEntry.imageUrl }}
+              source={{ uri: image?.url }}
               style={{ width: "100%", height: 400 }}
             ></Image>
           )}

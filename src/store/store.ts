@@ -15,13 +15,17 @@ import { firebaseAuth } from "../services/firebaseAuth";
 
 // Slices
 import accountReducer from "./slices/account";
+import campaignsReducer from "./slices/campaigns";
 import observationsReducer from "./slices/observations";
+import featuresReducer from "./slices/features";
 import sessionReducer from "./slices/session";
 import uiReducer from "./slices/ui";
 
 const rootReducer = combineReducers({
   account: accountReducer,
+  campaigns: campaignsReducer,
   observations: observationsReducer,
+  features: featuresReducer,
   session: sessionReducer,
   ui: uiReducer,
 });

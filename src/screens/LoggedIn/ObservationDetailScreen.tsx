@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Feature, FeatureType, Observation, User } from "../../models";
+import {
+  Feature,
+  FeatureImage,
+  FeatureType,
+  Observation,
+  User,
+} from "../../models";
 
 import { Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import { NavigationProps } from "../../navigation/types";
-import { selectFeature } from "../../store/slices/observations";
+import { fetchFeatures, selectFeature } from "../../store/slices/features";
 import { FlexColumn, ListItem, Section, Text } from "../../components/elements";
 
 export default function ObservationDetailScreen({
@@ -26,12 +32,42 @@ export default function ObservationDetailScreen({
     (state) => state.observations.selectedObservationEntry
   );
 
-  const featureTypes = useSelector<RootState, Array<FeatureType>>(
-    (state) => state.observations.featureTypes
+  const featureEntries = useSelector<RootState, Array<Feature>>(
+    (state) => state.features.featureEntries
   );
+
+  const filteredFeatureEntriesBySelectedObservation = featureEntries.filter(
+    (f) => f.observationId === observationEntry?.id
+  );
+
+  const featureTypes = useSelector<RootState, Array<FeatureType>>(
+    (state) => state.features.featureTypes
+  );
+
+  const featureImages = useSelector<RootState, Array<FeatureImage>>(
+    (state) => state.features.featureImages
+  );
+
+  const isOnline = useSelector<RootState, boolean>(
+    (state) => state.ui.isOnline
+  );
+
+  useEffect(() => {
+    dispatch(fetchFeatures());
+  }, []);
 
   const getFeatureTypeById = (id: string) =>
     featureTypes.find((ft) => ft.id === id);
+
+  const getFeatureImage = (feature: Feature) => {
+    const onlineImage: FeatureImage | undefined =
+      isOnline && feature?.featureImages && feature?.featureImages?.length > 0
+        ? feature?.featureImages[0]
+        : undefined;
+    const image: FeatureImage | undefined =
+      onlineImage || featureImages.find((fi) => fi.featureId === feature?.id);
+    return image?.url || "";
+  };
 
   const navigateToDetailScreen = (featureEntry: Feature) => {
     dispatch(selectFeature(featureEntry));
@@ -67,27 +103,29 @@ export default function ObservationDetailScreen({
           </Section>
           <Title>Added Features / Items</Title>
 
-          {observationEntry.features.map((featureEntry, index) => (
-            <ListItem
-              key={index}
-              onPress={() => navigateToDetailScreen(featureEntry)}
-            >
-              {Boolean(featureEntry.imageUrl) && (
-                <Image
-                  source={{ uri: featureEntry.imageUrl }}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 6,
-                    marginRight: 12,
-                  }}
-                ></Image>
-              )}
-              <Text>
-                {getFeatureTypeById(featureEntry.featureTypeId)?.name}
-              </Text>
-            </ListItem>
-          ))}
+          {filteredFeatureEntriesBySelectedObservation.map(
+            (featureEntry, index) => (
+              <ListItem
+                key={index}
+                onPress={() => navigateToDetailScreen(featureEntry)}
+              >
+                {getFeatureImage(featureEntry) ? (
+                  <Image
+                    source={{ uri: getFeatureImage(featureEntry) }}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      borderRadius: 6,
+                      marginRight: 12,
+                    }}
+                  ></Image>
+                ) : null}
+                <Text>
+                  {getFeatureTypeById(featureEntry.featureTypeId)?.name}
+                </Text>
+              </ListItem>
+            )
+          )}
         </>
       )}
     </Screen>

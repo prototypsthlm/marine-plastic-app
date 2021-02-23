@@ -1,10 +1,7 @@
 import * as React from "react";
 import { useSelector } from "react-redux";
 import { Campaign } from "../models";
-import {
-  fetchCampaigns,
-  setSelectedCampaign,
-} from "../store/slices/observations";
+import { fetchCampaigns, setSelectedCampaign } from "../store/slices/campaigns";
 import { RootState, useThunkDispatch } from "../store/store";
 import { theme } from "../theme";
 import { ListItem, SectionHeader, Text, FlexColumn } from "./elements";
@@ -14,7 +11,7 @@ export default function CampaignPicker() {
   const dispatch = useThunkDispatch();
 
   const campaignEntries = useSelector<RootState, Array<Campaign>>(
-    (state) => state.observations.campaignEntries
+    (state) => state.campaigns.campaignEntries
   );
 
   const campaignlessEntry: Campaign = {

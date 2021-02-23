@@ -6,11 +6,10 @@ import * as Yup from "yup";
 import styled from "../styled";
 import { RootState, useThunkDispatch } from "../store/store";
 import {
-  NewFeaturePayload,
   NewObservationPayload,
   submitNewObservation,
 } from "../store/slices/observations";
-
+import { NewFeaturePayload } from "../store/slices/features";
 import { Geometry } from "../models";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -59,7 +58,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
   const featuresToAdd = useSelector<RootState, Array<NewFeaturePayload>>(
-    (state) => state.observations.featuresToAdd
+    (state) => state.features.featuresToAdd
   );
 
   const handleFormSubmit = (values: any, actions: any) => {
