@@ -5,7 +5,7 @@ import { EnvCompartmentsEnum, FeatureType } from "../models";
 import {
   addFeatureType,
   selectFeatureTypeByMaterial,
-} from "../store/slices/observations";
+} from "../store/slices/features";
 import { RootState, useThunkDispatch } from "../store/store";
 import styled from "../styled";
 import { theme } from "../theme";
@@ -16,7 +16,7 @@ export default function FeatureTypePicker() {
   const dispatch = useThunkDispatch();
 
   const featureTypes = useSelector<RootState, Array<FeatureType>>(
-    (state) => state.observations.featureTypes
+    (state) => state.features.featureTypes
   );
 
   const optionsMaterial = useSelector(selectFeatureTypeByMaterial);

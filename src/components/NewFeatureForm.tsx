@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import styled from "../styled";
 import UploadImage from "./UploadImage";
 import { RootState, useThunkDispatch } from "../store/store";
-import { NewFeaturePayload, addNewFeature } from "../store/slices/observations";
+import { NewFeaturePayload, addNewFeature } from "../store/slices/features";
 import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
 import { theme } from "../theme";
 import { NavigationProps } from "../navigation/types";
@@ -94,7 +94,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
   const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
-    (state) => state.observations.selectedFeatureType
+    (state) => state.features.selectedFeatureType
   );
 
   const [isExtraInfoOpen, setIsExtraInfoOpen] = useState<boolean>(false);

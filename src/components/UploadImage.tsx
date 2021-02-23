@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Button, Platform } from "react-native";
+import { Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
 import * as Location from "expo-location";
 import styled from "../styled";
 import { LocationObject } from "expo-location";
@@ -71,13 +72,19 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
       exif: true,
     });
 
     if (!result.cancelled) {
-      onChange && onChange(result);
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 1000, height: 1000 } }],
+        { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG }
+      );
+
+      onChange && onChange({ ...result, uri: manipResult.uri });
     }
 
     setIsLoading(false);
@@ -97,13 +104,19 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
       exif: true,
     });
 
     if (!result.cancelled) {
-      onChange && onChange({ ...result, location });
+      const manipResult = await ImageManipulator.manipulateAsync(
+        result.uri,
+        [{ resize: { width: 1000, height: 1000 } }],
+        { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG }
+      );
+
+      onChange && onChange({ ...result, uri: manipResult.uri, location });
     }
 
     setIsLoading(false);

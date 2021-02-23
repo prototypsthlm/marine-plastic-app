@@ -2,18 +2,21 @@ import React, { useEffect } from "react";
 import styled from "../../styled";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../store/store";
-import { Campaign, Observation, User } from "../../models";
+import { Campaign, FeatureImage, Observation, User } from "../../models";
 
 import { FlatList, Image } from "react-native";
 
 import { Screen } from "../../components/Screen";
 import {
-  fetchCampaigns,
-  fetchAllFeatureTypes,
   fetchObservations,
   selectFilteredObservationsByCampaign,
-  selectObservation,
+  selectObservationDetails,
 } from "../../store/slices/observations";
+import {
+  fetchAllFeatureImages,
+  fetchAllFeatureTypes,
+} from "../../store/slices/features";
+import { fetchCampaigns } from "../../store/slices/campaigns";
 import { NavigationProps } from "../../navigation/types";
 import {
   FlexColumn,
@@ -29,7 +32,11 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   const observationsEntries = useSelector(selectFilteredObservationsByCampaign);
 
   const selectedCampaignEntry = useSelector<RootState, Campaign | undefined>(
-    (state) => state.observations.selectedCampaignEntry
+    (state) => state.campaigns.selectedCampaignEntry
+  );
+
+  const featureImages = useSelector<RootState, Array<FeatureImage>>(
+    (state) => state.features.featureImages
   );
 
   const user = useSelector<RootState, User | undefined>(
@@ -40,22 +47,26 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
+    dispatch(fetchAllFeatureImages());
     dispatch(fetchCampaigns());
     dispatch(fetchObservations());
   }, []);
 
   const navigateToDetailScreen = (observationEntry: Observation) => {
-    dispatch(selectObservation(observationEntry));
+    dispatch(selectObservationDetails(observationEntry));
     navigation.navigate("observationDetailScreen");
   };
+
+  const getFeatureImage = (featureId: string) =>
+    featureImages.find((f) => f.featureId === featureId);
 
   const renderItem = ({ item }: { item: Observation }) => (
     <ListItem onPress={() => navigateToDetailScreen(item)}>
       {item.features &&
       item.features.length > 0 &&
-      item.features[0].imageUrl ? (
+      getFeatureImage(item.features[0].id) ? (
         <Image
-          source={{ uri: item.features[0].imageUrl }}
+          source={{ uri: getFeatureImage(item.features[0].id)?.url }}
           style={{
             width: 50,
             height: 50,
