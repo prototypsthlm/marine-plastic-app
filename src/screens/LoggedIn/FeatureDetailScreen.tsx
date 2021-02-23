@@ -18,8 +18,14 @@ export default function FeatureDetailScreen() {
     (state) => state.features.featureImages
   );
 
+  const isOnline = useSelector<RootState, boolean>(
+    (state) => state.ui.isOnline
+  );
+
   const onlineImage: FeatureImage | undefined =
-    featureEntry?.featureImages && featureEntry?.featureImages?.length > 0
+    isOnline &&
+    featureEntry?.featureImages &&
+    featureEntry?.featureImages?.length > 0
       ? featureEntry?.featureImages[0]
       : undefined;
   const image: FeatureImage | undefined =

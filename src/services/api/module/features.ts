@@ -47,7 +47,7 @@ export const featuresModule = {
     return response;
   },
   async postFeatureImage(featureImage: FeatureImage) {
-    if (featureImage.url === undefined) return;
+    const imageUri = featureImage.url || "";
 
     const form = new FormData();
     form.append("id", featureImage.id);
@@ -57,12 +57,12 @@ export const featuresModule = {
     );
     form.append("featureId", featureImage.featureId);
 
-    const imageData = {
-      name: featureImage.id + "-featureImage.jpg",
-      uri: featureImage.url,
-      type: "image/jpg",
-    };
-    form.append("image", imageData);
+    const fileExt = imageUri.split(".").pop() || "jpg";
+    form.append("image", {
+      name: featureImage.id + "-featureImage." + fileExt,
+      uri: imageUri,
+      type: "image/" + fileExt,
+    });
 
     const response: HttpResponse<
       SingleResponse<FeatureImage>

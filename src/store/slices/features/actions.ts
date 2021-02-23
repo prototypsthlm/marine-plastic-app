@@ -31,7 +31,7 @@ export const fetchFeatures: Thunk = () => async (
       getState().features.featureNextPageCursor
     );
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get features.");
+      throw new ActionError("Couldn't get/sync features.");
 
     const features: Array<Feature> = result.data.results;
     const cursor: string | null = result.data?.nextPage;
@@ -86,7 +86,7 @@ export const fetchAllFeatureTypes: Thunk = () => async (
   if (featureTypes.length < 1) {
     const result = await api.getAllFeatureTypes();
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get feature types.");
+      throw new ActionError("Couldn't get/sync feature types.");
 
     featureTypes = result.data?.results;
 

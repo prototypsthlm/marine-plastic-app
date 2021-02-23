@@ -24,7 +24,7 @@ export const fetchCampaigns: Thunk = () => async (
       getState().campaigns.campaignNextPageCursor
     );
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get campaigns.");
+      throw new ActionError("Couldn't get/sync campaigns.");
 
     const campaigns: Array<Campaign> = result.data.results;
     const cursor: string | null = result.data?.nextPage;

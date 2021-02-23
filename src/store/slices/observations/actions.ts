@@ -15,7 +15,11 @@ import { NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
-import { resetFeaturesToAdd, setFeatureReachedPageEnd } from "../features";
+import {
+  fetchAllFeatureImages,
+  resetFeaturesToAdd,
+  setFeatureReachedPageEnd,
+} from "../features";
 
 export const fetchObservations: Thunk = () => async (
   dispatch,
@@ -156,6 +160,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
   );
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
+  dispatch(fetchAllFeatureImages());
   navigation.navigate("observationListScreen");
 };
 
@@ -173,7 +178,10 @@ export const syncOfflineEntries: Thunk = () => async (
       EntityType.Feature,
       false
     );
-    const featureImages: Array<FeatureImage> = [];
+    const featureImages: Array<FeatureImage> = await localDB.getEntities<FeatureImage>(
+      EntityType.FeatureImage,
+      false
+    );
 
     dispatch(
       submitObservationsAndFeatures({ observations, features, featureImages })
@@ -208,7 +216,7 @@ export const submitObservationsAndFeatures: Thunk<{
             false,
             observation.campaignId
           );
-        else throw new ActionError("Couldn't post observation.");
+        else throw new ActionError("Couldn't post/sync observation.");
       } else {
         // Upsert if success
         const syncedObservation: Observation = response.data?.result;
@@ -238,7 +246,7 @@ export const submitObservationsAndFeatures: Thunk<{
             feature.observationId,
             feature.id
           );
-        else throw new ActionError("Couldn't post feature.");
+        else throw new ActionError("Couldn't post/sync feature.");
       } else {
         // Upsert if success
         const syncedFeature: Feature = response.data?.result;
@@ -255,17 +263,35 @@ export const submitObservationsAndFeatures: Thunk<{
 
     // 3. Upload feature images
     for (let i = 0; i < featureImages.length; i++) {
+      // POST endpoint
       const featureImage: FeatureImage | undefined = featureImages[i];
-      if (featureImage)
-        // Store offline
-        await localDB.upsertEntities(
-          [featureImage],
-          EntityType.FeatureImage,
-          false,
-          null,
-          null,
-          featureImage.featureId
-        );
+      if (featureImage && featureImage.url) {
+        const response = await api.postFeatureImage(featureImage);
+
+        if (!response.ok || !response.data?.result) {
+          // Store offline
+          if (response.problem === "cannot-connect")
+            await localDB.upsertEntities(
+              [featureImage],
+              EntityType.FeatureImage,
+              false,
+              null,
+              null,
+              featureImage.featureId
+            );
+          else throw new ActionError("Couldn't post/sync feature image.");
+        } else {
+          // Upsert if success
+          await localDB.upsertEntities(
+            [featureImage],
+            EntityType.FeatureImage,
+            true,
+            null,
+            null,
+            featureImage.featureId
+          );
+        }
+      }
     }
   } catch (e) {
     console.log(e);

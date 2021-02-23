@@ -48,6 +48,10 @@ export default function ObservationDetailScreen({
     (state) => state.features.featureImages
   );
 
+  const isOnline = useSelector<RootState, boolean>(
+    (state) => state.ui.isOnline
+  );
+
   useEffect(() => {
     dispatch(fetchFeatures());
   }, []);
@@ -55,8 +59,15 @@ export default function ObservationDetailScreen({
   const getFeatureTypeById = (id: string) =>
     featureTypes.find((ft) => ft.id === id);
 
-  const getFeatureImage = (featureId: string) =>
-    featureImages.find((f) => f.featureId === featureId);
+  const getFeatureImage = (feature: Feature) => {
+    const onlineImage: FeatureImage | undefined =
+      isOnline && feature?.featureImages && feature?.featureImages?.length > 0
+        ? feature?.featureImages[0]
+        : undefined;
+    const image: FeatureImage | undefined =
+      onlineImage || featureImages.find((fi) => fi.featureId === feature?.id);
+    return image?.url || "";
+  };
 
   const navigateToDetailScreen = (featureEntry: Feature) => {
     dispatch(selectFeature(featureEntry));
@@ -98,9 +109,9 @@ export default function ObservationDetailScreen({
                 key={index}
                 onPress={() => navigateToDetailScreen(featureEntry)}
               >
-                {getFeatureImage(featureEntry.id) !== undefined ? (
+                {getFeatureImage(featureEntry) ? (
                   <Image
-                    source={{ uri: getFeatureImage(featureEntry.id)?.url }}
+                    source={{ uri: getFeatureImage(featureEntry) }}
                     style={{
                       width: 50,
                       height: 50,
