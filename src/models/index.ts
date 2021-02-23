@@ -52,6 +52,8 @@ export interface Feature extends BaseEntity {
   observationId: string;
   featureTypeId: string;
   imageUrl?: string;
+  image?: FeatureImage;
+  featureImages?: Array<FeatureImage>;
 
   quantity?: number;
   quantityUnits?: string;
@@ -64,6 +66,12 @@ export interface Feature extends BaseEntity {
   isCollected: boolean;
 
   comments?: string;
+}
+
+export interface FeatureImage extends BaseEntity {
+  featureId: string;
+  url?: string;
+  status?: string;
 }
 
 export enum EnvCompartmentsEnum {
