@@ -24,6 +24,8 @@ export default function CampaignPicker() {
     isClosed: false,
   };
 
+  const openedCampaignEntries = campaignEntries.filter((c) => !c.isClosed);
+
   const renderItem = ({ item }: { item: Campaign }) => (
     <ListItem
       onPress={() =>
@@ -45,7 +47,7 @@ export default function CampaignPicker() {
 
   return (
     <FlatList
-      data={[campaignlessEntry, ...campaignEntries]}
+      data={[campaignlessEntry, ...openedCampaignEntries]}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={() => <SectionHeader>SELECT CAMPAIGN</SectionHeader>}
