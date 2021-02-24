@@ -42,23 +42,21 @@ const InitialFormValues: InitialFormValuesShape = {
   comments: undefined,
 };
 
+const numberValidation = () =>
+  Yup.number()
+    .transform((_, value) => {
+      return +value.replace(/,/, ".");
+    })
+    .typeError("Input a number")
+    .positive("Input a positive number");
+
 const validation = Yup.object().shape({
-  quantity: Yup.number()
-    .typeError("Input a number")
-    .positive("Input a positive number"),
+  quantity: numberValidation(),
   quantityUnits: Yup.string(),
-  estimatedWeightKg: Yup.number()
-    .typeError("Input a number")
-    .positive("Input a positive number"),
-  estimatedSizeM2: Yup.number()
-    .typeError("Input a number")
-    .positive("Input a positive number"),
-  estimatedVolumeM3: Yup.number()
-    .typeError("Input a number")
-    .positive("Input a positive number"),
-  depthM: Yup.number()
-    .typeError("Input a number")
-    .positive("Input a positive number"),
+  estimatedWeightKg: numberValidation(),
+  estimatedSizeM2: numberValidation(),
+  estimatedVolumeM3: numberValidation(),
+  depthM: numberValidation(),
 
   isAbsence: Yup.boolean(),
   isCollected: Yup.boolean(),
@@ -115,12 +113,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
       imageGPSLatitude: imageLocation.latitude,
       imageGPSLongitude: imageLocation.longitude,
 
-      quantity: Number(values.quantity),
+      quantity: Number(values.quantity?.replace(/,/, ".")),
       quantityUnits: values.quantityUnits,
-      estimatedWeightKg: Number(values.estimatedWeightKg),
-      estimatedSizeM2: Number(values.estimatedSizeM2),
-      estimatedVolumeM3: Number(values.estimatedVolumeM3),
-      depthM: Number(values.depthM),
+      estimatedWeightKg: Number(values.estimatedWeightKg?.replace(/,/, ".")),
+      estimatedSizeM2: Number(values.estimatedSizeM2?.replace(/,/, ".")),
+      estimatedVolumeM3: Number(values.estimatedVolumeM3?.replace(/,/, ".")),
+      depthM: Number(values.depthM?.replace(/,/, ".")),
 
       isAbsence: values.isAbsence,
       isCollected: values.isCollected,
