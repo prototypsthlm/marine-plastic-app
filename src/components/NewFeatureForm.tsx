@@ -135,19 +135,19 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     {
       field: "estimatedWeightKg",
       label: "Estimated Weight (Kg)",
-      kbType: "numeric",
+      kbType: "decimal-pad",
     },
     {
       field: "estimatedSizeM2",
       label: "Estimated Size (m2)",
-      kbType: "numeric",
+      kbType: "decimal-pad",
     },
     {
       field: "estimatedVolumeM3",
       label: "Estimated Volume (m3)",
-      kbType: "numeric",
+      kbType: "decimal-pad",
     },
-    { field: "depthM", label: "Depth (m)", kbType: "numeric" },
+    { field: "depthM", label: "Depth (m)", kbType: "decimal-pad" },
     { field: "comments", label: "Comments", kbType: "default" },
   ];
 
