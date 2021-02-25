@@ -42,7 +42,7 @@ export const observationsModule = {
     observationId: string | null = null,
     featureId: string | null = null
   ): Promise<Array<T>> {
-    return new Promise<Array<T>>((resolve) => {
+    return new Promise<Array<T>>((resolve, reject) => {
       db.transaction((tx) => {
         const filerByCampaign =
           campaignId !== null ? `and campaignId = '${campaignId}'` : "";
@@ -58,7 +58,7 @@ export const observationsModule = {
             : "";
         tx.executeSql(
           `select * from baseEntity where type = ? ${filerByCampaign} ${filerByObservation} ${filerByFeature} ${filerByIsSynced}`,
-          [entityType, campaignId, observationId],
+          [entityType],
           (_, { rows }) => {
             let entities: Array<T> = [];
             for (let i = 0; i < rows.length; i++) {
@@ -67,7 +67,7 @@ export const observationsModule = {
             resolve(entities);
           }
         );
-      });
+      }, reject);
     });
   },
 };
