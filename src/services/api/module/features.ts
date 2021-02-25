@@ -61,7 +61,7 @@ export const featuresModule = {
     form.append("image", {
       name: featureImage.id + "-featureImage." + fileExt,
       uri: imageUri,
-      type: "image/" + fileExt,
+      type: "image/" + fileExt === "jpg" ? "jpeg" : fileExt,
     });
 
     const response: HttpResponse<
