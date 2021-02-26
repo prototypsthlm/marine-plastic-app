@@ -7,3 +7,7 @@ export interface NewObservationPayload {
   geometry: Geometry;
   features: Array<NewFeaturePayload>;
 }
+
+export interface EditObservationPayload {
+  comments?: string;
+}

@@ -1,21 +1,27 @@
 import React, { useEffect } from "react";
-import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../../store/store";
+import { RootState, useThunkDispatch } from "../../../store/store";
 import {
   Feature,
   FeatureImage,
   FeatureType,
   Observation,
   User,
-} from "../../models";
+} from "../../../models";
 
 import { Image } from "react-native";
 
-import { Screen } from "../../components/Screen";
-import { NavigationProps } from "../../navigation/types";
-import { fetchFeatures, selectFeature } from "../../store/slices/features";
-import { FlexColumn, ListItem, Section, Text } from "../../components/elements";
+import { Screen } from "../../../components/Screen";
+import { NavigationProps } from "../../../navigation/types";
+import { fetchFeatures, selectFeature } from "../../../store/slices/features";
+import {
+  FlexColumn,
+  ListItem,
+  Section,
+  SectionHeader,
+  Text,
+} from "../../../components/elements";
+import { theme } from "../../../theme";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -101,7 +107,9 @@ export default function ObservationDetailScreen({
               </FlexColumn>
             ) : null}
           </Section>
-          <Title>Added Features / Items</Title>
+          <SectionHeader style={{ marginTop: theme.spacing.large }}>
+            ADDED FEATURES / ITEMS
+          </SectionHeader>
 
           {filteredFeatureEntriesBySelectedObservation.map(
             (featureEntry, index) => (
@@ -131,10 +139,3 @@ export default function ObservationDetailScreen({
     </Screen>
   );
 }
-
-const Title = styled.Text`
-  margin: ${(props) => props.theme.spacing.medium}px;
-  margin-left: ${(props) => props.theme.spacing.medium}px;
-  font-family: ${(props) => props.theme.typography.primaryBold};
-  font-size: ${(props) => props.theme.fontSize.large}px;
-`;

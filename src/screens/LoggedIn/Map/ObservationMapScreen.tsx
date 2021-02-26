@@ -1,10 +1,10 @@
 import * as React from "react";
-import styled from "../../styled";
-import MapView, { Geojson, Marker } from "react-native-maps";
-import { Dimensions, Image } from "react-native";
+import styled from "../../../styled";
+import MapView, { Geojson } from "react-native-maps";
+import { Dimensions } from "react-native";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { Observation } from "../../models";
+import { RootState } from "../../../store/store";
+import { Observation } from "../../../models";
 
 export default function ObservationMapScreen() {
   const observationsEntries = useSelector<RootState, Array<Observation>>(

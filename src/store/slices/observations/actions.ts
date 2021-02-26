@@ -11,7 +11,7 @@ import {
   selectObservation,
   setObservationCursor,
 } from "./slice";
-import { NewObservationPayload } from "./types";
+import { EditObservationPayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
@@ -162,6 +162,12 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
   dispatch(resetFeaturesToAdd());
   dispatch(fetchAllFeatureImages());
   navigation.navigate("observationListScreen");
+};
+
+export const submitEditObservation: Thunk<EditObservationPayload> = (
+  editObservationPayload
+) => async (dispatch, getState, { navigation }) => {
+  navigation.replace("observationDetailScreen");
 };
 
 export const syncOfflineEntries: Thunk = () => async (
