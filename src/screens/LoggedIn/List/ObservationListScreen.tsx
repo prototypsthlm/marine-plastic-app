@@ -1,30 +1,29 @@
 import React, { useEffect } from "react";
-import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../../store/store";
-import { Campaign, FeatureImage, Observation, User } from "../../models";
+import { RootState, useThunkDispatch } from "../../../store/store";
+import { Campaign, FeatureImage, Observation, User } from "../../../models";
 
 import { FlatList, Image } from "react-native";
 
-import { Screen } from "../../components/Screen";
+import { Screen } from "../../../components/Screen";
 import {
   fetchObservations,
   selectFilteredObservationsByCampaign,
   selectObservationDetails,
-} from "../../store/slices/observations";
+} from "../../../store/slices/observations";
 import {
   fetchAllFeatureImages,
   fetchAllFeatureTypes,
-} from "../../store/slices/features";
-import { fetchCampaigns } from "../../store/slices/campaigns";
-import { NavigationProps } from "../../navigation/types";
+} from "../../../store/slices/features";
+import { fetchCampaigns } from "../../../store/slices/campaigns";
+import { NavigationProps } from "../../../navigation/types";
 import {
   FlexColumn,
   ListItem,
   SectionHeader,
   Text,
-} from "../../components/elements";
-import { theme } from "../../theme";
+} from "../../../components/elements";
+import { theme } from "../../../theme";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();

@@ -1,13 +1,12 @@
 import React from "react";
-import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
-import { Feature, FeatureImage } from "../../models";
+import { RootState } from "../../../store/store";
+import { Feature, FeatureImage } from "../../../models";
 
 import { Image } from "react-native";
 
-import { Screen } from "../../components/Screen";
-import { FlexColumn, Section, Text } from "../../components/elements";
+import { Screen } from "../../../components/Screen";
+import { FlexColumn, Section, Text } from "../../../components/elements";
 
 export default function FeatureDetailScreen() {
   const featureEntry = useSelector<RootState, Feature | undefined>(
