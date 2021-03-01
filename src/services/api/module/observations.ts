@@ -1,4 +1,5 @@
 import { Observation } from "../../../models";
+import { EditObservationPayload } from "../../../store/slices/observations";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
@@ -32,6 +33,19 @@ export const observationsModule = {
     const response: HttpResponse<
       SingleResponse<Observation>
     > = await baseApi.post(observationPath, params);
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+  async patchObservation(
+    observation: Observation,
+    fieldsToUpdate: EditObservationPayload
+  ) {
+    const params = {
+      ...fieldsToUpdate,
+    };
+    const response: HttpResponse<
+      SingleResponse<Observation>
+    > = await baseApi.patch(observationPath + "/" + observation.id, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },

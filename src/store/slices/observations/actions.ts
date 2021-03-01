@@ -6,6 +6,7 @@ import {
 } from "../../../models";
 import { Thunk } from "../../store";
 import {
+  addEditedObservation,
   addFetchedObservations,
   addNewObservation,
   selectObservation,
@@ -17,6 +18,8 @@ import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 import {
   fetchAllFeatureImages,
+  processSubmitFeatureImages,
+  processSubmitFeatures,
   resetFeaturesToAdd,
   setFeatureReachedPageEnd,
 } from "../features";
@@ -83,7 +86,7 @@ export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
-) => async (dispatch, getState, { navigation }) => {
+) => async (dispatch, getState, { api, localDB, navigation }) => {
   const campaignId: string | undefined = getState().campaigns
     .selectedCampaignEntry?.id;
 
@@ -151,13 +154,10 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     .filter((f) => f.image !== undefined)
     .map((f) => f.image);
 
-  dispatch(
-    submitObservationsAndFeatures({
-      observations: [newObservation],
-      features: newFeatures,
-      featureImages: allFeatureImages,
-    })
-  );
+  await processSubmitObservation(api, localDB, [newObservation]);
+  await processSubmitFeatures(api, localDB, newFeatures);
+  await processSubmitFeatureImages(api, localDB, allFeatureImages);
+
   dispatch(addNewObservation(newObservation));
   dispatch(resetFeaturesToAdd());
   dispatch(fetchAllFeatureImages());
@@ -166,14 +166,44 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
 export const submitEditObservation: Thunk<EditObservationPayload> = (
   editObservationPayload
-) => async (dispatch, getState, { navigation }) => {
-  navigation.replace("observationDetailScreen");
+) => async (dispatch, getState, { api, localDB, navigation }) => {
+  // 1. Patch to backend
+  const currentObservation: Observation | undefined = getState().observations
+    .selectedObservationEntry;
+  if (!currentObservation) return;
+  const response = await api.patchObservation(
+    currentObservation,
+    editObservationPayload
+  );
+
+  // 2. Upsert to localDB
+  if (!response.ok || !response.data?.result) {
+    throw new ActionError("Couldn't sync updated observation.");
+  } else {
+    // Upsert if success
+    const updatedObservation: Observation = {
+      ...currentObservation,
+      ...editObservationPayload,
+    };
+    await localDB.upsertEntities(
+      [updatedObservation],
+      EntityType.Observation,
+      true,
+      updatedObservation.campaignId
+    );
+
+    // 3. Refresh store with new data
+    dispatch(addEditedObservation(updatedObservation));
+    dispatch(selectObservationDetails(updatedObservation));
+
+    navigation.replace("observationDetailScreen");
+  }
 };
 
 export const syncOfflineEntries: Thunk = () => async (
-  dispatch,
+  _dispatch,
   _,
-  { localDB }
+  { api, localDB }
 ) => {
   try {
     const observations: Array<Observation> = await localDB.getEntities<Observation>(
@@ -189,22 +219,25 @@ export const syncOfflineEntries: Thunk = () => async (
       false
     );
 
-    dispatch(
-      submitObservationsAndFeatures({ observations, features, featureImages })
-    );
+    await processSubmitObservation(api, localDB, observations);
+    await processSubmitFeatures(api, localDB, features);
+    await processSubmitFeatureImages(api, localDB, featureImages);
   } catch (e) {
     console.log(e);
   }
 };
 
-export const submitObservationsAndFeatures: Thunk<{
-  observations: Array<Observation>;
-  features: Array<Feature>;
-  featureImages: Array<FeatureImage | undefined>;
-}> = ({ observations, features, featureImages }) => async (
-  dispatch,
-  _,
-  { api, localDB }
+export const selectObservationDetails: Thunk<Observation> = (observation) => (
+  dispatch
+) => {
+  dispatch(selectObservation(observation));
+  dispatch(setFeatureReachedPageEnd(false));
+};
+
+export const processSubmitObservation = async (
+  api: any,
+  localDB: any,
+  observations: Array<Observation>
 ) => {
   try {
     // 1. Upload observations
@@ -234,79 +267,7 @@ export const submitObservationsAndFeatures: Thunk<{
         );
       }
     }
-
-    // 2. Upload features
-    for (let i = 0; i < features.length; i++) {
-      // POST endpoint
-      const feature: Feature = features[i];
-      const response = await api.postFeature(feature);
-
-      if (!response.ok || !response.data?.result) {
-        // Store offline
-        if (response.problem === "cannot-connect")
-          await localDB.upsertEntities(
-            [feature],
-            EntityType.Feature,
-            false,
-            null,
-            feature.observationId,
-            feature.id
-          );
-        else throw new ActionError("Couldn't post/sync feature.");
-      } else {
-        // Upsert if success
-        const syncedFeature: Feature = response.data?.result;
-        await localDB.upsertEntities(
-          [syncedFeature],
-          EntityType.Feature,
-          true,
-          null,
-          feature.observationId,
-          feature.id
-        );
-      }
-    }
-
-    // 3. Upload feature images
-    for (let i = 0; i < featureImages.length; i++) {
-      // POST endpoint
-      const featureImage: FeatureImage | undefined = featureImages[i];
-      if (featureImage && featureImage.url) {
-        const response = await api.postFeatureImage(featureImage);
-
-        if (!response.ok || !response.data?.result) {
-          // Store offline
-          if (response.problem === "cannot-connect")
-            await localDB.upsertEntities(
-              [featureImage],
-              EntityType.FeatureImage,
-              false,
-              null,
-              null,
-              featureImage.featureId
-            );
-          else throw new ActionError("Couldn't post/sync feature image.");
-        } else {
-          // Upsert if success
-          await localDB.upsertEntities(
-            [featureImage],
-            EntityType.FeatureImage,
-            true,
-            null,
-            null,
-            featureImage.featureId
-          );
-        }
-      }
-    }
   } catch (e) {
     console.log(e);
   }
-};
-
-export const selectObservationDetails: Thunk<Observation> = (
-  observation
-) => async (dispatch) => {
-  dispatch(selectObservation(observation));
-  dispatch(setFeatureReachedPageEnd(false));
 };

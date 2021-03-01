@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import {
@@ -22,6 +22,8 @@ import {
   Text,
 } from "../../../components/elements";
 import { theme } from "../../../theme";
+import { Item } from "react-navigation-header-buttons";
+import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -61,6 +63,19 @@ export default function ObservationDetailScreen({
   useEffect(() => {
     dispatch(fetchFeatures());
   }, []);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <BasicHeaderButtons>
+          <Item
+            title="Edit"
+            onPress={() => navigation.navigate("observationEditScreen")}
+          />
+        </BasicHeaderButtons>
+      ),
+    });
+  }, [navigation]);
 
   const getFeatureTypeById = (id: string) =>
     featureTypes.find((ft) => ft.id === id);

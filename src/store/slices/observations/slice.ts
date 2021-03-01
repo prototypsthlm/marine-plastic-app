@@ -49,6 +49,14 @@ export const observationsSlice = createSlice({
     addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
       state.observationEntries = [...state.observationEntries, payload];
     },
+    addEditedObservation: (state, { payload }: PayloadAction<Observation>) => {
+      state.observationEntries = [
+        ...state.observationEntries.filter(
+          (observation) => observation.id !== payload.id
+        ),
+        payload,
+      ];
+    },
     addFetchedObservations: (
       state,
       { payload }: PayloadAction<Array<Observation>>
@@ -70,6 +78,7 @@ export const {
 
   // Entries
   addNewObservation,
+  addEditedObservation,
   addFetchedObservations,
 
   // Selection

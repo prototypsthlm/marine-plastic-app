@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "../navigation/types";
 import { ListItem, Text } from "./elements";
+import { theme } from "../theme";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -99,7 +100,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             >
               <Ionicons
                 size={30}
-                style={{ color: "#2f95dc" }}
+                style={{ color: theme.color.accent }}
                 name="ios-add-circle"
               />
             </ButtonWithIcon>

@@ -33,6 +33,10 @@ export const color = {
    */
   primary: palette.black,
   /**
+   * The main tinting color.
+   */
+  accent: palette.curiousBlue,
+  /**
    * The default color of text in many components.
    */
   text: palette.black,
