@@ -2,20 +2,14 @@ import React from "react";
 import styled from "../styled";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../store/store";
-import { setOfflineModeNotification } from "../store/slices/ui";
+import { RootState } from "../store/store";
 
 export default function OfflineModeBanner() {
-  const dispatch = useThunkDispatch();
-
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
   );
-  const isOfflineModeNotificationDisabled = useSelector<RootState, boolean>(
-    (state) => state.ui.isOfflineModeNotificationDisabled
-  );
 
-  if (isOnline || isOfflineModeNotificationDisabled) return null;
+  if (isOnline) return null;
 
   return (
     <Banner>
@@ -27,18 +21,6 @@ export default function OfflineModeBanner() {
           name="ios-cloud-offline"
         />
       </Row>
-      <CloseButton onPress={() => dispatch(setOfflineModeNotification(true))}>
-        <Ionicons
-          size={24}
-          style={{
-            color: "white",
-            position: "absolute",
-            right: 0,
-            marginHorizontal: 6,
-          }}
-          name="ios-close"
-        />
-      </CloseButton>
     </Banner>
   );
 }
