@@ -4,7 +4,7 @@ import { EntityType } from "../types";
 
 type EntityPayload = Array<Observation | Feature | Campaign | FeatureImage>;
 
-export const observationsModule = {
+export const baseEntityModule = {
   upsertEntities(
     payloadArray: EntityPayload,
     entityType: EntityType,
@@ -68,6 +68,21 @@ export const observationsModule = {
           }
         );
       }, reject);
+    });
+  },
+  deleteEntities(payloadArray: Array<string>) {
+    return new Promise<void>((resolve, reject) => {
+      db.transaction(
+        (tx) => {
+          tx.executeSql(
+            `delete from baseEntity where id in ("${payloadArray.join(
+              '", "'
+            )}")`
+          );
+        },
+        reject,
+        resolve
+      );
     });
   },
 };

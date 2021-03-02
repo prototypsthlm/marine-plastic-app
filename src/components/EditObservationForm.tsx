@@ -9,8 +9,12 @@ import InputField, { KBType } from "./InputField";
 import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
 import { Observation } from "../models";
-import { TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import BasicHeaderButtons from "./BasicHeaderButtons";
+import { Item } from "react-navigation-header-buttons";
+import {
+  EditObservationPayload,
+  submitEditObservation,
+} from "../store/slices/observations";
 
 interface InitialFormValuesShape {
   [key: string]: string | undefined;
@@ -35,13 +39,13 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={() => handleSubmit()}>
-          <Ionicons
-            size={30}
-            style={{ color: "#2f95dc", marginHorizontal: 16 }}
-            name="ios-checkmark"
+        <BasicHeaderButtons>
+          <Item
+            title="Save"
+            iconName="ios-checkmark"
+            onPress={() => handleSubmit()}
           />
-        </TouchableOpacity>
+        </BasicHeaderButtons>
       ),
     });
   }, [navigation]);
@@ -55,9 +59,10 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
   };
 
   const handleFormSubmit = (values: any, actions: any) => {
-    console.log(values);
-    // dispatch(addNewFeature(newFeature));
-    // actions.resetForm(InitialFormValues);
+    const editedObservationPayload: EditObservationPayload = {
+      ...values,
+    };
+    dispatch(submitEditObservation(editedObservationPayload));
     actions.setSubmitting(false);
   };
 
@@ -72,15 +77,7 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
       onSubmit={handleFormSubmit}
       validationSchema={validation}
     >
-      {({
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        setFieldValue,
-        values,
-        errors,
-        touched,
-      }) => {
+      {({ handleBlur, handleChange, values, errors, touched }) => {
         return (
           <>
             <SectionHeader style={{ marginTop: theme.spacing.large }}>
