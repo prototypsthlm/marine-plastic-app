@@ -66,5 +66,5 @@ export const setSelectedCampaign: Thunk<{
   else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
   dispatch(setObservationReachedPageEnd(false));
   dispatch(fetchObservations());
-  navigation.navigate("observationListScreen");
+  navigation.goBack();
 };
