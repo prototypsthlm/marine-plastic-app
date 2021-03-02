@@ -8,11 +8,8 @@ export default function OfflineModeBanner() {
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
   );
-  const isOfflineModeNotificationDisabled = useSelector<RootState, boolean>(
-    (state) => state.ui.isOfflineModeNotificationDisabled
-  );
 
-  if (isOnline || isOfflineModeNotificationDisabled) return null;
+  if (isOnline) return null;
 
   return (
     <Banner>
