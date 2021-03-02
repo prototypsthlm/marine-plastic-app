@@ -5,6 +5,7 @@ import * as React from "react";
 import ListNavigator from "./tabs/ListNavigator";
 import MapNavigator from "./tabs/MapNavigator";
 import AddNavigator from "./tabs/AddNavigator";
+import { theme } from "../theme";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -12,7 +13,7 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="observationList"
-      tabBarOptions={{ activeTintColor: "#2f95dc" }}
+      tabBarOptions={{ activeTintColor: theme.color.accent }}
     >
       <BottomTab.Screen
         name="observationList"

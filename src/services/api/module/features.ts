@@ -46,6 +46,16 @@ export const featuresModule = {
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
+  async deleteFeature(feature: Feature) {
+    const featureId = feature.id;
+    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+      featurePath + "/" + featureId
+    );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+
+  // FeatureImages
   async postFeatureImage(featureImage: FeatureImage) {
     const imageUri = featureImage.url || "";
 
@@ -72,6 +82,14 @@ export const featuresModule = {
         "Content-Type": "multipart/form-data",
       },
     });
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+  async deleteFeatureImage(featureImage: FeatureImage) {
+    const featureImageId = featureImage.id;
+    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+      featureImagePath + "/" + featureImageId
+    );
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
