@@ -49,4 +49,12 @@ export const observationsModule = {
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
+  async deleteObservation(observation: Observation) {
+    const observationId = observation.id;
+    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+      observationPath + "/" + observationId
+    );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
 };

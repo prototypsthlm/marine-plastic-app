@@ -196,7 +196,7 @@ export const submitEditObservation: Thunk<EditObservationPayload> = (
     dispatch(addEditedObservation(updatedObservation));
     dispatch(selectObservationDetails(updatedObservation));
 
-    navigation.replace("observationDetailScreen");
+    navigation.goBack();
   }
 };
 
@@ -269,5 +269,41 @@ export const processSubmitObservation = async (
     }
   } catch (e) {
     console.log(e);
+  }
+};
+
+export const deleteObservation: Thunk = () => async (
+  dispatch,
+  getState,
+  { api, localDB, navigation }
+) => {
+  // Delete Observation from backend
+  const currentObservation: Observation | undefined = getState().observations
+    .selectedObservationEntry;
+  if (!currentObservation) return;
+  const response = await api.deleteObservation(currentObservation);
+
+  if (!response.ok) {
+    throw new ActionError("Couldn't delete observation.");
+  } else {
+    // If success, delete from localDB
+    const observationId: string = currentObservation.id;
+    const observationFeatures: Array<Feature> = getState().features.featureEntries.filter(
+      (f) => f.observationId === observationId
+    );
+    const featureIds: Array<string> = observationFeatures.map((f) => f.id);
+    const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
+      (f) => featureIds.includes(f.featureId)
+    );
+    const featureImageIds: Array<string> = featureImages.map((f) => f.id);
+    const ids: Array<string> = [
+      observationId,
+      ...featureIds,
+      ...featureImageIds,
+    ];
+    if (ids.length > 0) await localDB.deleteEntities(ids);
+
+    dispatch(fetchAllObservationsFromSelectedCampaign());
+    navigation.goBack();
   }
 };
