@@ -87,81 +87,85 @@ export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
 ) => async (dispatch, getState, { api, localDB, navigation }) => {
-  const campaignId: string | undefined = getState().campaigns
-    .selectedCampaignEntry?.id;
+  try {
+    const campaignId: string | undefined = getState().campaigns
+      .selectedCampaignEntry?.id;
 
-  const creatorId: string | undefined = getState().account.user?.id;
-  if (creatorId === undefined) return;
+    const creatorId: string | undefined = getState().account.user?.id;
+    if (creatorId === undefined) return;
 
-  const newObservationId: string = generateUUIDv4();
-  const newFeatures: Array<Feature> = newObservationPayload.features.map(
-    (featurePayload) => {
-      const featureId: string = generateUUIDv4();
-      return {
-        id: featureId,
-        creatorId: creatorId,
-        creatorApp: CreatorApps.DATA_COLLECTION_APP,
-        createdAt: undefined,
-        updatedAt: undefined,
-        isDeleted: false,
-        deletedAt: undefined,
+    const newObservationId: string = generateUUIDv4();
+    const newFeatures: Array<Feature> = newObservationPayload.features.map(
+      (featurePayload) => {
+        const featureId: string = generateUUIDv4();
+        return {
+          id: featureId,
+          creatorId: creatorId,
+          creatorApp: CreatorApps.DATA_COLLECTION_APP,
+          createdAt: undefined,
+          updatedAt: undefined,
+          isDeleted: false,
+          deletedAt: undefined,
 
-        observationId: newObservationId,
-        featureTypeId: featurePayload.feaureType.id,
-        imageUrl: featurePayload.imageUrl,
-        image: featurePayload.imageUrl
-          ? {
-              id: generateUUIDv4(),
-              creatorId: creatorId,
-              creatorApp: CreatorApps.DATA_COLLECTION_APP,
-              featureId: featureId,
-              url: featurePayload.imageUrl,
-            }
-          : undefined,
+          observationId: newObservationId,
+          featureTypeId: featurePayload.feaureType.id,
+          imageUrl: featurePayload.imageUrl,
+          image: featurePayload.imageUrl
+            ? {
+                id: generateUUIDv4(),
+                creatorId: creatorId,
+                creatorApp: CreatorApps.DATA_COLLECTION_APP,
+                featureId: featureId,
+                url: featurePayload.imageUrl,
+              }
+            : undefined,
 
-        quantity: featurePayload.quantity,
-        quantityUnits: featurePayload.quantityUnits,
-        estimatedWeightKg: featurePayload.estimatedWeightKg,
-        estimatedSizeM2: featurePayload.estimatedSizeM2,
-        estimatedVolumeM3: featurePayload.estimatedVolumeM3,
-        depthM: featurePayload.depthM,
+          quantity: featurePayload.quantity,
+          quantityUnits: featurePayload.quantityUnits,
+          estimatedWeightKg: featurePayload.estimatedWeightKg,
+          estimatedSizeM2: featurePayload.estimatedSizeM2,
+          estimatedVolumeM3: featurePayload.estimatedVolumeM3,
+          depthM: featurePayload.depthM,
 
-        isAbsence: featurePayload.isAbsence,
-        isCollected: featurePayload.isCollected,
+          isAbsence: featurePayload.isAbsence,
+          isCollected: featurePayload.isCollected,
 
-        comments: featurePayload.comments,
-      };
-    }
-  );
-  const newObservation: Observation = {
-    id: newObservationId,
-    creatorId: creatorId,
-    creatorApp: CreatorApps.DATA_COLLECTION_APP,
-    createdAt: undefined,
-    updatedAt: undefined,
-    isDeleted: false,
-    deletedAt: undefined,
+          comments: featurePayload.comments,
+        };
+      }
+    );
+    const newObservation: Observation = {
+      id: newObservationId,
+      creatorId: creatorId,
+      creatorApp: CreatorApps.DATA_COLLECTION_APP,
+      createdAt: undefined,
+      updatedAt: undefined,
+      isDeleted: false,
+      deletedAt: undefined,
 
-    campaignId: campaignId || null,
-    geometry: newObservationPayload.geometry,
-    timestamp: newObservationPayload.timestamp.toISOString(),
-    comments: newObservationPayload.comments,
-    isMatched: false,
-    features: newFeatures,
-  };
+      campaignId: campaignId || null,
+      geometry: newObservationPayload.geometry,
+      timestamp: newObservationPayload.timestamp.toISOString(),
+      comments: newObservationPayload.comments,
+      isMatched: false,
+      features: newFeatures,
+    };
 
-  const allFeatureImages: Array<FeatureImage | undefined> = newFeatures
-    .filter((f) => f.image !== undefined)
-    .map((f) => f.image);
+    const allFeatureImages: Array<
+      FeatureImage | undefined
+    > = newFeatures.filter((f) => f.image !== undefined).map((f) => f.image);
 
-  await processSubmitObservation(api, localDB, [newObservation]);
-  await processSubmitFeatures(api, localDB, newFeatures);
-  await processSubmitFeatureImages(api, localDB, allFeatureImages);
+    await processSubmitObservation(api, localDB, [newObservation]);
+    await processSubmitFeatures(api, localDB, newFeatures);
+    await processSubmitFeatureImages(api, localDB, allFeatureImages);
 
-  dispatch(addNewObservation(newObservation));
-  dispatch(resetFeaturesToAdd());
-  dispatch(fetchAllFeatureImages());
-  navigation.navigate("observationListScreen");
+    dispatch(addNewObservation(newObservation));
+    dispatch(resetFeaturesToAdd());
+    dispatch(fetchAllFeatureImages());
+    navigation.navigate("observationListScreen");
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const submitEditObservation: Thunk<EditObservationPayload> = (
