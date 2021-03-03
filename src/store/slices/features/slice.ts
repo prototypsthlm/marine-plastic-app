@@ -5,8 +5,9 @@ import { NewFeaturePayload } from "./types";
 
 interface FeaturesState {
   // Pagination
-  featureNextPageCursor: string | null;
-  featureReachedPageEnd: boolean;
+  nextPageCursor: string | null;
+  isFirstPage: boolean;
+  reachedPageEnd: boolean;
 
   // Entries
   featureEntries: Array<Feature>;
@@ -23,8 +24,9 @@ interface FeaturesState {
 
 const initialState: FeaturesState = {
   // Pagination
-  featureNextPageCursor: null,
-  featureReachedPageEnd: false,
+  nextPageCursor: null,
+  isFirstPage: true,
+  reachedPageEnd: false,
 
   // Entries
   featureEntries: [],
@@ -45,11 +47,16 @@ export const featuresSlice = createSlice({
   reducers: {
     // Pagination
     setFeatureCursor: (state, { payload }: PayloadAction<string | null>) => {
-      state.featureReachedPageEnd = payload === null;
-      state.featureNextPageCursor = payload;
+      state.reachedPageEnd = payload === null;
+      state.nextPageCursor = payload;
     },
-    setFeatureReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
-      state.featureReachedPageEnd = payload;
+    setReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.reachedPageEnd = payload;
+    },
+    resetPagination: (state) => {
+      state.nextPageCursor = null;
+      state.reachedPageEnd = false;
+      state.isFirstPage = true;
     },
 
     // Entries
@@ -60,6 +67,14 @@ export const featuresSlice = createSlice({
       ];
     },
     addFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
+      if (state.isFirstPage) {
+        state.isFirstPage = false;
+        state.featureEntries = [...state.featureEntries, ...payload];
+      } else {
+        state.featureEntries = payload;
+      }
+    },
+    setFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
       state.featureEntries = payload;
     },
     addFetchedFeatureImages: (
@@ -102,11 +117,13 @@ export const featuresSlice = createSlice({
 export const {
   // Pagination
   setFeatureCursor,
-  setFeatureReachedPageEnd,
+  setReachedPageEnd,
+  resetPagination,
 
   // Entries
   addEditedFeature,
   addFetchedFeatures,
+  setFetchedFeatures,
   addFetchedFeatureImages,
   addFetchedFeatureTypes,
 

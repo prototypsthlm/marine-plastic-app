@@ -17,11 +17,11 @@ import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 import {
-  fetchAllFeatureImages,
+  fetchCachedFeatureImages,
   processSubmitFeatureImages,
   processSubmitFeatures,
   resetFeaturesToAdd,
-  setFeatureReachedPageEnd,
+  setReachedPageEnd,
 } from "../features";
 
 export const fetchObservations: Thunk = () => async (
@@ -161,7 +161,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
     dispatch(addNewObservation(newObservation));
     dispatch(resetFeaturesToAdd());
-    dispatch(fetchAllFeatureImages());
+    dispatch(fetchCachedFeatureImages());
     navigation.navigate("observationListScreen");
   } catch (e) {
     console.log(e);
@@ -235,7 +235,7 @@ export const selectObservationDetails: Thunk<Observation> = (observation) => (
   dispatch
 ) => {
   dispatch(selectObservation(observation));
-  dispatch(setFeatureReachedPageEnd(false));
+  dispatch(setReachedPageEnd(false));
 };
 
 export const processSubmitObservation = async (

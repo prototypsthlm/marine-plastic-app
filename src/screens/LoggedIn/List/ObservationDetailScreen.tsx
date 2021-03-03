@@ -62,7 +62,7 @@ export default function ObservationDetailScreen({
   );
 
   useEffect(() => {
-    dispatch(fetchFeatures());
+    dispatch(fetchFeatures({}));
   }, []);
 
   useLayoutEffect(() => {

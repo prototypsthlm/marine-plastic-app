@@ -12,7 +12,7 @@ import {
   selectObservationDetails,
 } from "../../../store/slices/observations";
 import {
-  fetchAllFeatureImages,
+  fetchCachedFeatureImages,
   fetchAllFeatureTypes,
 } from "../../../store/slices/features";
 import { NavigationProps } from "../../../navigation/types";
@@ -45,7 +45,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
-    dispatch(fetchAllFeatureImages());
+    dispatch(fetchCachedFeatureImages());
     dispatch(fetchObservations());
   }, []);
 
