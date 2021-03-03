@@ -2,9 +2,11 @@ import { Campaign } from "../../../models";
 import { Thunk } from "../../store";
 import {
   addFetchedCampaigns,
+  resetPagination,
   selectCampaign,
   selectCampaignless,
   setCampaignCursor,
+  setFetchedCampaigns,
 } from "./slice";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
@@ -13,16 +15,18 @@ import {
   setObservationReachedPageEnd,
 } from "../observations";
 
-export const fetchCampaigns: Thunk = () => async (
-  dispatch,
-  getState,
-  { api, localDB }
-) => {
-  if (!getState().campaigns.campaignReachedPageEnd && getState().ui.isOnline) {
+export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
+  options
+) => async (dispatch, getState, { api, localDB }) => {
+  const { forceRefresh } = options;
+  const refresh: boolean = forceRefresh || false;
+  if (
+    (refresh || !getState().campaigns.reachedPageEnd) &&
+    getState().ui.isOnline
+  ) {
+    if (refresh) dispatch(resetPagination());
     // 1. Get next page
-    const result = await api.getCampaigns(
-      getState().campaigns.campaignNextPageCursor
-    );
+    const result = await api.getCampaigns(getState().campaigns.nextPageCursor);
     if (!result.ok || !result.data?.results)
       throw new ActionError("Couldn't get/sync campaigns.");
 
@@ -34,12 +38,15 @@ export const fetchCampaigns: Thunk = () => async (
       await localDB.upsertEntities(campaigns, EntityType.Campaign, true);
 
     dispatch(setCampaignCursor(cursor));
+    dispatch(addFetchedCampaigns(campaigns));
   }
 
-  dispatch(fetchAllCampaigns());
+  if (!getState().ui.isOnline) {
+    dispatch(fetchCachedCampaigns());
+  }
 };
 
-export const fetchAllCampaigns: Thunk = () => async (
+export const fetchCachedCampaigns: Thunk = () => async (
   dispatch,
   _,
   { localDB }
@@ -48,7 +55,7 @@ export const fetchAllCampaigns: Thunk = () => async (
     const campaignEntries: Array<Campaign> = await localDB.getEntities<Campaign>(
       EntityType.Campaign
     );
-    dispatch(addFetchedCampaigns(campaignEntries));
+    dispatch(setFetchedCampaigns(campaignEntries));
   } catch (e) {
     console.log({ e });
   }

@@ -15,7 +15,6 @@ import {
   fetchAllFeatureImages,
   fetchAllFeatureTypes,
 } from "../../../store/slices/features";
-import { fetchCampaigns } from "../../../store/slices/campaigns";
 import { NavigationProps } from "../../../navigation/types";
 import {
   FlexColumn,
@@ -47,7 +46,6 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
     dispatch(fetchAllFeatureImages());
-    dispatch(fetchCampaigns());
     dispatch(fetchObservations());
   }, []);
 

@@ -4,8 +4,9 @@ import { Campaign } from "../../../models";
 
 interface CampaignsState {
   // Pagination
-  campaignNextPageCursor: string | null;
-  campaignReachedPageEnd: boolean;
+  nextPageCursor: string | null;
+  isFirstPage: boolean;
+  reachedPageEnd: boolean;
 
   // Entries
   campaignEntries: Array<Campaign>;
@@ -16,8 +17,9 @@ interface CampaignsState {
 
 const initialState: CampaignsState = {
   // Pagination
-  campaignNextPageCursor: null,
-  campaignReachedPageEnd: false,
+  nextPageCursor: null,
+  isFirstPage: true,
+  reachedPageEnd: false,
 
   // Entries
   campaignEntries: [],
@@ -32,15 +34,31 @@ export const campaignsSlice = createSlice({
   reducers: {
     // Pagination
     setCampaignCursor: (state, { payload }: PayloadAction<string | null>) => {
-      state.campaignReachedPageEnd = payload === null;
-      state.campaignNextPageCursor = payload;
+      state.reachedPageEnd = payload === null;
+      state.nextPageCursor = payload;
     },
-    setCampaignReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
-      state.campaignReachedPageEnd = payload;
+    setreachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.reachedPageEnd = payload;
+    },
+    resetPagination: (state) => {
+      state.nextPageCursor = null;
+      state.reachedPageEnd = false;
+      state.isFirstPage = true;
     },
 
     // Entries
     addFetchedCampaigns: (
+      state,
+      { payload }: PayloadAction<Array<Campaign>>
+    ) => {
+      if (state.isFirstPage) {
+        state.isFirstPage = false;
+        state.campaignEntries = [...state.campaignEntries, ...payload];
+      } else {
+        state.campaignEntries = payload;
+      }
+    },
+    setFetchedCampaigns: (
       state,
       { payload }: PayloadAction<Array<Campaign>>
     ) => {
@@ -60,10 +78,12 @@ export const campaignsSlice = createSlice({
 export const {
   // Pagination
   setCampaignCursor,
-  setCampaignReachedPageEnd,
+  setreachedPageEnd,
+  resetPagination,
 
   // Entries
   addFetchedCampaigns,
+  setFetchedCampaigns,
 
   // Selection
   selectCampaign,
