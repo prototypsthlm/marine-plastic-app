@@ -234,3 +234,31 @@ export const processSubmitFeatureImages = async (
     console.log(e);
   }
 };
+
+export const deleteFeature: Thunk = () => async (
+  dispatch,
+  getState,
+  { api, localDB, navigation }
+) => {
+  // Delete Feature from backend
+  const currentFeature: Feature | undefined = getState().features
+    .selectedFeatureEntry;
+  if (!currentFeature) return;
+  const response = await api.deleteFeature(currentFeature);
+
+  if (!response.ok) {
+    throw new ActionError("Couldn't delete feature.");
+  } else {
+    // If success, delete from localDB
+    const featureId: string = currentFeature.id;
+    const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
+      (fi) => fi.featureId === featureId
+    );
+    const featureImageIds: Array<string> = featureImages.map((fi) => fi.id);
+    const ids: Array<string> = [featureId, ...featureImageIds];
+    if (ids.length > 0) await localDB.deleteEntities(ids);
+
+    dispatch(fetchAllFeatures());
+    navigation.goBack();
+  }
+};

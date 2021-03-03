@@ -1,17 +1,21 @@
 import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { RootState, useThunkDispatch } from "../../../store/store";
 import { Feature, FeatureImage } from "../../../models";
 
-import { Image } from "react-native";
+import { Alert, Image } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { FlexColumn, Section, Text } from "../../../components/elements";
 import { NavigationProps } from "../../../navigation/types";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
+import { theme } from "../../../theme";
+import { deleteFeature } from "../../../store/slices/features";
 
 export default function FeatureDetailScreen({ navigation }: NavigationProps) {
+  const dispatch = useThunkDispatch();
+
   const featureEntry = useSelector<RootState, Feature | undefined>(
     (state) => state.features.selectedFeatureEntry
   );
@@ -32,10 +36,34 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
             title="Edit"
             onPress={() => navigation.navigate("featureEditScreen")}
           />
+          <Item
+            title="Delete"
+            iconName="ios-trash"
+            color={theme.color.palette.red}
+            onPress={() => deleteAlert()}
+          />
         </BasicHeaderButtons>
       ),
     });
   }, [navigation]);
+
+  const deleteAlert = () =>
+    Alert.alert(
+      "Delete feature?",
+      "This feature will be permanently deleted.",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => dispatch(deleteFeature()),
+          style: "destructive",
+        },
+      ],
+      { cancelable: false }
+    );
 
   const onlineImage: FeatureImage | undefined =
     isOnline &&
