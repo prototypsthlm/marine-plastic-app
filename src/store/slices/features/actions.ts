@@ -1,15 +1,17 @@
 import { Feature, FeatureImage, FeatureType } from "../../../models";
 import { Thunk } from "../../store";
 import {
+  addEditedFeature,
   addFetchedFeatureImages,
   addFetchedFeatures,
   addFetchedFeatureTypes,
   addNewFeatureToAdd,
   resetFeatureType,
+  selectFeature,
   selectFeatureType,
   setFeatureCursor,
 } from "./slice";
-import { NewFeaturePayload } from "./types";
+import { EditFeaturePayload, NewFeaturePayload } from "./types";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 
@@ -111,7 +113,41 @@ export const addFeatureType: Thunk<FeatureType> = (featureTypePayload) => (
   { navigation }
 ) => {
   dispatch(selectFeatureType(featureTypePayload));
-  navigation.navigate("newFeatureScreen");
+  navigation.goBack();
+};
+
+export const submitEditFeature: Thunk<EditFeaturePayload> = (
+  editFeaturePayload
+) => async (dispatch, getState, { api, localDB, navigation }) => {
+  // 1. Patch to backend
+  const currentFeature: Feature | undefined = getState().features
+    .selectedFeatureEntry;
+  if (!currentFeature) return;
+  const response = await api.patchFeature(currentFeature, editFeaturePayload);
+
+  // 2. Upsert to localDB
+  if (!response.ok || !response.data?.result) {
+    throw new ActionError("Couldn't sync updated feature.");
+  } else {
+    // Upsert if success
+    const updatedFeature: Feature = {
+      ...currentFeature,
+      ...editFeaturePayload,
+    };
+    await localDB.upsertEntities(
+      [updatedFeature],
+      EntityType.Feature,
+      true,
+      null,
+      updatedFeature.observationId
+    );
+
+    // 3. Refresh store with new data
+    dispatch(addEditedFeature(updatedFeature));
+    dispatch(selectFeature(updatedFeature));
+
+    navigation.goBack();
+  }
 };
 
 export const processSubmitFeatures = async (
@@ -196,5 +232,33 @@ export const processSubmitFeatureImages = async (
     }
   } catch (e) {
     console.log(e);
+  }
+};
+
+export const deleteFeature: Thunk = () => async (
+  dispatch,
+  getState,
+  { api, localDB, navigation }
+) => {
+  // Delete Feature from backend
+  const currentFeature: Feature | undefined = getState().features
+    .selectedFeatureEntry;
+  if (!currentFeature) return;
+  const response = await api.deleteFeature(currentFeature);
+
+  if (!response.ok) {
+    throw new ActionError("Couldn't delete feature.");
+  } else {
+    // If success, delete from localDB
+    const featureId: string = currentFeature.id;
+    const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
+      (fi) => fi.featureId === featureId
+    );
+    const featureImageIds: Array<string> = featureImages.map((fi) => fi.id);
+    const ids: Array<string> = [featureId, ...featureImageIds];
+    if (ids.length > 0) await localDB.deleteEntities(ids);
+
+    dispatch(fetchAllFeatures());
+    navigation.goBack();
   }
 };
