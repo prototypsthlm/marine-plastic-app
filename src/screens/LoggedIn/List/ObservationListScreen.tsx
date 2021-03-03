@@ -83,9 +83,15 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     </ListItem>
   );
 
+  const refreshingObservationList = useSelector<RootState, boolean>(
+    (state) => state.observations.refreshing
+  );
+
   return (
     <Screen>
       <FlatList
+        refreshing={refreshingObservationList}
+        onRefresh={() => dispatch(fetchObservations({ forceRefresh: true }))}
         data={observationsEntries}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}

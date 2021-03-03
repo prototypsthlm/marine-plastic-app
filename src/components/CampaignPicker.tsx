@@ -45,8 +45,14 @@ export default function CampaignPicker() {
     </ListItem>
   );
 
+  const refreshingCampaignsList = useSelector<RootState, boolean>(
+    (state) => state.campaigns.refreshing
+  );
+
   return (
     <FlatList
+      refreshing={refreshingCampaignsList}
+      onRefresh={() => dispatch(fetchCampaigns({ forceRefresh: true }))}
       data={[campaignlessEntry, ...openedCampaignEntries]}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}

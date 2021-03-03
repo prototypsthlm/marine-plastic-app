@@ -12,6 +12,7 @@ import {
   selectFeatureType,
   setFeatureCursor,
   setFetchedFeatures,
+  setRefreshing,
 } from "./slice";
 import { EditFeaturePayload, NewFeaturePayload } from "./types";
 import { ActionError } from "../../errors/ActionError";
@@ -20,6 +21,7 @@ import { EntityType } from "../../../services/localDB/types";
 export const fetchFeatures: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
+  dispatch(setRefreshing(true));
   const { forceRefresh } = options;
   const refresh: boolean = forceRefresh || false;
   const isObservationSelected =
@@ -54,6 +56,7 @@ export const fetchFeatures: Thunk<{ forceRefresh?: boolean }> = (
   if (!getState().ui.isOnline) {
     dispatch(fetchCachedFeatures());
   }
+  dispatch(setRefreshing(false));
 };
 
 export const fetchCachedFeatures: Thunk = () => async (

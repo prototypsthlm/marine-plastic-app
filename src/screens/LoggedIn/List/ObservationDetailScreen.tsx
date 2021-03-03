@@ -9,7 +9,7 @@ import {
   User,
 } from "../../../models";
 
-import { Alert, Image } from "react-native";
+import { Alert, FlatList, Image } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { NavigationProps } from "../../../navigation/types";
@@ -120,62 +120,70 @@ export default function ObservationDetailScreen({
     navigation.navigate("featureDetailScreen");
   };
 
-  return (
-    <Screen scroll>
-      {observationEntry && (
-        <>
-          <Section>
-            <Text>
-              <Text bold>Observer:</Text> {username}
-            </Text>
-            <Text>
-              <Text bold>{"Date: "}</Text>
-              {observationEntry.timestamp
-                ? new Date(observationEntry.timestamp)
-                    .toUTCString()
-                    .slice(5, 17)
-                : ""}
-            </Text>
-            <Text>
-              <Text bold>Comments:</Text> {observationEntry.comments}
-            </Text>
-            <Text bold>Geolocation coords:</Text>
-            {observationEntry.geometry?.coordinates.length > 0 ? (
-              <FlexColumn>
-                <Text>{observationEntry.geometry.coordinates[0]}</Text>
-                <Text>{observationEntry.geometry.coordinates[1]}</Text>
-              </FlexColumn>
-            ) : null}
-          </Section>
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            ADDED FEATURES / ITEMS
-          </SectionHeader>
+  const renderItem = ({ item }: { item: Feature }) => (
+    <ListItem onPress={() => navigateToDetailScreen(item)}>
+      {getFeatureImage(item) ? (
+        <Image
+          source={{ uri: getFeatureImage(item) }}
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 6,
+            marginRight: 12,
+          }}
+        ></Image>
+      ) : null}
+      <Text>{getFeatureTypeById(item.featureTypeId)?.name}</Text>
+    </ListItem>
+  );
 
-          {filteredFeatureEntriesBySelectedObservation.map(
-            (featureEntry, index) => (
-              <ListItem
-                key={index}
-                onPress={() => navigateToDetailScreen(featureEntry)}
-              >
-                {getFeatureImage(featureEntry) ? (
-                  <Image
-                    source={{ uri: getFeatureImage(featureEntry) }}
-                    style={{
-                      width: 50,
-                      height: 50,
-                      borderRadius: 6,
-                      marginRight: 12,
-                    }}
-                  ></Image>
-                ) : null}
+  const refreshingFeaturesList = useSelector<RootState, boolean>(
+    (state) => state.features.refreshing
+  );
+
+  return (
+    <Screen>
+      <FlatList
+        refreshing={refreshingFeaturesList}
+        onRefresh={() => dispatch(fetchFeatures({ forceRefresh: true }))}
+        data={filteredFeatureEntriesBySelectedObservation}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        ListHeaderComponent={() => (
+          <>
+            {observationEntry && (
+              <Section>
                 <Text>
-                  {getFeatureTypeById(featureEntry.featureTypeId)?.name}
+                  <Text bold>Observer:</Text> {username}
                 </Text>
-              </ListItem>
-            )
-          )}
-        </>
-      )}
+                <Text>
+                  <Text bold>{"Date: "}</Text>
+                  {observationEntry.timestamp
+                    ? new Date(observationEntry.timestamp)
+                        .toUTCString()
+                        .slice(5, 17)
+                    : ""}
+                </Text>
+                <Text>
+                  <Text bold>Comments:</Text> {observationEntry.comments}
+                </Text>
+                <Text bold>Geolocation coords:</Text>
+                {observationEntry.geometry?.coordinates.length > 0 ? (
+                  <FlexColumn>
+                    <Text>{observationEntry.geometry.coordinates[0]}</Text>
+                    <Text>{observationEntry.geometry.coordinates[1]}</Text>
+                  </FlexColumn>
+                ) : null}
+              </Section>
+            )}
+            <SectionHeader style={{ marginTop: theme.spacing.large }}>
+              ADDED FEATURES / ITEMS
+            </SectionHeader>
+          </>
+        )}
+        onEndReached={() => dispatch(fetchFeatures({}))}
+        onEndReachedThreshold={0.1}
+      />
     </Screen>
   );
 }

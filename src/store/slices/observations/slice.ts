@@ -7,6 +7,7 @@ interface ObservationsState {
   nextPageCursor: string | null;
   isFirstPage: boolean;
   reachedPageEnd: boolean;
+  refreshing: boolean;
 
   // Entries
   observationEntries: Array<Observation>;
@@ -20,6 +21,7 @@ const initialState: ObservationsState = {
   nextPageCursor: null,
   isFirstPage: true,
   reachedPageEnd: false,
+  refreshing: false,
 
   // Entries
   observationEntries: [],
@@ -47,6 +49,10 @@ export const observationsSlice = createSlice({
       state.nextPageCursor = null;
       state.reachedPageEnd = false;
       state.isFirstPage = true;
+      state.observationEntries = [];
+    },
+    setRefreshing: (state, { payload }: PayloadAction<boolean>) => {
+      state.refreshing = payload;
     },
 
     // Entries
@@ -91,6 +97,7 @@ export const {
   setObservationCursor,
   setReachedPageEnd,
   resetPagination,
+  setRefreshing,
 
   // Entries
   addNewObservation,

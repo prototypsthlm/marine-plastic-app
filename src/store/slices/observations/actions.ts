@@ -13,6 +13,7 @@ import {
   selectObservation,
   setFetchedObservations,
   setObservationCursor,
+  setRefreshing,
 } from "./slice";
 import { EditObservationPayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
@@ -30,6 +31,7 @@ export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
   try {
+    dispatch(setRefreshing(true));
     const { forceRefresh } = options;
     const refresh: boolean = forceRefresh || false;
     if (
@@ -67,8 +69,11 @@ export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
     if (!getState().ui.isOnline) {
       dispatch(fetchCachedObservations());
     }
+
+    dispatch(setRefreshing(false));
   } catch (e) {
     console.log({ e });
+    dispatch(setRefreshing(false));
   }
 };
 

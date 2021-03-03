@@ -8,6 +8,7 @@ interface FeaturesState {
   nextPageCursor: string | null;
   isFirstPage: boolean;
   reachedPageEnd: boolean;
+  refreshing: boolean;
 
   // Entries
   featureEntries: Array<Feature>;
@@ -27,6 +28,7 @@ const initialState: FeaturesState = {
   nextPageCursor: null,
   isFirstPage: true,
   reachedPageEnd: false,
+  refreshing: false,
 
   // Entries
   featureEntries: [],
@@ -57,6 +59,10 @@ export const featuresSlice = createSlice({
       state.nextPageCursor = null;
       state.reachedPageEnd = false;
       state.isFirstPage = true;
+      state.featureEntries = [];
+    },
+    setRefreshing: (state, { payload }: PayloadAction<boolean>) => {
+      state.refreshing = payload;
     },
 
     // Entries
@@ -119,6 +125,7 @@ export const {
   setFeatureCursor,
   setReachedPageEnd,
   resetPagination,
+  setRefreshing,
 
   // Entries
   addEditedFeature,

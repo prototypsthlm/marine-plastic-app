@@ -7,6 +7,7 @@ import {
   selectCampaignless,
   setCampaignCursor,
   setFetchedCampaigns,
+  setRefreshing,
 } from "./slice";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
@@ -15,6 +16,7 @@ import { fetchObservations, setReachedPageEnd } from "../observations";
 export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
+  dispatch(setRefreshing(true));
   const { forceRefresh } = options;
   const refresh: boolean = forceRefresh || false;
   if (
@@ -42,6 +44,7 @@ export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
   if (!getState().ui.isOnline) {
     dispatch(fetchCachedCampaigns());
   }
+  dispatch(setRefreshing(false));
 };
 
 export const fetchCachedCampaigns: Thunk = () => async (

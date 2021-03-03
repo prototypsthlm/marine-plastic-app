@@ -7,6 +7,7 @@ interface CampaignsState {
   nextPageCursor: string | null;
   isFirstPage: boolean;
   reachedPageEnd: boolean;
+  refreshing: boolean;
 
   // Entries
   campaignEntries: Array<Campaign>;
@@ -20,6 +21,7 @@ const initialState: CampaignsState = {
   nextPageCursor: null,
   isFirstPage: true,
   reachedPageEnd: false,
+  refreshing: false,
 
   // Entries
   campaignEntries: [],
@@ -44,6 +46,10 @@ export const campaignsSlice = createSlice({
       state.nextPageCursor = null;
       state.reachedPageEnd = false;
       state.isFirstPage = true;
+      state.campaignEntries = [];
+    },
+    setRefreshing: (state, { payload }: PayloadAction<boolean>) => {
+      state.refreshing = payload;
     },
 
     // Entries
@@ -80,6 +86,7 @@ export const {
   setCampaignCursor,
   setreachedPageEnd,
   resetPagination,
+  setRefreshing,
 
   // Entries
   addFetchedCampaigns,
