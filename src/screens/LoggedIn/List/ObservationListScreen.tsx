@@ -46,7 +46,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
     dispatch(fetchCachedFeatureImages());
-    dispatch(fetchObservations());
+    dispatch(fetchObservations({}));
   }, []);
 
   const navigateToDetailScreen = (observationEntry: Observation) => {
@@ -125,7 +125,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
             )}
           </>
         )}
-        onEndReached={() => dispatch(fetchObservations())}
+        onEndReached={() => dispatch(fetchObservations({}))}
         onEndReachedThreshold={0.1}
       />
     </Screen>

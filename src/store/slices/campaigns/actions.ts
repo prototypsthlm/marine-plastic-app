@@ -10,10 +10,7 @@ import {
 } from "./slice";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
-import {
-  fetchObservations,
-  setObservationReachedPageEnd,
-} from "../observations";
+import { fetchObservations, setReachedPageEnd } from "../observations";
 
 export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
   options
@@ -24,7 +21,8 @@ export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
     (refresh || !getState().campaigns.reachedPageEnd) &&
     getState().ui.isOnline
   ) {
-    if (refresh) dispatch(resetPagination());
+    if (refresh && getState().campaigns.reachedPageEnd)
+      dispatch(resetPagination());
     // 1. Get next page
     const result = await api.getCampaigns(getState().campaigns.nextPageCursor);
     if (!result.ok || !result.data?.results)
@@ -71,7 +69,7 @@ export const setSelectedCampaign: Thunk<{
 ) => {
   if (isCampignless) dispatch(selectCampaignless());
   else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
-  dispatch(setObservationReachedPageEnd(false));
-  dispatch(fetchObservations());
+  dispatch(setReachedPageEnd(false));
+  dispatch(fetchObservations({}));
   navigation.goBack();
 };
