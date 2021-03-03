@@ -63,12 +63,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   );
 
   const InitialFormValues: InitialFormValuesShape = {
-    quantity: String(featureEntry?.quantity),
-    quantityUnits: String(featureEntry?.quantityUnits),
-    estimatedWeightKg: String(featureEntry?.estimatedWeightKg),
-    estimatedSizeM2: String(featureEntry?.estimatedSizeM2),
-    estimatedVolumeM3: String(featureEntry?.estimatedVolumeM3),
-    depthM: String(featureEntry?.depthM),
+    quantity: String(featureEntry?.quantity || ""),
+    quantityUnits: String(featureEntry?.quantityUnits || ""),
+    estimatedWeightKg: String(featureEntry?.estimatedWeightKg || ""),
+    estimatedSizeM2: String(featureEntry?.estimatedSizeM2 || ""),
+    estimatedVolumeM3: String(featureEntry?.estimatedVolumeM3 || ""),
+    depthM: String(featureEntry?.depthM || ""),
     isAbsence: featureEntry?.isAbsence || false,
     isCollected: featureEntry?.isCollected || false,
     comments: featureEntry?.comments || "",
