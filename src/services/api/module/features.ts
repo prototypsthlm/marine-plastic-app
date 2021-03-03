@@ -1,4 +1,5 @@
 import { CreatorApps, Feature, FeatureImage } from "../../../models";
+import { EditFeaturePayload } from "../../../store/slices/features";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
@@ -41,6 +42,17 @@ export const featuresModule = {
     };
     const response: HttpResponse<SingleResponse<Feature>> = await baseApi.post(
       featurePath,
+      params
+    );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+  async patchFeature(feature: Feature, fieldsToUpdate: EditFeaturePayload) {
+    const params = {
+      ...fieldsToUpdate,
+    };
+    const response: HttpResponse<SingleResponse<Feature>> = await baseApi.patch(
+      featurePath + "/" + feature.id,
       params
     );
     if (!response.ok) return createGenericProblem(response);

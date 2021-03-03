@@ -5,6 +5,9 @@ import ObservationDetailScreen from "../../screens/LoggedIn/List/ObservationDeta
 import FeatureDetailScreen from "../../screens/LoggedIn/List/FeatureDetailScreen";
 import CampaignPickerScreen from "../../screens/LoggedIn/List/CampaignPickerScreen";
 import ObservationEditScreen from "../../screens/LoggedIn/List/ObservationEditScreen";
+import FeatureEditScreen from "../../screens/LoggedIn/List/FeatureEditScreen";
+
+import FeatureTypePickerScreen from "../../screens/LoggedIn/Add/FeatureTypePickerScreen";
 
 const Stack = createStackNavigator();
 
@@ -30,6 +33,16 @@ export default function ListNavigator() {
         name="featureDetailScreen"
         component={FeatureDetailScreen}
         options={{ headerTitle: "Feature details" }}
+      />
+      <Stack.Screen
+        name="featureEditScreen"
+        component={FeatureEditScreen}
+        options={{ headerTitle: "Edit Feature" }}
+      />
+      <Stack.Screen
+        name="featureTypePickerScreen"
+        component={FeatureTypePickerScreen}
+        options={{ headerTitle: "Feature Type Picker" }}
       />
       <Stack.Screen
         name="campaignPickerScreen"
