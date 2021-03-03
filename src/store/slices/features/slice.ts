@@ -53,6 +53,12 @@ export const featuresSlice = createSlice({
     },
 
     // Entries
+    addEditedFeature: (state, { payload }: PayloadAction<Feature>) => {
+      state.featureEntries = [
+        ...state.featureEntries.filter((feature) => feature.id !== payload.id),
+        payload,
+      ];
+    },
     addFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
       state.featureEntries = payload;
     },
@@ -99,6 +105,7 @@ export const {
   setFeatureReachedPageEnd,
 
   // Entries
+  addEditedFeature,
   addFetchedFeatures,
   addFetchedFeatureImages,
   addFetchedFeatureTypes,

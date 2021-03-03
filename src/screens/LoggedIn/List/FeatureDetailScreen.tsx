@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { Feature, FeatureImage } from "../../../models";
@@ -7,8 +7,11 @@ import { Image } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { FlexColumn, Section, Text } from "../../../components/elements";
+import { NavigationProps } from "../../../navigation/types";
+import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
+import { Item } from "react-navigation-header-buttons";
 
-export default function FeatureDetailScreen() {
+export default function FeatureDetailScreen({ navigation }: NavigationProps) {
   const featureEntry = useSelector<RootState, Feature | undefined>(
     (state) => state.features.selectedFeatureEntry
   );
@@ -20,6 +23,19 @@ export default function FeatureDetailScreen() {
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
   );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <BasicHeaderButtons>
+          <Item
+            title="Edit"
+            onPress={() => navigation.navigate("featureEditScreen")}
+          />
+        </BasicHeaderButtons>
+      ),
+    });
+  }, [navigation]);
 
   const onlineImage: FeatureImage | undefined =
     isOnline &&
