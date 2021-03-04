@@ -15,12 +15,22 @@ import { LoggedOutStackNavigator } from "./LoggedOutStackNavigator";
 import NetInfo from "@react-native-community/netinfo";
 import { setIsOnline } from "../store/slices/ui";
 import { syncOfflineEntries } from "../store/slices/observations";
+import { theme } from '../theme';
+
+const OceanScanTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    card: theme.color.palette.dark,
+    text: theme.color.palette.white
+  },
+};
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation() {
   return (
-    <NavigationContainer ref={navigationRef} theme={DefaultTheme}>
+    <NavigationContainer ref={navigationRef} theme={OceanScanTheme}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -58,7 +68,7 @@ function RootNavigator() {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
+      <Stack.Screen name="Root" component={BottomTabNavigator}/>
     </Stack.Navigator>
   );
 }
