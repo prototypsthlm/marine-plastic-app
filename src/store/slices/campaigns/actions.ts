@@ -23,8 +23,7 @@ export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
     (refresh || !getState().campaigns.reachedPageEnd) &&
     getState().ui.isOnline
   ) {
-    if (refresh && getState().campaigns.reachedPageEnd)
-      dispatch(resetPagination());
+    if (refresh) dispatch(resetPagination());
     // 1. Get next page
     const result = await api.getCampaigns(getState().campaigns.nextPageCursor);
     if (!result.ok || !result.data?.results)

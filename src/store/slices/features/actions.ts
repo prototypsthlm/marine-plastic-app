@@ -31,8 +31,7 @@ export const fetchFeatures: Thunk<{ forceRefresh?: boolean }> = (
     getState().ui.isOnline &&
     isObservationSelected
   ) {
-    if (refresh && getState().features.reachedPageEnd)
-      dispatch(resetPagination());
+    if (refresh) dispatch(resetPagination());
 
     // 1. Get next page
     const result = await api.getFeatures(

@@ -75,9 +75,9 @@ export const featuresSlice = createSlice({
     addFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
       if (state.isFirstPage) {
         state.isFirstPage = false;
-        state.featureEntries = [...state.featureEntries, ...payload];
-      } else {
         state.featureEntries = payload;
+      } else {
+        state.featureEntries = [...state.featureEntries, ...payload];
       }
     },
     setFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {

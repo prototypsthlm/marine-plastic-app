@@ -59,9 +59,9 @@ export const campaignsSlice = createSlice({
     ) => {
       if (state.isFirstPage) {
         state.isFirstPage = false;
-        state.campaignEntries = [...state.campaignEntries, ...payload];
-      } else {
         state.campaignEntries = payload;
+      } else {
+        state.campaignEntries = [...state.campaignEntries, ...payload];
       }
     },
     setFetchedCampaigns: (

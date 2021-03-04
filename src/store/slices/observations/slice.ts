@@ -73,9 +73,9 @@ export const observationsSlice = createSlice({
     ) => {
       if (state.isFirstPage) {
         state.isFirstPage = false;
-        state.observationEntries = [...state.observationEntries, ...payload];
-      } else {
         state.observationEntries = payload;
+      } else {
+        state.observationEntries = [...state.observationEntries, ...payload];
       }
     },
     setFetchedObservations: (
