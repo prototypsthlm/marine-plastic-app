@@ -1,16 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 
-import ObservationListScreen from "../screens/LoggedIn/ObservationListScreen";
-import ObservationMapScreen from "../screens/LoggedIn/ObservationMapScreen";
-import NewObservationScreen from "../screens/LoggedIn/NewObservationScreen";
-import ObservationDetailScreen from "../screens/LoggedIn/ObservationDetailScreen";
-import NewFeatureScreen from "../screens/LoggedIn/NewFeatureScreen";
-import FeatureDetailScreen from "../screens/LoggedIn/FeatureDetailScreen";
-import FeatureTypePickerScreen from "../screens/LoggedIn/FeatureTypePickerScreen";
-import CampaignPickerScreen from "../screens/LoggedIn/CampaignPickerScreen";
+import ListNavigator from "./tabs/ListNavigator";
+import MapNavigator from "./tabs/MapNavigator";
+import AddNavigator from "./tabs/AddNavigator";
+import { theme } from "../theme";
 
 const BottomTab = createBottomTabNavigator();
 
@@ -18,11 +13,11 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="observationList"
-      tabBarOptions={{ activeTintColor: "#2f95dc" }}
+      tabBarOptions={{ activeTintColor: theme.color.accent }}
     >
       <BottomTab.Screen
         name="observationList"
-        component={ObservationListNavigator}
+        component={ListNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-list" color={color} />
@@ -32,7 +27,7 @@ export default function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="observationMap"
-        component={ObservationMapNavigator}
+        component={MapNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-map" color={color} />
@@ -42,7 +37,7 @@ export default function BottomTabNavigator() {
       />
       <BottomTab.Screen
         name="newObservation"
-        component={NewObservationNavigator}
+        component={AddNavigator}
         options={{
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="ios-add-circle" color={color} />
@@ -61,69 +56,4 @@ function TabBarIcon(props: {
   color: string;
 }) {
   return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
-}
-
-// Each tab has its own navigation stack, you can read more about this pattern here:
-// https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const Stack = createStackNavigator();
-
-function ObservationListNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="observationListScreen"
-        component={ObservationListScreen}
-        options={{ headerTitle: "My observations list" }}
-      />
-      <Stack.Screen
-        name="observationDetailScreen"
-        component={ObservationDetailScreen}
-        options={{ headerTitle: "Observations details" }}
-      />
-      <Stack.Screen
-        name="featureDetailScreen"
-        component={FeatureDetailScreen}
-        options={{ headerTitle: "Feature details" }}
-      />
-      <Stack.Screen
-        name="campaignPickerScreen"
-        component={CampaignPickerScreen}
-        options={{ headerTitle: "Campaign Picker" }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function ObservationMapNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="observationMapScreen"
-        component={ObservationMapScreen}
-        options={{ headerTitle: "My observations map" }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function NewObservationNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="newObservationScreen"
-        component={NewObservationScreen}
-        options={{ headerTitle: "Add new observation" }}
-      />
-      <Stack.Screen
-        name="newFeatureScreen"
-        component={NewFeatureScreen}
-        options={{ headerTitle: "Add new feature" }}
-      />
-      <Stack.Screen
-        name="featureTypePickerScreen"
-        component={FeatureTypePickerScreen}
-        options={{ headerTitle: "Feature Type Picker" }}
-      />
-    </Stack.Navigator>
-  );
 }

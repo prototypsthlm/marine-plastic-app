@@ -10,11 +10,12 @@ import {
   submitNewObservation,
 } from "../store/slices/observations";
 import { NewFeaturePayload } from "../store/slices/features";
-import { Geometry } from "../models";
+import { Campaign, Geometry } from "../models";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "../navigation/types";
-import { ListItem, Text } from "./elements";
+import { ListItem, SectionHeader, Text } from "./elements";
+import { theme } from "../theme";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -57,6 +58,10 @@ function getGeometryFromFeatures(features: Array<NewFeaturePayload>): Geometry {
 const NewObservationForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
+  const selectedCampaignEntry = useSelector<RootState, Campaign | undefined>(
+    (state) => state.campaigns.selectedCampaignEntry
+  );
+
   const featuresToAdd = useSelector<RootState, Array<NewFeaturePayload>>(
     (state) => state.features.featuresToAdd
   );
@@ -80,6 +85,22 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     >
       {({ handleBlur, handleChange, handleSubmit, values }) => (
         <>
+          <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
+          <ListItem
+              onPress={() => navigation.navigate("changeCampaignScreen")}
+            >
+            <Text
+                style={{
+                  color: theme.color.palette.gray,
+                  paddingVertical: theme.spacing.small,
+                }}
+              >
+                {selectedCampaignEntry
+                  ? selectedCampaignEntry.name
+                  : "Campaign-less observations"}
+            </Text>
+          </ListItem>
+
           <FormSection>
             <InputField
               invertColors={false}
@@ -99,7 +120,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             >
               <Ionicons
                 size={30}
-                style={{ color: "#2f95dc" }}
+                style={{ color: theme.color.accent }}
                 name="ios-add-circle"
               />
             </ButtonWithIcon>

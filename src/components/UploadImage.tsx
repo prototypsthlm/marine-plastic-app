@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as ImageManipulator from "expo-image-manipulator";
 import * as Location from "expo-location";
@@ -72,12 +72,23 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
       quality: 1,
       exif: true,
     });
 
     if (!result.cancelled) {
+      if (!result.exif || !result.exif.GPSLongitude)
+        Alert.alert(
+          "No location metadata",
+          "This image lacks geolocation metadata."
+        );
+
+      if (!result.exif || !result.exif.DateTimeOriginal)
+        Alert.alert(
+          "No timestamp metadata",
+          "This image lacks timestamp metadata. The device current time will be used instead."
+        );
+
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
         [{ resize: { width: 1000, height: 1000 } }],
@@ -104,7 +115,6 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
       quality: 1,
       exif: true,
     });

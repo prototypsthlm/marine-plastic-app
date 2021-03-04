@@ -1,0 +1,12 @@
+import * as React from "react";
+import { Screen } from "../../../components/Screen";
+import EditFeatureForm from "../../../components/EditFeatureForm";
+import { NavigationProps } from "../../../navigation/types";
+
+export default function FeatureEditScreen({ navigation }: NavigationProps) {
+  return (
+    <Screen scroll>
+      <EditFeatureForm navigation={navigation} />
+    </Screen>
+  );
+}

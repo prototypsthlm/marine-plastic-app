@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { Campaign } from "../models";
 import { fetchCampaigns, setSelectedCampaign } from "../store/slices/campaigns";
@@ -45,13 +45,19 @@ export default function CampaignPicker() {
     </ListItem>
   );
 
+  const refreshingCampaignsList = useSelector<RootState, boolean>(
+    (state) => state.campaigns.refreshing
+  );
+
   return (
     <FlatList
+      refreshing={refreshingCampaignsList}
+      onRefresh={() => dispatch(fetchCampaigns({ forceRefresh: true }))}
       data={[campaignlessEntry, ...openedCampaignEntries]}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={() => <SectionHeader>SELECT CAMPAIGN</SectionHeader>}
-      onEndReached={() => dispatch(fetchCampaigns())}
+      onEndReached={() => dispatch(fetchCampaigns({}))}
       onEndReachedThreshold={0.1}
     />
   );

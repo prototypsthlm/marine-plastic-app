@@ -1,4 +1,5 @@
 import { CreatorApps, Feature, FeatureImage } from "../../../models";
+import { EditFeaturePayload } from "../../../store/slices/features";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
@@ -46,6 +47,27 @@ export const featuresModule = {
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
+  async patchFeature(feature: Feature, fieldsToUpdate: EditFeaturePayload) {
+    const params = {
+      ...fieldsToUpdate,
+    };
+    const response: HttpResponse<SingleResponse<Feature>> = await baseApi.patch(
+      featurePath + "/" + feature.id,
+      params
+    );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+  async deleteFeature(feature: Feature) {
+    const featureId = feature.id;
+    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+      featurePath + "/" + featureId
+    );
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+
+  // FeatureImages
   async postFeatureImage(featureImage: FeatureImage) {
     const imageUri = featureImage.url || "";
 
@@ -61,7 +83,7 @@ export const featuresModule = {
     form.append("image", {
       name: featureImage.id + "-featureImage." + fileExt,
       uri: imageUri,
-      type: "image/" + fileExt,
+      type: "image/" + fileExt === "jpg" ? "jpeg" : fileExt,
     });
 
     const response: HttpResponse<
@@ -72,6 +94,14 @@ export const featuresModule = {
         "Content-Type": "multipart/form-data",
       },
     });
+    if (!response.ok) return createGenericProblem(response);
+    return response;
+  },
+  async deleteFeatureImage(featureImage: FeatureImage) {
+    const featureImageId = featureImage.id;
+    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+      featureImagePath + "/" + featureImageId
+    );
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
