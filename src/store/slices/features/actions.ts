@@ -7,30 +7,37 @@ import {
   addFetchedFeatureTypes,
   addNewFeatureToAdd,
   resetFeatureType,
+  resetPagination,
   selectFeature,
   selectFeatureType,
   setFeatureCursor,
+  setFetchedFeatures,
+  setRefreshing,
 } from "./slice";
 import { EditFeaturePayload, NewFeaturePayload } from "./types";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 
-export const fetchFeatures: Thunk = () => async (
-  dispatch,
-  getState,
-  { api, localDB }
-) => {
+export const fetchFeatures: Thunk<{ forceRefresh?: boolean }> = (
+  options
+) => async (dispatch, getState, { api, localDB }) => {
+  dispatch(setRefreshing(true));
+  const { forceRefresh } = options;
+  const refresh: boolean = forceRefresh || false;
   const isObservationSelected =
     getState().observations.selectedObservationEntry !== undefined;
   if (
-    !getState().features.featureReachedPageEnd &&
+    (refresh || !getState().features.reachedPageEnd) &&
     getState().ui.isOnline &&
     isObservationSelected
   ) {
+    if (refresh && getState().features.reachedPageEnd)
+      dispatch(resetPagination());
+
     // 1. Get next page
     const result = await api.getFeatures(
       getState().observations.selectedObservationEntry?.id || "",
-      getState().features.featureNextPageCursor
+      getState().features.nextPageCursor
     );
     if (!result.ok || !result.data?.results)
       throw new ActionError("Couldn't get/sync features.");
@@ -43,12 +50,16 @@ export const fetchFeatures: Thunk = () => async (
       await localDB.upsertEntities(features, EntityType.Feature, true);
 
     dispatch(setFeatureCursor(cursor));
+    dispatch(addFetchedFeatures(features));
   }
 
-  dispatch(fetchAllFeatures());
+  if (!getState().ui.isOnline) {
+    dispatch(fetchCachedFeatures());
+  }
+  dispatch(setRefreshing(false));
 };
 
-export const fetchAllFeatures: Thunk = () => async (
+export const fetchCachedFeatures: Thunk = () => async (
   dispatch,
   _,
   { localDB }
@@ -57,13 +68,13 @@ export const fetchAllFeatures: Thunk = () => async (
     const featureEntries: Array<Feature> = await localDB.getEntities<Feature>(
       EntityType.Feature
     );
-    dispatch(addFetchedFeatures(featureEntries));
+    dispatch(setFetchedFeatures(featureEntries));
   } catch (e) {
     console.log({ e });
   }
 };
 
-export const fetchAllFeatureImages: Thunk = () => async (
+export const fetchCachedFeatureImages: Thunk = () => async (
   dispatch,
   _,
   { localDB }
@@ -258,7 +269,7 @@ export const deleteFeature: Thunk = () => async (
     const ids: Array<string> = [featureId, ...featureImageIds];
     if (ids.length > 0) await localDB.deleteEntities(ids);
 
-    dispatch(fetchAllFeatures());
+    dispatch(fetchFeatures({}));
     navigation.goBack();
   }
 };

@@ -12,10 +12,9 @@ import {
   selectObservationDetails,
 } from "../../../store/slices/observations";
 import {
-  fetchAllFeatureImages,
+  fetchCachedFeatureImages,
   fetchAllFeatureTypes,
 } from "../../../store/slices/features";
-import { fetchCampaigns } from "../../../store/slices/campaigns";
 import { NavigationProps } from "../../../navigation/types";
 import {
   FlexColumn,
@@ -46,9 +45,8 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
-    dispatch(fetchAllFeatureImages());
-    dispatch(fetchCampaigns());
-    dispatch(fetchObservations());
+    dispatch(fetchCachedFeatureImages());
+    dispatch(fetchObservations({}));
   }, []);
 
   const navigateToDetailScreen = (observationEntry: Observation) => {
@@ -85,9 +83,15 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     </ListItem>
   );
 
+  const refreshingObservationList = useSelector<RootState, boolean>(
+    (state) => state.observations.refreshing
+  );
+
   return (
     <Screen>
       <FlatList
+        refreshing={refreshingObservationList}
+        onRefresh={() => dispatch(fetchObservations({ forceRefresh: true }))}
         data={observationsEntries}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -127,7 +131,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
             )}
           </>
         )}
-        onEndReached={() => dispatch(fetchObservations())}
+        onEndReached={() => dispatch(fetchObservations({}))}
         onEndReachedThreshold={0.1}
       />
     </Screen>
