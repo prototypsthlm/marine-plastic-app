@@ -9,36 +9,42 @@ import {
   addEditedObservation,
   addFetchedObservations,
   addNewObservation,
+  resetPagination,
   selectObservation,
+  setFetchedObservations,
   setObservationCursor,
+  setRefreshing,
 } from "./slice";
 import { EditObservationPayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 import {
-  fetchAllFeatureImages,
+  fetchCachedFeatureImages,
   processSubmitFeatureImages,
   processSubmitFeatures,
   resetFeaturesToAdd,
-  setFeatureReachedPageEnd,
+  resetPagination as resetFeaturePagination,
 } from "../features";
 
-export const fetchObservations: Thunk = () => async (
-  dispatch,
-  getState,
-  { api, localDB }
-) => {
+export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
+  options
+) => async (dispatch, getState, { api, localDB }) => {
   try {
+    dispatch(setRefreshing(true));
+    const { forceRefresh } = options;
+    const refresh: boolean = forceRefresh || false;
     if (
-      !getState().observations.observationReachedPageEnd &&
+      (refresh || !getState().observations.reachedPageEnd) &&
       getState().ui.isOnline
     ) {
+      if (refresh && getState().observations.reachedPageEnd)
+        dispatch(resetPagination());
+
       // 1. Get next page
       const campaignId: string | null =
         getState().campaigns.selectedCampaignEntry?.id || null;
-      const nextPage: string | null = getState().observations
-        .observationNextPageCursor;
+      const nextPage: string | null = getState().observations.nextPageCursor;
       const response = await api.getObservations(campaignId, nextPage);
 
       if (!response.ok || !response.data?.results)
@@ -57,15 +63,21 @@ export const fetchObservations: Thunk = () => async (
         );
 
       dispatch(setObservationCursor(cursor));
+      dispatch(addFetchedObservations(observationsEntries));
     }
 
-    dispatch(fetchAllObservationsFromSelectedCampaign());
+    if (!getState().ui.isOnline) {
+      dispatch(fetchCachedObservations());
+    }
+
+    dispatch(setRefreshing(false));
   } catch (e) {
     console.log({ e });
+    dispatch(setRefreshing(false));
   }
 };
 
-export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
+export const fetchCachedObservations: Thunk = () => async (
   dispatch,
   getState,
   { localDB }
@@ -78,7 +90,7 @@ export const fetchAllObservationsFromSelectedCampaign: Thunk = () => async (
       null,
       campaignId
     );
-    dispatch(addFetchedObservations(observationEntries));
+    dispatch(setFetchedObservations(observationEntries));
   } catch (e) {
     console.log({ e });
   }
@@ -161,7 +173,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
     dispatch(addNewObservation(newObservation));
     dispatch(resetFeaturesToAdd());
-    dispatch(fetchAllFeatureImages());
+    dispatch(fetchCachedFeatureImages());
     navigation.navigate("observationListScreen");
   } catch (e) {
     console.log(e);
@@ -235,7 +247,7 @@ export const selectObservationDetails: Thunk<Observation> = (observation) => (
   dispatch
 ) => {
   dispatch(selectObservation(observation));
-  dispatch(setFeatureReachedPageEnd(false));
+  dispatch(resetFeaturePagination());
 };
 
 export const processSubmitObservation = async (
@@ -307,7 +319,7 @@ export const deleteObservation: Thunk = () => async (
     ];
     if (ids.length > 0) await localDB.deleteEntities(ids);
 
-    dispatch(fetchAllObservationsFromSelectedCampaign());
+    dispatch(fetchCachedObservations());
     navigation.goBack();
   }
 };

@@ -4,8 +4,10 @@ import { Observation } from "../../../models";
 
 interface ObservationsState {
   // Pagination
-  observationNextPageCursor: string | null;
-  observationReachedPageEnd: boolean;
+  nextPageCursor: string | null;
+  isFirstPage: boolean;
+  reachedPageEnd: boolean;
+  refreshing: boolean;
 
   // Entries
   observationEntries: Array<Observation>;
@@ -16,8 +18,10 @@ interface ObservationsState {
 
 const initialState: ObservationsState = {
   // Pagination
-  observationNextPageCursor: null,
-  observationReachedPageEnd: false,
+  nextPageCursor: null,
+  isFirstPage: true,
+  reachedPageEnd: false,
+  refreshing: false,
 
   // Entries
   observationEntries: [],
@@ -35,14 +39,20 @@ export const observationsSlice = createSlice({
       state,
       { payload }: PayloadAction<string | null>
     ) => {
-      state.observationReachedPageEnd = payload === null;
-      state.observationNextPageCursor = payload;
+      state.reachedPageEnd = payload === null;
+      state.nextPageCursor = payload;
     },
-    setObservationReachedPageEnd: (
-      state,
-      { payload }: PayloadAction<boolean>
-    ) => {
-      state.observationReachedPageEnd = payload;
+    setReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.reachedPageEnd = payload;
+    },
+    resetPagination: (state) => {
+      state.nextPageCursor = null;
+      state.reachedPageEnd = false;
+      state.isFirstPage = true;
+      state.observationEntries = [];
+    },
+    setRefreshing: (state, { payload }: PayloadAction<boolean>) => {
+      state.refreshing = payload;
     },
 
     // Entries
@@ -61,6 +71,17 @@ export const observationsSlice = createSlice({
       state,
       { payload }: PayloadAction<Array<Observation>>
     ) => {
+      if (state.isFirstPage) {
+        state.isFirstPage = false;
+        state.observationEntries = payload;
+      } else {
+        state.observationEntries = [...state.observationEntries, ...payload];
+      }
+    },
+    setFetchedObservations: (
+      state,
+      { payload }: PayloadAction<Array<Observation>>
+    ) => {
       state.observationEntries = payload;
     },
 
@@ -74,12 +95,15 @@ export const observationsSlice = createSlice({
 export const {
   // Pagination
   setObservationCursor,
-  setObservationReachedPageEnd,
+  setReachedPageEnd,
+  resetPagination,
+  setRefreshing,
 
   // Entries
   addNewObservation,
   addEditedObservation,
   addFetchedObservations,
+  setFetchedObservations,
 
   // Selection
   selectObservation,
