@@ -39,7 +39,7 @@ export const campaignsSlice = createSlice({
       state.reachedPageEnd = payload === null;
       state.nextPageCursor = payload;
     },
-    setreachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+    setReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
       state.reachedPageEnd = payload;
     },
     resetPagination: (state) => {
@@ -84,7 +84,7 @@ export const campaignsSlice = createSlice({
 export const {
   // Pagination
   setCampaignCursor,
-  setreachedPageEnd,
+  setReachedPageEnd,
   resetPagination,
   setRefreshing,
 
