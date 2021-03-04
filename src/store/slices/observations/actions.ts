@@ -38,7 +38,8 @@ export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
       (refresh || !getState().observations.reachedPageEnd) &&
       getState().ui.isOnline
     ) {
-      if (refresh) dispatch(resetPagination());
+      if (refresh && getState().observations.reachedPageEnd)
+        dispatch(resetPagination());
 
       // 1. Get next page
       const campaignId: string | null =
