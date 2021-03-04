@@ -12,10 +12,8 @@ export const selectFilteredObservationsByCampaign = createSelector(
   selectCurrentCampaign,
   selectObservationEntries,
   (selectedCampaign, observationEntries): Array<Observation> =>
-    observationEntries
-      .filter(
-        (observationEntry) =>
-          observationEntry.campaignId === (selectedCampaign?.id || null)
-      )
-      .reverse()
+    observationEntries.filter(
+      (observationEntry) =>
+        observationEntry.campaignId === (selectedCampaign?.id || null)
+    )
 );

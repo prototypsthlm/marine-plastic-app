@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { InputField, KBType } from "./InputField";
-import { Button, Switch } from "react-native";
-import { Formik } from "formik";
+import { Switch } from "react-native";
+import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
-import UploadImage from "./UploadImage";
 import { RootState, useThunkDispatch } from "../store/store";
 import {
-  NewFeaturePayload,
-  addNewFeature,
-  resetFeatureType,
+  submitEditFeature,
+  EditFeaturePayload,
+  selectFeatureType,
 } from "../store/slices/features";
 import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
 import { theme } from "../theme";
 import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
-import { FeatureType } from "../models";
-import { getImageLocation } from "../utils/geoUtils";
+import { Feature, FeatureImage, FeatureType } from "../models";
+import BasicHeaderButtons from "./BasicHeaderButtons";
+import { Item } from "react-navigation-header-buttons";
 
 interface InitialFormValuesShape {
   [key: string]: string | boolean | undefined;
@@ -32,20 +32,6 @@ interface InitialFormValuesShape {
 
   comments?: string;
 }
-
-const InitialFormValues: InitialFormValuesShape = {
-  quantity: undefined,
-  quantityUnits: undefined,
-  estimatedWeightKg: undefined,
-  estimatedSizeM2: undefined,
-  estimatedVolumeM3: undefined,
-  depthM: undefined,
-
-  isAbsence: false,
-  isCollected: false,
-
-  comments: undefined,
-};
 
 const numberValidation = () =>
   Yup.number()
@@ -72,31 +58,83 @@ const validation = Yup.object().shape({
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
+  const featureEntry = useSelector<RootState, Feature | undefined>(
+    (state) => state.features.selectedFeatureEntry
+  );
+
+  const InitialFormValues: InitialFormValuesShape = {
+    quantity: String(featureEntry?.quantity || ""),
+    quantityUnits: String(featureEntry?.quantityUnits || ""),
+    estimatedWeightKg: String(featureEntry?.estimatedWeightKg || ""),
+    estimatedSizeM2: String(featureEntry?.estimatedSizeM2 || ""),
+    estimatedVolumeM3: String(featureEntry?.estimatedVolumeM3 || ""),
+    depthM: String(featureEntry?.depthM || ""),
+    isAbsence: featureEntry?.isAbsence || false,
+    isCollected: featureEntry?.isCollected || false,
+    comments: featureEntry?.comments || "",
+  };
+
   const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
     (state) => state.features.selectedFeatureType
   );
 
+  const featureTypes = useSelector<RootState, Array<FeatureType>>(
+    (state) => state.features.featureTypes
+  );
+
+  const currentFeatureType: FeatureType | undefined = featureTypes.find(
+    (ft) => ft.id === featureEntry?.featureTypeId
+  );
+
   useEffect(() => {
-    dispatch(resetFeatureType());
+    if (currentFeatureType) dispatch(selectFeatureType(currentFeatureType));
   }, []);
 
-  const [isExtraInfoOpen, setIsExtraInfoOpen] = useState<boolean>(false);
+  const featureImages = useSelector<RootState, Array<FeatureImage>>(
+    (state) => state.features.featureImages
+  );
 
-  const [image, setImage] = useState<any>();
+  const isOnline = useSelector<RootState, boolean>(
+    (state) => state.ui.isOnline
+  );
 
-  const handleImageChange = (image: object) => {
-    setImage(image);
+  const onlineImage: FeatureImage | undefined =
+    isOnline &&
+    featureEntry?.featureImages &&
+    featureEntry?.featureImages?.length > 0
+      ? featureEntry?.featureImages[0]
+      : undefined;
+  const image: FeatureImage | undefined =
+    onlineImage ||
+    featureImages.find((fi) => fi.featureId === featureEntry?.id);
+
+  const formRef = useRef<FormikProps<InitialFormValuesShape>>(null);
+
+  const handleSubmit = () => {
+    if (formRef.current && selectedFeatureTypes === undefined) {
+      !formRef.current.isSubmitting && formRef.current.handleSubmit();
+    }
   };
 
-  const handleFormSubmit = (values: any, actions: any) => {
-    if (selectedFeatureTypes === undefined) return;
-    const imageLocation = getImageLocation(image);
-    const newFeature: NewFeaturePayload = {
-      feaureType: selectedFeatureTypes,
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <BasicHeaderButtons>
+          <Item
+            title="Save"
+            iconName="ios-checkmark"
+            onPress={() => handleSubmit()}
+          />
+        </BasicHeaderButtons>
+      ),
+    });
+  }, [navigation]);
 
-      imageUrl: image.uri,
-      imageGPSLatitude: imageLocation.latitude,
-      imageGPSLongitude: imageLocation.longitude,
+  const handleFormSubmit = (values: any, actions: any) => {
+    console.log(values);
+    if (selectedFeatureTypes === undefined) return;
+    const editedFeature: EditFeaturePayload = {
+      featureTypeId: selectedFeatureTypes.id,
 
       quantity: Number(values.quantity?.replace(/,/, ".")),
       quantityUnits: values.quantityUnits,
@@ -110,8 +148,8 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
 
       comments: values.comments,
     };
-    dispatch(addNewFeature(newFeature));
-    actions.resetForm(InitialFormValues);
+    dispatch(submitEditFeature(editedFeature));
+    actions.setSubmitting(false);
   };
 
   const extraFields: Array<{ field: string; label: string; kbType: KBType }> = [
@@ -136,6 +174,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
 
   return (
     <Formik
+      innerRef={formRef}
       initialValues={InitialFormValues}
       onSubmit={handleFormSubmit}
       validationSchema={validation}
@@ -143,7 +182,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
       {({
         handleBlur,
         handleChange,
-        handleSubmit,
         setFieldValue,
         values,
         errors,
@@ -183,105 +221,82 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
           </SectionHeader>
           {image ? (
             <Image
-              source={{ uri: image.uri }}
+              source={{ uri: image.url }}
               style={{ width: "100%", height: 200 }}
             />
           ) : null}
-          <UploadImage onChange={handleImageChange} />
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
-          {!isExtraInfoOpen && (
-            <ListItem onPress={() => setIsExtraInfoOpen(true)}>
-              <Text
-                style={{
-                  color: theme.color.palette.gray,
-                  paddingTop: theme.spacing.small,
-                  paddingBottom: theme.spacing.small,
-                }}
-              >
-                Tap to expand form...
-              </Text>
-            </ListItem>
-          )}
-          {isExtraInfoOpen && (
-            <>
-              <ListItemNonTouchable>
-                <Text>Is absent</Text>
-                <Switch
-                  trackColor={{
-                    false: "#767577",
-                    true: theme.color.palette.curiousBlue,
-                  }}
-                  onValueChange={(value) => setFieldValue("isAbsence", value)}
-                  value={values.isAbsence}
-                />
-              </ListItemNonTouchable>
-              <ListItemNonTouchable>
-                <Text>Is collected</Text>
-                <Switch
-                  trackColor={{
-                    false: "#767577",
-                    true: theme.color.palette.curiousBlue,
-                  }}
-                  onValueChange={(value) => setFieldValue("isCollected", value)}
-                  value={values.isCollected}
-                />
-              </ListItemNonTouchable>
-              <FormSection>
-                <FlexRow>
-                  <InputField
-                    halfWidth
-                    keyboardType="numeric"
-                    label="Quantity"
-                    preset="default"
-                    onChangeText={handleChange("quantity")}
-                    onBlur={handleBlur("quantity")}
-                    value={values.quantity}
-                    error={
-                      touched.quantity && errors.quantity
-                        ? errors.quantity
-                        : undefined
-                    }
-                  />
-                  <InputField
-                    halfWidth
-                    label="Quantity units"
-                    preset="default"
-                    onChangeText={handleChange("quantityUnits")}
-                    onBlur={handleBlur("quantityUnits")}
-                    value={values.quantityUnits}
-                    error={
-                      touched.quantityUnits && errors.quantityUnits
-                        ? errors.quantityUnits
-                        : undefined
-                    }
-                  />
-                </FlexRow>
-                {extraFields.map((item, index) => (
-                  <InputField
-                    key={index}
-                    label={item.label}
-                    keyboardType={item.kbType}
-                    preset="default"
-                    onChangeText={handleChange(item.field)}
-                    onBlur={handleBlur(item.field)}
-                    value={values[item.field] as string}
-                    error={
-                      touched[item.field] && errors[item.field]
-                        ? errors[item.field]
-                        : undefined
-                    }
-                  />
-                ))}
-              </FormSection>
-            </>
-          )}
-          <Button
-            disabled={!image || selectedFeatureTypes === undefined}
-            title="Add feature to observation"
-            onPress={handleSubmit as any}
-          />
+          <ListItemNonTouchable>
+            <Text>Is absent</Text>
+            <Switch
+              trackColor={{
+                false: "#767577",
+                true: theme.color.palette.curiousBlue,
+              }}
+              onValueChange={(value) => setFieldValue("isAbsence", value)}
+              value={values.isAbsence}
+            />
+          </ListItemNonTouchable>
+          <ListItemNonTouchable>
+            <Text>Is collected</Text>
+            <Switch
+              trackColor={{
+                false: "#767577",
+                true: theme.color.palette.curiousBlue,
+              }}
+              onValueChange={(value) => setFieldValue("isCollected", value)}
+              value={values.isCollected}
+            />
+          </ListItemNonTouchable>
+          <FormSection>
+            <FlexRow>
+              <InputField
+                halfWidth
+                keyboardType="numeric"
+                label="Quantity"
+                preset="default"
+                onChangeText={handleChange("quantity")}
+                onBlur={handleBlur("quantity")}
+                value={values.quantity}
+                error={
+                  touched.quantity && errors.quantity
+                    ? errors.quantity
+                    : undefined
+                }
+              />
+              <InputField
+                halfWidth
+                label="Quantity units"
+                preset="default"
+                onChangeText={handleChange("quantityUnits")}
+                onBlur={handleBlur("quantityUnits")}
+                value={values.quantityUnits}
+                error={
+                  touched.quantityUnits && errors.quantityUnits
+                    ? errors.quantityUnits
+                    : undefined
+                }
+              />
+            </FlexRow>
+            {extraFields.map((item, index) => (
+              <InputField
+                key={index}
+                label={item.label}
+                keyboardType={item.kbType}
+                preset="default"
+                onChangeText={handleChange(item.field)}
+                onBlur={handleBlur(item.field)}
+                value={values[item.field] as string}
+                error={
+                  touched[item.field] && errors[item.field]
+                    ? errors[item.field]
+                    : undefined
+                }
+              />
+            ))}
+          </FormSection>
         </>
       )}
     </Formik>

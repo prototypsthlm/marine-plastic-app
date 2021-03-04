@@ -1,5 +1,5 @@
-import { observationsModule } from "./module/observations";
+import { baseEntityModule } from "./module/baseEntity";
 
 export const localDB = {
-  ...observationsModule,
+  ...baseEntityModule,
 };

@@ -5,8 +5,10 @@ import { NewFeaturePayload } from "./types";
 
 interface FeaturesState {
   // Pagination
-  featureNextPageCursor: string | null;
-  featureReachedPageEnd: boolean;
+  nextPageCursor: string | null;
+  isFirstPage: boolean;
+  reachedPageEnd: boolean;
+  refreshing: boolean;
 
   // Entries
   featureEntries: Array<Feature>;
@@ -23,8 +25,10 @@ interface FeaturesState {
 
 const initialState: FeaturesState = {
   // Pagination
-  featureNextPageCursor: null,
-  featureReachedPageEnd: false,
+  nextPageCursor: null,
+  isFirstPage: true,
+  reachedPageEnd: false,
+  refreshing: false,
 
   // Entries
   featureEntries: [],
@@ -45,15 +49,38 @@ export const featuresSlice = createSlice({
   reducers: {
     // Pagination
     setFeatureCursor: (state, { payload }: PayloadAction<string | null>) => {
-      state.featureReachedPageEnd = payload === null;
-      state.featureNextPageCursor = payload;
+      state.reachedPageEnd = payload === null;
+      state.nextPageCursor = payload;
     },
-    setFeatureReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
-      state.featureReachedPageEnd = payload;
+    setReachedPageEnd: (state, { payload }: PayloadAction<boolean>) => {
+      state.reachedPageEnd = payload;
+    },
+    resetPagination: (state) => {
+      state.nextPageCursor = null;
+      state.reachedPageEnd = false;
+      state.isFirstPage = true;
+      state.featureEntries = [];
+    },
+    setRefreshing: (state, { payload }: PayloadAction<boolean>) => {
+      state.refreshing = payload;
     },
 
     // Entries
+    addEditedFeature: (state, { payload }: PayloadAction<Feature>) => {
+      state.featureEntries = [
+        ...state.featureEntries.filter((feature) => feature.id !== payload.id),
+        payload,
+      ];
+    },
     addFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
+      if (state.isFirstPage) {
+        state.isFirstPage = false;
+        state.featureEntries = payload;
+      } else {
+        state.featureEntries = [...state.featureEntries, ...payload];
+      }
+    },
+    setFetchedFeatures: (state, { payload }: PayloadAction<Array<Feature>>) => {
       state.featureEntries = payload;
     },
     addFetchedFeatureImages: (
@@ -96,10 +123,14 @@ export const featuresSlice = createSlice({
 export const {
   // Pagination
   setFeatureCursor,
-  setFeatureReachedPageEnd,
+  setReachedPageEnd,
+  resetPagination,
+  setRefreshing,
 
   // Entries
+  addEditedFeature,
   addFetchedFeatures,
+  setFetchedFeatures,
   addFetchedFeatureImages,
   addFetchedFeatureTypes,
 

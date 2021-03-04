@@ -1,30 +1,28 @@
 import React, { useEffect } from "react";
-import styled from "../../styled";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../../store/store";
-import { Campaign, FeatureImage, Observation, User } from "../../models";
+import { RootState, useThunkDispatch } from "../../../store/store";
+import { Campaign, FeatureImage, Observation, User } from "../../../models";
 
 import { FlatList, Image } from "react-native";
 
-import { Screen } from "../../components/Screen";
+import { Screen } from "../../../components/Screen";
 import {
   fetchObservations,
   selectFilteredObservationsByCampaign,
   selectObservationDetails,
-} from "../../store/slices/observations";
+} from "../../../store/slices/observations";
 import {
-  fetchAllFeatureImages,
+  fetchCachedFeatureImages,
   fetchAllFeatureTypes,
-} from "../../store/slices/features";
-import { fetchCampaigns } from "../../store/slices/campaigns";
-import { NavigationProps } from "../../navigation/types";
+} from "../../../store/slices/features";
+import { NavigationProps } from "../../../navigation/types";
 import {
   FlexColumn,
   ListItem,
   SectionHeader,
   Text,
-} from "../../components/elements";
-import { theme } from "../../theme";
+} from "../../../components/elements";
+import { theme } from "../../../theme";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
@@ -47,9 +45,8 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllFeatureTypes());
-    dispatch(fetchAllFeatureImages());
-    dispatch(fetchCampaigns());
-    dispatch(fetchObservations());
+    dispatch(fetchCachedFeatureImages());
+    dispatch(fetchObservations({}));
   }, []);
 
   const navigateToDetailScreen = (observationEntry: Observation) => {
@@ -86,9 +83,15 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     </ListItem>
   );
 
+  const refreshingObservationList = useSelector<RootState, boolean>(
+    (state) => state.observations.refreshing
+  );
+
   return (
     <Screen>
       <FlatList
+        refreshing={refreshingObservationList}
+        onRefresh={() => dispatch(fetchObservations({ forceRefresh: true }))}
         data={observationsEntries}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -128,7 +131,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
             )}
           </>
         )}
-        onEndReached={() => dispatch(fetchObservations())}
+        onEndReached={() => dispatch(fetchObservations({}))}
         onEndReachedThreshold={0.1}
       />
     </Screen>

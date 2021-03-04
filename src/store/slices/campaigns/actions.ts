@@ -2,27 +2,34 @@ import { Campaign } from "../../../models";
 import { Thunk } from "../../store";
 import {
   addFetchedCampaigns,
+  resetPagination,
   selectCampaign,
   selectCampaignless,
   setCampaignCursor,
+  setFetchedCampaigns,
+  setRefreshing,
 } from "./slice";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 import {
   fetchObservations,
-  setObservationReachedPageEnd,
+  resetPagination as resetObservationPagination,
 } from "../observations";
 
-export const fetchCampaigns: Thunk = () => async (
-  dispatch,
-  getState,
-  { api, localDB }
-) => {
-  if (!getState().campaigns.campaignReachedPageEnd && getState().ui.isOnline) {
+export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
+  options
+) => async (dispatch, getState, { api, localDB }) => {
+  dispatch(setRefreshing(true));
+  const { forceRefresh } = options;
+  const refresh: boolean = forceRefresh || false;
+  if (
+    (refresh || !getState().campaigns.reachedPageEnd) &&
+    getState().ui.isOnline
+  ) {
+    if (refresh && getState().campaigns.reachedPageEnd)
+      dispatch(resetPagination());
     // 1. Get next page
-    const result = await api.getCampaigns(
-      getState().campaigns.campaignNextPageCursor
-    );
+    const result = await api.getCampaigns(getState().campaigns.nextPageCursor);
     if (!result.ok || !result.data?.results)
       throw new ActionError("Couldn't get/sync campaigns.");
 
@@ -34,12 +41,16 @@ export const fetchCampaigns: Thunk = () => async (
       await localDB.upsertEntities(campaigns, EntityType.Campaign, true);
 
     dispatch(setCampaignCursor(cursor));
+    dispatch(addFetchedCampaigns(campaigns));
   }
 
-  dispatch(fetchAllCampaigns());
+  if (!getState().ui.isOnline) {
+    dispatch(fetchCachedCampaigns());
+  }
+  dispatch(setRefreshing(false));
 };
 
-export const fetchAllCampaigns: Thunk = () => async (
+export const fetchCachedCampaigns: Thunk = () => async (
   dispatch,
   _,
   { localDB }
@@ -48,7 +59,7 @@ export const fetchAllCampaigns: Thunk = () => async (
     const campaignEntries: Array<Campaign> = await localDB.getEntities<Campaign>(
       EntityType.Campaign
     );
-    dispatch(addFetchedCampaigns(campaignEntries));
+    dispatch(setFetchedCampaigns(campaignEntries));
   } catch (e) {
     console.log({ e });
   }
@@ -64,7 +75,8 @@ export const setSelectedCampaign: Thunk<{
 ) => {
   if (isCampignless) dispatch(selectCampaignless());
   else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
-  dispatch(setObservationReachedPageEnd(false));
-  dispatch(fetchObservations());
-  navigation.navigate("observationListScreen");
+  dispatch(resetPagination());
+  dispatch(resetObservationPagination());
+  dispatch(fetchObservations({}));
+  navigation.goBack();
 };
