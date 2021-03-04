@@ -11,7 +11,10 @@ import {
 } from "./slice";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
-import { fetchObservations, setReachedPageEnd } from "../observations";
+import {
+  fetchObservations,
+  resetPagination as resetObservationPagination,
+} from "../observations";
 
 export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
   options
@@ -72,7 +75,8 @@ export const setSelectedCampaign: Thunk<{
 ) => {
   if (isCampignless) dispatch(selectCampaignless());
   else if (campaignEntryPayload) dispatch(selectCampaign(campaignEntryPayload));
-  dispatch(setReachedPageEnd(false));
+  dispatch(resetPagination());
+  dispatch(resetObservationPagination());
   dispatch(fetchObservations({}));
   navigation.goBack();
 };

@@ -24,7 +24,7 @@ import {
   processSubmitFeatureImages,
   processSubmitFeatures,
   resetFeaturesToAdd,
-  setReachedPageEnd,
+  resetPagination as resetFeaturePagination,
 } from "../features";
 
 export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
@@ -247,7 +247,7 @@ export const selectObservationDetails: Thunk<Observation> = (observation) => (
   dispatch
 ) => {
   dispatch(selectObservation(observation));
-  dispatch(setReachedPageEnd(false));
+  dispatch(resetFeaturePagination());
 };
 
 export const processSubmitObservation = async (
