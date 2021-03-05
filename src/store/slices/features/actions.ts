@@ -21,6 +21,7 @@ import { EntityType } from "../../../services/localDB/types";
 export const fetchFeatures: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
+  if (getState().features.refreshing) return;
   dispatch(setRefreshing(true));
   const { forceRefresh } = options;
   const refresh: boolean = forceRefresh || false;
