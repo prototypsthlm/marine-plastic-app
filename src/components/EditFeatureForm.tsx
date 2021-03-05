@@ -111,7 +111,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const formRef = useRef<FormikProps<InitialFormValuesShape>>(null);
 
   const handleSubmit = () => {
-    if (formRef.current && selectedFeatureTypes === undefined) {
+    if (formRef.current && selectedFeatureTypes !== undefined) {
       !formRef.current.isSubmitting && formRef.current.handleSubmit();
     }
   };
@@ -131,7 +131,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   }, [navigation]);
 
   const handleFormSubmit = (values: any, actions: any) => {
-    console.log(values);
     if (selectedFeatureTypes === undefined) return;
     const editedFeature: EditFeaturePayload = {
       featureTypeId: selectedFeatureTypes.id,
