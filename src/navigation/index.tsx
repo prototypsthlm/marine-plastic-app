@@ -22,6 +22,7 @@ const OceanScanTheme = {
   colors: {
     ...DefaultTheme.colors,
     card: theme.color.palette.dark,
+    primary: theme.color.palette.cyan,
     text: theme.color.palette.white
   },
 };
