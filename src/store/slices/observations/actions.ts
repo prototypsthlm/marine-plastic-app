@@ -31,6 +31,7 @@ export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
   try {
+    if (getState().observations.refreshing) return;
     dispatch(setRefreshing(true));
     const { forceRefresh } = options;
     const refresh: boolean = forceRefresh || false;

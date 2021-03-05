@@ -16,6 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "../navigation/types";
 import { ListItem, SectionHeader, Text } from "./elements";
 import { theme } from "../theme";
+import { getGeometryFromFeatures } from "../utils/geoUtils";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -28,32 +29,6 @@ const InitialFormValues: InitialFormValuesShape = {
 const validation = Yup.object().shape({
   comments: Yup.string(),
 });
-
-function getGeometryFromFeatures(features: Array<NewFeaturePayload>): Geometry {
-  if (features.length === 0)
-    return {
-      type: "Point",
-      coordinates: [0, 0],
-    };
-  if (features.length === 1) {
-    return {
-      type: "Point",
-      coordinates: [
-        features[0].imageGPSLatitude as number,
-        features[0].imageGPSLongitude as number,
-      ],
-    };
-  } else {
-    const coords: Array<Array<number>> = features.map((feature) => [
-      feature.imageGPSLatitude as number,
-      feature.imageGPSLongitude as number,
-    ]);
-    return {
-      type: "Polygon",
-      coordinates: [coords],
-    };
-  }
-}
 
 const NewObservationForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
@@ -86,25 +61,23 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       {({ handleBlur, handleChange, handleSubmit, values }) => (
         <>
           <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
-          <ListItem
-              onPress={() => navigation.navigate("changeCampaignScreen")}
-            >
+          <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
             <Text
-                style={{
-                  color: theme.color.palette.gray,
-                  paddingVertical: theme.spacing.small,
-                }}
-              >
-                {selectedCampaignEntry
-                  ? selectedCampaignEntry.name
-                  : "Campaign-less observations"}
+              style={{
+                color: theme.color.palette.gray,
+                paddingVertical: theme.spacing.small,
+              }}
+            >
+              {selectedCampaignEntry
+                ? selectedCampaignEntry.name
+                : "Campaign-less observations"}
             </Text>
           </ListItem>
 
           <FormSection>
             <InputField
               invertColors={false}
-              label="Observation Name / Comments"
+              label="Observation Comment"
               preset="default"
               stylePreset="rounded"
               onChangeText={handleChange("comments")}
