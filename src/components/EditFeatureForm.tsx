@@ -187,34 +187,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
         touched,
       }) => (
         <>
-          <SectionHeader>FEATURE TYPE</SectionHeader>
-          <ListItem
-            onPress={() => navigation.navigate("featureTypePickerScreen")}
-          >
-            {selectedFeatureTypes === undefined && (
-              <Text
-                style={{
-                  color: theme.color.palette.gray,
-                  paddingTop: theme.spacing.small,
-                  paddingBottom: theme.spacing.small,
-                }}
-              >
-                Select feature type...
-              </Text>
-            )}
-            {selectedFeatureTypes !== undefined && (
-              <FlexColumn style={{ width: "100%" }}>
-                <FlexRow>
-                  <Text bold>{selectedFeatureTypes.tsgMlCode}</Text>
-                  <Text style={{ color: theme.color.palette.gray }}>
-                    {selectedFeatureTypes.material}
-                  </Text>
-                </FlexRow>
-                <Text>{selectedFeatureTypes.name}</Text>
-              </FlexColumn>
-            )}
-          </ListItem>
-
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             PICTURE
           </SectionHeader>
@@ -227,6 +199,50 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
+          <ListItem
+            onPress={() => navigation.navigate("featureTypePickerScreen")}
+          >
+            {selectedFeatureTypes === undefined && (
+              <Text
+                style={{
+                  color: theme.color.palette.curiousBlue,
+                  paddingTop: theme.spacing.small,
+                  paddingBottom: theme.spacing.small,
+                }}
+              >
+                Select feature type...
+              </Text>
+            )}
+            {selectedFeatureTypes !== undefined && (
+              <FlexColumn style={{ 
+                  width: "100%", 
+                  paddingTop: theme.spacing.small,
+                  paddingBottom: theme.spacing.small
+                }}>
+                <FlexRow>
+                  <Text style={{
+                    fontSize: 12, 
+                    marginBottom: theme.spacing.small 
+                  }}>
+                    TYPE
+                  </Text>
+                  <Text style={{
+                    fontSize: 12,
+                    color: theme.color.palette.curiousBlue,
+                  }}>
+                    Change
+                  </Text>
+                </FlexRow>
+                <FlexRow>
+                  <Text bold>{selectedFeatureTypes.tsgMlCode}</Text>
+                  <Text style={{ color: theme.color.palette.gray }}>
+                    {selectedFeatureTypes.material}
+                  </Text>
+                </FlexRow>
+                <Text>{selectedFeatureTypes.name}</Text>
+              </FlexColumn>
+            )}
+          </ListItem>
           <ListItemNonTouchable>
             <Text>Is absent</Text>
             <Switch
