@@ -19,6 +19,7 @@ import {
 export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
+  if (getState().campaigns.refreshing) return;
   dispatch(setRefreshing(true));
   const { forceRefresh } = options;
   const refresh: boolean = forceRefresh || false;
