@@ -24,7 +24,6 @@ export default function BottomTabNavigator() {
         activeTintColor: theme.color.palette.cyan, 
         inactiveTintColor: theme.color.palette.white,
         activeBackgroundColor: theme.color.palette.gray,
-        inactiveBackgroundColor: theme.color.palette.dark,
         labelStyle: styles.bottomTabLabel
       }}
     >
