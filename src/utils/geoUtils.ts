@@ -75,9 +75,9 @@ function getConvexHullPolygon(features: Array<NewFeaturePayload>) {
     (feature.imageGPSLongitude as number) || 0,
   ]);
   const points = featureCollection(coords.map((coord) => point(coord)));
-  const hul = convex(points);
+  const hull = convex(points);
   return (
-    hul?.geometry || {
+    hull?.geometry || {
       type: "Polygon",
       coordinates: [],
     }
