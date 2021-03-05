@@ -36,7 +36,7 @@ export const color = {
   /**
    * The main tinting color.
    */
-  accent: palette.curiousBlue,
+  accent: palette.cyan,
   /**
    * The default color of text in many components.
    */

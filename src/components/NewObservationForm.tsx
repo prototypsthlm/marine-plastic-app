@@ -93,7 +93,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             >
               <Ionicons
                 size={30}
-                style={{ color: theme.color.accent }}
+                style={{ color: theme.color.palette.curiousBlue }}
                 name="ios-add-circle"
               />
             </ButtonWithIcon>

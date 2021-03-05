@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { StyleSheet } from 'react-native';
 import * as React from "react";
 
 import ListNavigator from "./tabs/ListNavigator";
@@ -9,11 +10,22 @@ import { theme } from "../theme";
 
 const BottomTab = createBottomTabNavigator();
 
+const styles = StyleSheet.create({
+  bottomTabLabel: {
+    fontFamily: theme.typography.primary,
+    fontSize: 12
+  },
+});
 export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="observationList"
-      tabBarOptions={{ activeTintColor: theme.color.accent }}
+      tabBarOptions={{ 
+        activeTintColor: theme.color.palette.cyan, 
+        inactiveTintColor: theme.color.palette.white,
+        activeBackgroundColor: theme.color.palette.gray,
+        labelStyle: styles.bottomTabLabel
+      }}
     >
       <BottomTab.Screen
         name="observationList"
