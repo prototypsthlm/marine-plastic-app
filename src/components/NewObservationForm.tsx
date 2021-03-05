@@ -104,7 +104,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           <FormSection>
             <InputField
               invertColors={false}
-              label="Observation Name / Comments"
+              label="Observation Comment"
               preset="default"
               stylePreset="rounded"
               onChangeText={handleChange("comments")}
