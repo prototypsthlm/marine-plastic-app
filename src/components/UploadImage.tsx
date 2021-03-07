@@ -8,6 +8,7 @@ import { LocationObject } from "expo-location";
 import { ListItem, Text } from "./elements";
 import { theme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
+import LongButton from "./elements/LongButton";
 
 interface UploadImageProps {
   onChange?: (image: object) => void;
@@ -65,9 +66,13 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   const pickImage = async () => {
     if (!canUseMediaLibrary) {
       await requestMediaLibrary();
+      await requestLocation();
       return;
     }
     setIsLoading(true);
+
+    const loc = await Location.getLastKnownPositionAsync();
+    setLocation(loc);
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -95,7 +100,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG }
       );
 
-      onChange && onChange({ ...result, uri: manipResult.uri });
+      onChange && onChange({ ...result, uri: manipResult.uri, location });
     }
 
     setIsLoading(false);
@@ -134,41 +139,30 @@ export default function UploadImage({ onChange }: UploadImageProps) {
 
   return (
     <FlexRow>
-      <ListItem
-        style={{
-          width: "50%",
-          borderRightColor: theme.color.palette.gray,
-          marginRight: 1,
-          justifyContent: "center",
-        }}
+      <LongButton
+        half
         onPress={pickImage}
-      >
-        <Text
-          style={{ color: theme.color.palette.curiousBlue, paddingRight: 8 }}
-        >
-          Upload a picture
-        </Text>
-        <Ionicons
-          size={30}
-          style={{ color: theme.color.palette.curiousBlue }}
-          name="ios-image"
-        />
-      </ListItem>
-      <ListItem
-        style={{ width: "50%", justifyContent: "center" }}
+        text="Upload a picture"
+        icon={
+          <Ionicons
+            size={30}
+            style={{ color: theme.color.palette.curiousBlue }}
+            name="ios-image"
+          />
+        }
+      />
+      <LongButton
+        half
         onPress={takePhoto}
-      >
-        <Text
-          style={{ color: theme.color.palette.curiousBlue, paddingRight: 8 }}
-        >
-          Take photo
-        </Text>
-        <Ionicons
-          size={30}
-          style={{ color: theme.color.palette.curiousBlue }}
-          name="ios-camera"
-        />
-      </ListItem>
+        text="Take photo"
+        icon={
+          <Ionicons
+            size={30}
+            style={{ color: theme.color.palette.curiousBlue }}
+            name="ios-camera"
+          />
+        }
+      />
     </FlexRow>
   );
 }
