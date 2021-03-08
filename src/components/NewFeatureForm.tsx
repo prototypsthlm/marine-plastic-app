@@ -10,6 +10,7 @@ import {
   NewFeaturePayload,
   addNewFeature,
   resetFeatureType,
+  selectFeatureType,
 } from "../store/slices/features";
 import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
 import { theme } from "../theme";
@@ -72,12 +73,17 @@ const validation = Yup.object().shape({
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
+
+  const defaultFeatureType = useSelector<RootState, FeatureType | undefined>(
+    (state) => state.features.featureTypes.find(x => x.tsgMlCode === 'G999')
+  );
+
   const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
     (state) => state.features.selectedFeatureType
   );
 
   useEffect(() => {
-    dispatch(resetFeatureType());
+    defaultFeatureType ? dispatch(selectFeatureType(defaultFeatureType)) : dispatch(resetFeatureType());
   }, []);
 
   const [isExtraInfoOpen, setIsExtraInfoOpen] = useState<boolean>(false);
