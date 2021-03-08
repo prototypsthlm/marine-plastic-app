@@ -29,6 +29,7 @@
     "@reduxjs/toolkit": "^1.5.0",
     "@turf/convex": "^6.3.0",
     "@turf/helpers": "^6.3.0",
+    "@turf/rewind": "^6.3.0",
     "apisauce": "^2.0.1",
     "expo": "~40.0.0",
     "expo-app-loading": "^1.0.1",
