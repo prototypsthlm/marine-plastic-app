@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { InputField } from "./InputField";
 import { Button, Image } from "react-native";
 import { Formik } from "formik";
@@ -40,6 +40,13 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   const featuresToAdd = useSelector<RootState, Array<NewFeaturePayload>>(
     (state) => state.features.featuresToAdd
   );
+
+  useEffect(() => {
+    // If there are no features added to the obs., 
+    // go to new feature screen directly
+    if(featuresToAdd.length===0) 
+      navigation.navigate("newFeatureScreen")
+  }, [featuresToAdd])
 
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
