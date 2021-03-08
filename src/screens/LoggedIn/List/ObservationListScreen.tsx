@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import { Campaign, FeatureImage, Observation, User } from "../../../models";
 
-import { FlatList, Image } from "react-native";
+import { FlatList, Image, View } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import {
@@ -58,7 +58,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     featureImages.find((f) => f.featureId === featureId);
 
   const renderItem = ({ item }: { item: Observation }) => (
-    <ListItem onPress={() => navigateToDetailScreen(item)}>
+    <ListItem style={{}}onPress={() => navigateToDetailScreen(item)}>
       {item.features &&
       item.features.length > 0 &&
       getFeatureImage(item.features[0].id) ? (
@@ -71,9 +71,21 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
             marginRight: 12,
           }}
         />
-      ) : null}
+      ) : 
+      <View style={{
+        width: 50,
+        height: 50,
+        borderRadius: 6,
+        marginRight: 12,
+        backgroundColor: "#efefef",
+      }} />}
       <FlexColumn>
-        <Text>{username}</Text>
+        { user?.id === item.creatorId ? (
+          <Text style={{ fontFamily: theme.typography.primaryBold, color: theme.color.palette.curiousBlue }}>{username}</Text>
+          
+        ): (
+          <Text style={{ color: theme.color.palette.gray}}>Observer</Text>
+        )}
         <Text>
           {item.timestamp
             ? new Date(item.timestamp).toUTCString().slice(5, 17)
