@@ -1,6 +1,7 @@
 import { Geometry } from "../models";
 import { NewFeaturePayload } from "../store/slices/features";
 import convex from "@turf/convex";
+import rewind from "@turf/rewind";
 import { point, featureCollection, lineString, Position } from "@turf/helpers";
 
 export function formatGPSLocation(dd: number, ref: string) {
@@ -76,7 +77,7 @@ function getConvexHullPolygon(features: Array<NewFeaturePayload>) {
   ]);
   const points = featureCollection(coords.map((coord) => point(coord)));
   const hull = convex(points);
-  return (
+  return rewind(
     hull?.geometry || {
       type: "Polygon",
       coordinates: [],
