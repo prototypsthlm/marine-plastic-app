@@ -13,12 +13,12 @@ export default function AddNavigator() {
       <Stack.Screen
         name="newObservationScreen"
         component={NewObservationScreen}
-        options={{ headerTitle: "Add new observation" }}
+        options={{ headerTitle: "Submit observation" }}
       />
       <Stack.Screen
         name="newFeatureScreen"
         component={NewFeatureScreen}
-        options={{ headerTitle: "Add new feature" }}
+        options={{ headerTitle: "Add feature to observation" }}
       />
       <Stack.Screen
         name="featureTypePickerScreen"
