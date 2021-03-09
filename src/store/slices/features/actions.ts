@@ -176,7 +176,8 @@ export const processSubmitFeatures = async (
 
       if (!response.ok || !response.data?.result) {
         // Store offline
-        if (response.problem === "cannot-connect")
+
+        if (response.problem === "cannot-connect" || response.problem === "timeout") {
           await localDB.upsertEntities(
             [feature],
             EntityType.Feature,
@@ -185,7 +186,7 @@ export const processSubmitFeatures = async (
             feature.observationId,
             feature.id
           );
-        else throw new ActionError("Couldn't post/sync feature.");
+        } else throw new ActionError(`Couldn't post/sync feature: ${response.problem}`);
       } else {
         // Upsert if success
         const syncedFeature: Feature = response.data?.result;
@@ -219,7 +220,7 @@ export const processSubmitFeatureImages = async (
 
         if (!response.ok || !response.data?.result) {
           // Store offline
-          if (response.problem === "cannot-connect")
+          if (response.problem === "cannot-connect" || response.problem === "timeout") {
             await localDB.upsertEntities(
               [featureImage],
               EntityType.FeatureImage,
@@ -228,7 +229,8 @@ export const processSubmitFeatureImages = async (
               null,
               featureImage.featureId
             );
-          else throw new ActionError("Couldn't post/sync feature image.");
+          }
+          else throw new ActionError(`Couldn't post/sync feature image: ${response.problem}`);
         } else {
           // Upsert if success
           await localDB.upsertEntities(

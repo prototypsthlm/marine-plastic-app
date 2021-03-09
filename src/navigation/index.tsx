@@ -45,6 +45,7 @@ const Stack = createStackNavigator<{
 
 function RootNavigator() {
   const dispatch = useThunkDispatch();
+  const isLoggedIn = useSelector(selectIsLoggedIn);
 
   useEffect(() => {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
@@ -53,7 +54,8 @@ function RootNavigator() {
       if (user) dispatch(setUserWithNewToken());
     });
     const unsubscribeNetInfo = NetInfo.addEventListener((state) => {
-      if (state.isConnected) dispatch(syncOfflineEntries());
+      // Don't start syncing any entries before logged in and has token 
+      if (state.isConnected && isLoggedIn) dispatch(syncOfflineEntries());
       dispatch(setIsOnline(state.isConnected));
     });
 
@@ -61,9 +63,7 @@ function RootNavigator() {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
     };
-  }, []);
-
-  const isLoggedIn = useSelector(selectIsLoggedIn);
+  }, [isLoggedIn]);
 
   if (!isLoggedIn) return <LoggedOutStackNavigator />;
 
