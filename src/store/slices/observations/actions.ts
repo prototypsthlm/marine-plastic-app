@@ -265,14 +265,14 @@ export const processSubmitObservation = async (
 
       if (!response.ok || !response.data?.result) {
         // Store offline
-        if (response.problem === "cannot-connect")
+        if (response.problem === "cannot-connect" || response.problem === "timeout") {
           await localDB.upsertEntities(
             [observation],
             EntityType.Observation,
             false,
             observation.campaignId
           );
-        else throw new ActionError("Couldn't post/sync observation.");
+        } else throw new ActionError(`Couldn't post/sync observation: ${response.problem}}`);
       } else {
         // Upsert if success
         const syncedObservation: Observation = response.data?.result;
