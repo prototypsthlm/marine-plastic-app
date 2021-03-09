@@ -1,26 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { InputField, KBType } from "./InputField";
+import { InputField, KBType } from "../InputField";
 import { Button, Switch } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import styled from "../styled";
-import UploadImage from "./UploadImage";
-import { RootState, useThunkDispatch } from "../store/store";
+import styled from "../../styled";
+import { RootState, useThunkDispatch } from "../../store/store";
+
+import { useSelector } from "react-redux";
+import { FeatureType } from "../../models";
+import MapItem from "./MapItem";
+import PictureSection from "./PictureSection";
+import { LatLng } from "react-native-maps";
+import { NavigationProps } from "../../navigation/types";
 import {
+  selectFeatureType,
+  resetFeatureType,
   NewFeaturePayload,
   addNewFeature,
-  resetFeatureType,
-  selectFeatureType,
-} from "../store/slices/features";
-import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
-import { theme } from "../theme";
-import { NavigationProps } from "../navigation/types";
-import { useSelector } from "react-redux";
-import { FeatureType } from "../models";
-import { getImageLocation } from "../utils/geoUtils";
+} from "../../store/slices/features";
+import { theme } from "../../theme";
+import {
+  SectionHeader,
+  ListItem,
+  FlexColumn,
+  FlexRow,
+  Text,
+} from "../elements";
 
 interface InitialFormValuesShape {
-  [key: string]: string | boolean | undefined;
+  [key: string]: string | boolean | LatLng | undefined;
   quantity?: string;
   quantityUnits?: string;
   estimatedWeightKg?: string;
@@ -32,20 +40,14 @@ interface InitialFormValuesShape {
   isCollected: boolean;
 
   comments?: string;
+
+  imageUri?: string;
+  location?: LatLng;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
-  quantity: undefined,
-  quantityUnits: undefined,
-  estimatedWeightKg: undefined,
-  estimatedSizeM2: undefined,
-  estimatedVolumeM3: undefined,
-  depthM: undefined,
-
   isAbsence: false,
   isCollected: false,
-
-  comments: undefined,
 };
 
 const numberValidation = () =>
@@ -68,14 +70,19 @@ const validation = Yup.object().shape({
   isCollected: Yup.boolean(),
 
   comments: Yup.string(),
+
+  imageUri: Yup.string().required(),
+  location: Yup.object({
+    latitude: Yup.number().required(),
+    longitude: Yup.number().required(),
+  }).required(),
 });
 
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
-
   const defaultFeatureType = useSelector<RootState, FeatureType | undefined>(
-    (state) => state.features.featureTypes.find(x => x.tsgMlCode === 'G999')
+    (state) => state.features.featureTypes.find((x) => x.tsgMlCode === "G999")
   );
 
   const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
@@ -83,26 +90,21 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   );
 
   useEffect(() => {
-    defaultFeatureType ? dispatch(selectFeatureType(defaultFeatureType)) : dispatch(resetFeatureType());
+    defaultFeatureType
+      ? dispatch(selectFeatureType(defaultFeatureType))
+      : dispatch(resetFeatureType());
   }, []);
 
   const [isExtraInfoOpen, setIsExtraInfoOpen] = useState<boolean>(false);
 
-  const [image, setImage] = useState<any>();
-
-  const handleImageChange = (image: object) => {
-    setImage(image);
-  };
-
   const handleFormSubmit = (values: any, actions: any) => {
     if (selectedFeatureTypes === undefined) return;
-    const imageLocation = getImageLocation(image);
     const newFeature: NewFeaturePayload = {
       feaureType: selectedFeatureTypes,
 
-      imageUrl: image.uri,
-      imageGPSLatitude: imageLocation.latitude,
-      imageGPSLongitude: imageLocation.longitude,
+      imageUrl: values.imageUri,
+      imageGPSLatitude: values.location.latitude,
+      imageGPSLongitude: values.location.longitude,
 
       quantity: Number(values.quantity?.replace(/,/, ".")),
       quantityUnits: values.quantityUnits,
@@ -159,13 +161,23 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             PICTURE
           </SectionHeader>
-          {image ? (
-            <Image
-              source={{ uri: image.uri }}
-              style={{ width: "100%", height: 200 }}
-            />
+          <PictureSection
+            onImageUriChange={handleChange("imageUri")}
+            onLocationChange={(value) => setFieldValue("location", value)}
+          />
+
+          {Boolean(values.imageUri) && values.location !== undefined ? (
+            <>
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>
+                GEOLOCATION
+              </SectionHeader>
+              <MapItem
+                location={values.location}
+                onLocationChange={(value) => setFieldValue("location", value)}
+              />
+            </>
           ) : null}
-          <UploadImage onChange={handleImageChange} />
+
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
@@ -199,22 +211,28 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                   </Text>
                 )}
                 {selectedFeatureTypes !== undefined && (
-                  <FlexColumn style={{ 
-                      width: "100%", 
+                  <FlexColumn
+                    style={{
+                      width: "100%",
                       paddingTop: theme.spacing.small,
-                      paddingBottom: theme.spacing.small
-                    }}>
+                      paddingBottom: theme.spacing.small,
+                    }}
+                  >
                     <FlexRow>
-                      <Text style={{
-                        fontSize: 12, 
-                        marginBottom: theme.spacing.small 
-                      }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          marginBottom: theme.spacing.small,
+                        }}
+                      >
                         TYPE
                       </Text>
-                      <Text style={{
-                        fontSize: 12,
-                        color: theme.color.palette.curiousBlue,
-                      }}>
+                      <Text
+                        style={{
+                          fontSize: 12,
+                          color: theme.color.palette.curiousBlue,
+                        }}
+                      >
                         Change
                       </Text>
                     </FlexRow>
@@ -300,7 +318,10 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
             </>
           )}
           <Button
-            disabled={!image || selectedFeatureTypes === undefined}
+            disabled={
+              Boolean(touched.imageUri && errors.imageUri) ||
+              selectedFeatureTypes === undefined
+            }
             title="Add feature to observation"
             onPress={handleSubmit as any}
           />
@@ -330,10 +351,6 @@ const ListItemNonTouchable = styled.View`
   align-items: center;
   width: 100%;
   justify-content: space-between;
-`;
-
-const Image = styled.Image`
-  align-self: center;
 `;
 
 export default NewFeatureForm;
