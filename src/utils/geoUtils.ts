@@ -20,11 +20,16 @@ export function getImageLocation(image: any) {
   else
     return {
       longitude:
-        image.exif &&
-        formatGPSLocation(image.exif.GPSLongitude, image.exif.GPSLongitudeRef),
+        image.exif && image.exif.GPSLongitude && image.exif.GPSLongitudeRef
+          ? formatGPSLocation(
+              image.exif.GPSLongitude,
+              image.exif.GPSLongitudeRef
+            )
+          : image.location.coords.longitude,
       latitude:
-        image.exif &&
-        formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef),
+        image.exif && image.exif.GPSLatitude && image.exif.GPSLatitudeRef
+          ? formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef)
+          : image.location.coords.latitude,
     };
 }
 

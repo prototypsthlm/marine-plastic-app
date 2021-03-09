@@ -26,6 +26,10 @@ export const color = {
    */
   transparent: "rgba(0, 0, 0, 0)",
   /**
+   * The transparent modal overlay.
+   */
+  overlay: "rgba(0, 0, 0, 0.3)",
+  /**
    * The screen background.
    */
   background: palette.white,
