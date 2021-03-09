@@ -73,7 +73,7 @@ export default function LocationPicker({
               }}
               onPress={(e) => onMapPress(e)}
             >
-              <Marker coordinate={location} />
+              <Marker pinColor={'turquoise'} coordinate={location} />
             </MapView>
           </ModalCard>
         </BackgroundModalContainer>
