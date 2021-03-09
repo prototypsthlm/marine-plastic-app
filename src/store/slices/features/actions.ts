@@ -230,7 +230,7 @@ export const processSubmitFeatureImages = async (
               featureImage.featureId
             );
           }
-          else throw new ActionError("Couldn't post/sync feature image.");
+          else throw new ActionError(`Couldn't post/sync feature image: ${response.problem}`);
         } else {
           // Upsert if success
           await localDB.upsertEntities(
