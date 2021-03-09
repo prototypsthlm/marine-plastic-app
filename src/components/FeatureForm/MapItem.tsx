@@ -27,7 +27,7 @@ export default function MapItem({
           longitudeDelta: 0.0921,
         }}
       >
-        <Marker coordinate={location} />
+        <Marker pinColor={'turquoise'} coordinate={location} />
       </MapView>
       <LocationPicker
         initLocation={location}
