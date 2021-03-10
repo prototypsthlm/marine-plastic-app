@@ -76,7 +76,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: false,
       quality: 1,
       exif: true,
     });
@@ -96,7 +96,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
 
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 1000, height: 1000 } }],
+        [{ resize: { width: 1000 } }],
         { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG }
       );
 
@@ -119,7 +119,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
 
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
+      allowsEditing: false,
       quality: 1,
       exif: true,
     });
@@ -127,7 +127,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     if (!result.cancelled) {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
-        [{ resize: { width: 1000, height: 1000 } }],
+        [{ resize: { width: 1000 } }],
         { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG }
       );
 
