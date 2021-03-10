@@ -5,6 +5,7 @@ import { Dimensions } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store";
 import { Observation } from "../../../models";
+import { theme } from "../../../theme";
 
 export default function ObservationMapScreen() {
   const observationsEntries = useSelector<RootState, Array<Observation>>(
@@ -19,9 +20,11 @@ export default function ObservationMapScreen() {
           height: Dimensions.get("window").height,
         }}
       >
-        {observationsEntries.map((observationEntry, index) => (
-          <Geojson
+        {observationsEntries.map((observationEntry, index) => {
+          return <Geojson
             key={index}
+            //@ts-ignore
+            color={theme.color.palette.cyan}
             geojson={{
               type: "FeatureCollection",
               features: [
@@ -33,7 +36,7 @@ export default function ObservationMapScreen() {
               ],
             }}
           />
-        ))}
+        })}
       </MapView>
     </Screen>
   );
