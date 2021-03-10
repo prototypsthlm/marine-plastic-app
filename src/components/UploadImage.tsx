@@ -84,8 +84,8 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     if (!result.cancelled) {
       if (!result.exif || !result.exif.GPSLongitude)
         Alert.alert(
-          "No location metadata",
-          "This image lacks geolocation metadata."
+          "We can't tell where you are!",
+          "This image lacks geolocation metadata. Please provide this data manually."
         );
 
       if (!result.exif || !result.exif.DateTimeOriginal)
