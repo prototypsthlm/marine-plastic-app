@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Modal } from "react-native";
+import { Modal, View, Text } from "react-native";
 import MapView, { LatLng, Marker } from "react-native-maps";
 import styled from "../../styled";
 import { theme } from "../../theme";
@@ -73,7 +73,7 @@ export default function LocationPicker({
               }}
               onPress={(e) => onMapPress(e)}
             >
-              <Marker pinColor={'turquoise'} coordinate={location} />
+              <Marker pinColor={theme.color.palette.cyan} coordinate={location} title="Your position"></Marker>
             </MapView>
           </ModalCard>
         </BackgroundModalContainer>
