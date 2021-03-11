@@ -56,20 +56,20 @@ function getPoint(features: Array<NewFeaturePayload>) {
   return {
     type: "Point",
     coordinates: [
-      (features[0].imageGPSLatitude as number) || 0,
       (features[0].imageGPSLongitude as number) || 0,
+      (features[0].imageGPSLatitude as number) || 0,
     ],
   };
 }
 
 function getLine(features: Array<NewFeaturePayload>) {
   const point1: Position = [
-    (features[0].imageGPSLatitude as number) || 0,
     (features[0].imageGPSLongitude as number) || 0,
+    (features[0].imageGPSLatitude as number) || 0,
   ];
   const point2: Position = [
-    (features[1].imageGPSLatitude as number) || 0,
     (features[1].imageGPSLongitude as number) || 0,
+    (features[1].imageGPSLatitude as number) || 0,
   ];
   const line = lineString([point1, point2]);
   return line.geometry;
@@ -77,8 +77,8 @@ function getLine(features: Array<NewFeaturePayload>) {
 
 function getConvexHullPolygon(features: Array<NewFeaturePayload>) {
   const coords: Array<Array<number>> = features.map((feature) => [
-    (feature.imageGPSLatitude as number) || 0,
     (feature.imageGPSLongitude as number) || 0,
+    (feature.imageGPSLatitude as number) || 0,
   ]);
   const points = featureCollection(coords.map((coord) => point(coord)));
   const hull = convex(points);
