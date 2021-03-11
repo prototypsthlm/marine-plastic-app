@@ -37,7 +37,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         status: statusCamera,
       } = await ImagePicker.requestCameraPermissionsAsync();
       if (statusCamera !== "granted") {
-        alert("Sorry, we need camera roll permissions to make this work!");
+        alert("Sorry, we need permissions to access your camera in order for this to work!");
       } else setCanUseCamera(true);
     }
   };
