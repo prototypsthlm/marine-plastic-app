@@ -1,7 +1,7 @@
-import { FeatureType } from "../../../models";
+import { LitterType } from "../../../models";
 
-export interface NewFeaturePayload {
-  feaureType: FeatureType;
+export interface NewMeasurementPayload {
+  litterType: LitterType;
 
   imageUrl?: string;
   imageGPSLatitude?: number;
@@ -20,8 +20,8 @@ export interface NewFeaturePayload {
   comments?: string;
 }
 
-export interface EditFeaturePayload {
-  featureTypeId?: string;
+export interface EditMeasurementPayload {
+  litterTypeId?: string;
 
   quantity?: number;
   quantityUnits?: string;

@@ -1,4 +1,4 @@
-import { FeatureType, User } from "../../models";
+import { LitterType, User } from "../../models";
 
 export interface BaseResult<T> {
   ok: boolean;
@@ -19,8 +19,8 @@ export interface PagedResponse<T> {
   results: Array<T>;
 }
 
-export interface FeatureTypesResponse {
-  results: Array<FeatureType>;
+export interface LitterTypesResponse {
+  results: Array<LitterType>;
 }
 
 export type GetUserInfoResult = BaseResult<UserResponse>;

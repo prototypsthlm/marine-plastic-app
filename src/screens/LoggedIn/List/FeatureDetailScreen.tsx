@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
-import { Feature, FeatureImage } from "../../../models";
+import { Measurement, FeatureImage } from "../../../models";
 
 import { Alert, Image } from "react-native";
 
@@ -11,18 +11,20 @@ import { NavigationProps } from "../../../navigation/types";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
 import { theme } from "../../../theme";
-import { deleteFeature } from "../../../store/slices/features";
+import { deleteMeasurement } from "../../../store/slices/measurements";
 
 export default function FeatureDetailScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
 
-  const featureEntry = useSelector<RootState, Feature | undefined>(
-    (state) => state.features.selectedFeatureEntry
+  const measurementEntry = useSelector<RootState, Measurement | undefined>(
+    (state) => state.measurements.selectedMeasurementEntry
   );
 
+  /*
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
     (state) => state.features.featureImages
   );
+  */
 
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
@@ -58,13 +60,14 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
         },
         {
           text: "Delete",
-          onPress: () => dispatch(deleteFeature()),
+          onPress: () => dispatch(deleteMeasurement()),
           style: "destructive",
         },
       ],
       { cancelable: false }
     );
 
+  /*
   const onlineImage: FeatureImage | undefined =
     isOnline &&
     featureEntry?.featureImages &&
@@ -74,26 +77,27 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
   const image: FeatureImage | undefined =
     onlineImage ||
     featureImages.find((fi) => fi.featureId === featureEntry?.id);
+  */
 
   const fields = [
     { label: "Observer: ", value: "John Smith" },
-    { label: "Comments: ", value: featureEntry?.comments },
-    { label: "Quantity: ", value: featureEntry?.quantity },
-    { label: "Quantity units: ", value: featureEntry?.quantityUnits },
+    { label: "Comments: ", value: measurementEntry?.comments },
+    { label: "Quantity: ", value: measurementEntry?.quantity },
+    { label: "Quantity units: ", value: measurementEntry?.quantityUnits },
     {
       label: "Estimated Weight (Kg): ",
-      value: featureEntry?.estimatedWeightKg,
+      value: measurementEntry?.estimatedWeightKg,
     },
-    { label: "Estimated Size (m2): ", value: featureEntry?.estimatedSizeM2 },
+    { label: "Estimated Size (m2): ", value: measurementEntry?.estimatedSizeM2 },
     {
       label: "Estimated Volume (m3): ",
-      value: featureEntry?.estimatedVolumeM3,
+      value: measurementEntry?.estimatedVolumeM3,
     },
-    { label: "Depth (m): ", value: featureEntry?.depthM },
-    { label: "Is Absence: ", value: featureEntry?.isAbsence ? "Yes" : "No" },
+    { label: "Depth (m): ", value: measurementEntry?.depthM },
+    { label: "Is Absence: ", value: measurementEntry?.isAbsence ? "Yes" : "No" },
     {
       label: "Is Collected: ",
-      value: featureEntry?.isCollected ? "Yes" : "No",
+      value: measurementEntry?.isCollected ? "Yes" : "No",
     },
   ];
 
@@ -104,14 +108,14 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
         contentContainerStyle: { alignItems: "center" },
       }}
     >
-      {featureEntry && (
+      {measurementEntry && (
         <>
-          {Boolean(image) && (
+          {/*Boolean(image) && (
             <Image
               source={{ uri: image?.url }}
               style={{ width: "100%", height: 400 }}
             ></Image>
-          )}
+          )*/}
           <Section>
             <FlexColumn>
               {fields.map((item, index) => (

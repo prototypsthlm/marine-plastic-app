@@ -7,17 +7,17 @@ import styled from "../../styled";
 import { RootState, useThunkDispatch } from "../../store/store";
 
 import { useSelector } from "react-redux";
-import { FeatureType } from "../../models";
+import { LitterType } from "../../models";
 import MapItem from "./MapItem";
 import PictureSection from "./PictureSection";
 import { LatLng } from "react-native-maps";
 import { NavigationProps } from "../../navigation/types";
 import {
-  selectFeatureType,
-  resetFeatureType,
-  NewFeaturePayload,
-  addNewFeature,
-} from "../../store/slices/features";
+  selectLitterType,
+  resetLitterType,
+  NewMeasurementPayload,
+  addNewMeasurement,
+} from "../../store/slices/measurements";
 import { theme } from "../../theme";
 import {
   SectionHeader,
@@ -81,26 +81,26 @@ const validation = Yup.object().shape({
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
-  const defaultFeatureType = useSelector<RootState, FeatureType | undefined>(
-    (state) => state.features.featureTypes.find((x) => x.tsgMlCode === "G999")
+  const defaultLitterType = useSelector<RootState, LitterType | undefined>(
+    (state) => state.measurements.litterTypes.find((x) => x.tsgMlCode === "G999")
   );
 
-  const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
-    (state) => state.features.selectedFeatureType
+  const selectedLitterType = useSelector<RootState, LitterType | undefined>(
+    (state) => state.measurements.selectedLitterType
   );
 
   useEffect(() => {
-    defaultFeatureType
-      ? dispatch(selectFeatureType(defaultFeatureType))
-      : dispatch(resetFeatureType());
+    defaultLitterType
+      ? dispatch(selectLitterType(defaultLitterType))
+      : dispatch(resetLitterType());
   }, []);
 
   const [isExtraInfoOpen, setIsExtraInfoOpen] = useState<boolean>(false);
 
   const handleFormSubmit = (values: any, actions: any) => {
-    if (selectedFeatureTypes === undefined) return;
-    const newFeature: NewFeaturePayload = {
-      feaureType: selectedFeatureTypes,
+    if (selectedLitterType === undefined) return;
+    const newMeasurement: NewMeasurementPayload = {
+      litterType: selectedLitterType,
 
       imageUrl: values.imageUri,
       imageGPSLatitude: values.location.latitude,
@@ -118,7 +118,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
 
       comments: values.comments,
     };
-    dispatch(addNewFeature(newFeature));
+    dispatch(addNewMeasurement(newMeasurement));
     actions.resetForm(InitialFormValues);
   };
 
@@ -199,7 +199,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
               <ListItem
                 onPress={() => navigation.navigate("featureTypePickerScreen")}
               >
-                {selectedFeatureTypes === undefined && (
+                {selectedLitterType === undefined && (
                   <Text
                     style={{
                       color: theme.color.palette.curiousBlue,
@@ -210,7 +210,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                     Select feature type...
                   </Text>
                 )}
-                {selectedFeatureTypes !== undefined && (
+                {selectedLitterType !== undefined && (
                   <FlexColumn
                     style={{
                       width: "100%",
@@ -237,12 +237,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                       </Text>
                     </FlexRow>
                     <FlexRow>
-                      <Text bold>{selectedFeatureTypes.tsgMlCode}</Text>
+                      <Text bold>{selectedLitterType.tsgMlCode}</Text>
                       <Text style={{ color: theme.color.palette.gray }}>
-                        {selectedFeatureTypes.material}
+                        {selectedLitterType.material}
                       </Text>
                     </FlexRow>
-                    <Text>{selectedFeatureTypes.name}</Text>
+                    <Text>{selectedLitterType.name}</Text>
                   </FlexColumn>
                 )}
               </ListItem>
@@ -320,7 +320,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
           <Button
             disabled={
               Boolean(touched.imageUri && errors.imageUri) ||
-              selectedFeatureTypes === undefined
+              selectedLitterType === undefined
             }
             title="Add feature to observation"
             onPress={handleSubmit as any}

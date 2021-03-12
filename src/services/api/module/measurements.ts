@@ -1,67 +1,71 @@
-import { CreatorApps, Feature, FeatureImage } from "../../../models";
-import { EditFeaturePayload } from "../../../store/slices/features";
+import { CreatorApps, Measurement, FeatureImage } from "../../../models";
+import { EditMeasurementPayload } from "../../../store/slices/measurements";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
 import { PagedResponse, SingleResponse } from "../types";
 
-const featurePath = "/feature";
-const featuresPath = "/features";
+const measurementPath = "/measurement";
+const measurementsPath = "/measurements";
 
 const featureImagePath = "/featureImage";
 
-export const featuresModule = {
-  async getFeatures(observationId: string | null, cursor: string | null) {
+export const measurementsModule = {
+  async getMeasurements(observationId: string | null, cursor: string | null) {
     const params = {
       observationId: observationId === null ? "null" : observationId,
       cursor,
     };
-    const response: HttpResponse<PagedResponse<Feature>> = await baseApi.get(
-      featuresPath,
+
+    console.log("!!!!!!!!!PARAMS!!!!!!!!!!");
+    console.log(params);
+
+    const response: HttpResponse<PagedResponse<Measurement>> = await baseApi.get(
+      measurementsPath,
       params
     );
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
-  async postFeature(feature: Feature) {
+  async postMeasurement(measurement: Measurement) {
     const params = {
-      id: feature.id,
-      creatorApp: feature.creatorApp,
-      creatorId: feature.creatorId,
-      observationId: feature.observationId,
-      featureTypeId: feature.featureTypeId,
-      quantity: feature.quantity,
-      quantityUnits: feature.quantityUnits,
-      estimatedWeightKg: feature.estimatedWeightKg,
-      estimatedSizeM2: feature.estimatedSizeM2,
-      estimatedVolumeM3: feature.estimatedVolumeM3,
-      depthM: feature.depthM,
-      isAbsence: feature.isAbsence,
-      isCollected: feature.isCollected,
-      comments: feature.comments,
+      id: measurement.id,
+      creatorApp: measurement.creatorApp,
+      creatorId: measurement.creatorId,
+      observationId: measurement.observationId,
+      litterTypeId: measurement.litterTypeId,
+      quantity: measurement.quantity,
+      quantityUnits: measurement.quantityUnits,
+      estimatedWeightKg: measurement.estimatedWeightKg,
+      estimatedSizeM2: measurement.estimatedSizeM2,
+      estimatedVolumeM3: measurement.estimatedVolumeM3,
+      depthM: measurement.depthM,
+      isAbsence: measurement.isAbsence,
+      isCollected: measurement.isCollected,
+      comments: measurement.comments,
     };
-    const response: HttpResponse<SingleResponse<Feature>> = await baseApi.post(
-      featurePath,
+    const response: HttpResponse<SingleResponse<Measurement>> = await baseApi.post(
+      measurementPath,
       params
     );
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
-  async patchFeature(feature: Feature, fieldsToUpdate: EditFeaturePayload) {
+  async patchMeasurement(measurement: Measurement, fieldsToUpdate: EditMeasurementPayload) {
     const params = {
       ...fieldsToUpdate,
     };
-    const response: HttpResponse<SingleResponse<Feature>> = await baseApi.patch(
-      featurePath + "/" + feature.id,
+    const response: HttpResponse<SingleResponse<Measurement>> = await baseApi.patch(
+      measurementPath + "/" + measurement.id,
       params
     );
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
-  async deleteFeature(feature: Feature) {
-    const featureId = feature.id;
+  async deleteMeasurement(measurement: Measurement) {
+    const measurementId = measurement.id;
     const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
-      featurePath + "/" + featureId
+      measurementPath + "/" + measurementId
     );
     if (!response.ok) return createGenericProblem(response);
     return response;

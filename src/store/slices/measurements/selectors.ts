@@ -7,8 +7,8 @@ const aggregateAndSelectKey = (array: Array<any>, key: string): Array<string> =>
     []
   );
 
-export const selectFeatureTypeByMaterial = (
+export const selectLitterTypeByMaterial = (
   state: RootState
 ): Array<string> => {
-  return aggregateAndSelectKey(state.features.featureTypes, "material");
+  return aggregateAndSelectKey(state.measurements.litterTypes, "material");
 };

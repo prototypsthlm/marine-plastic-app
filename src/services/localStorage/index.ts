@@ -1,11 +1,11 @@
 import { campaignsModule } from "./module/campaigns";
-import { featureTypesModule } from "./module/featureTypes";
+import { measurementsModule } from "./module/litterTypes";
 import { observationModule } from "./module/observations";
 import { userModule } from "./module/user";
 
 const localStorage = {
   ...campaignsModule,
-  ...featureTypesModule,
+  ...measurementsModule,
   ...observationModule,
   ...userModule,
 };

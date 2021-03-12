@@ -1,8 +1,8 @@
-import { Campaign, Feature, FeatureImage, Observation } from "../../../models";
+import { Campaign, Measurement, FeatureImage, Observation } from "../../../models";
 import { db } from "../db";
 import { EntityType } from "../types";
 
-type EntityPayload = Array<Observation | Feature | Campaign | FeatureImage>;
+type EntityPayload = Array<Observation | Measurement | Campaign | FeatureImage>;
 
 export const baseEntityModule = {
   upsertEntities(
@@ -11,21 +11,21 @@ export const baseEntityModule = {
     isSynced: boolean,
     campaignId: string | null = null,
     observationId: string | null = null,
-    featureId: string | null = null
+    measurementId: string | null = null
   ) {
     const insertValues = payloadArray.map(
       (payload) =>
         `('${payload.id}', ${isSynced ? "1" : "0"}, '${entityType}', '${
           campaignId || "null"
         }', '${observationId || "null"}', '${
-          featureId || "null"
+          measurementId || "null"
         }', '${JSON.stringify(payload)}')`
     );
     return new Promise<void>((resolve, reject) => {
       db.transaction(
         (tx) => {
           tx.executeSql(
-            `insert into baseEntity (id, isSynced, type, campaignId, observationId, featureId, jsonObject) values ${insertValues.join(
+            `insert into baseEntity (id, isSynced, type, campaignId, observationId, measurementId, jsonObject) values ${insertValues.join(
               ", "
             )} on conflict(id) do update set isSynced=excluded.isSynced, jsonObject=excluded.jsonObject`
           );
@@ -40,7 +40,7 @@ export const baseEntityModule = {
     isSynced: boolean | null = null,
     campaignId: string | null = null,
     observationId: string | null = null,
-    featureId: string | null = null
+    measurementId: string | null = null
   ): Promise<Array<T>> {
     return new Promise<Array<T>>((resolve, reject) => {
       db.transaction((tx) => {
@@ -51,7 +51,7 @@ export const baseEntityModule = {
             ? `and observationId = '${observationId}'`
             : "";
         const filerByFeature =
-          featureId !== null ? `and featureId = '${featureId}'` : "";
+          measurementId !== null ? `and measurementId = '${measurementId}'` : "";
         const filerByIsSynced =
           isSynced !== null
             ? `and isSynced = ${observationId ? "true" : "false"}`

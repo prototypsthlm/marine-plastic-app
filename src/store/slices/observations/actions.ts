@@ -1,7 +1,7 @@
 import {
   CreatorApps,
-  Feature,
-  FeatureImage,
+  //FeatureImage,
+  Measurement,
   Observation,
 } from "../../../models";
 import { Thunk } from "../../store";
@@ -20,12 +20,12 @@ import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 import {
-  fetchCachedFeatureImages,
-  processSubmitFeatureImages,
-  processSubmitFeatures,
-  resetFeaturesToAdd,
+  //fetchCachedFeatureImages,
+  //processSubmitFeatureImages,
+  processSubmitMeasurements,
+  resetMeasurementsToAdd,
   resetPagination as resetFeaturePagination,
-} from "../features";
+} from "../measurements";
 
 export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
   options
@@ -108,11 +108,11 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
     if (creatorId === undefined) return;
 
     const newObservationId: string = generateUUIDv4();
-    const newFeatures: Array<Feature> = newObservationPayload.features.map(
-      (featurePayload) => {
-        const featureId: string = generateUUIDv4();
+    const newMeasurements: Array<Measurement> = newObservationPayload.measurements.map(
+      (measurementPayload) => {
+        const measurementId: string = generateUUIDv4();
         return {
-          id: featureId,
+          id: measurementId,
           creatorId: creatorId,
           creatorApp: CreatorApps.DATA_COLLECTION_APP,
           createdAt: undefined,
@@ -121,29 +121,30 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
           deletedAt: undefined,
 
           observationId: newObservationId,
-          featureTypeId: featurePayload.feaureType.id,
-          imageUrl: featurePayload.imageUrl,
-          image: featurePayload.imageUrl
+          litterTypeId: measurementPayload.litterType.id,
+          /*
+          imageUrl: measurementPayload.imageUrl,
+          image: measurementPayload.imageUrl
             ? {
                 id: generateUUIDv4(),
                 creatorId: creatorId,
                 creatorApp: CreatorApps.DATA_COLLECTION_APP,
                 featureId: featureId,
-                url: featurePayload.imageUrl,
+                url: measurementPayload.imageUrl,
               }
             : undefined,
+          */
+          quantity: measurementPayload.quantity,
+          quantityUnits: measurementPayload.quantityUnits,
+          estimatedWeightKg: measurementPayload.estimatedWeightKg,
+          estimatedSizeM2: measurementPayload.estimatedSizeM2,
+          estimatedVolumeM3: measurementPayload.estimatedVolumeM3,
+          depthM: measurementPayload.depthM,
 
-          quantity: featurePayload.quantity,
-          quantityUnits: featurePayload.quantityUnits,
-          estimatedWeightKg: featurePayload.estimatedWeightKg,
-          estimatedSizeM2: featurePayload.estimatedSizeM2,
-          estimatedVolumeM3: featurePayload.estimatedVolumeM3,
-          depthM: featurePayload.depthM,
+          isAbsence: measurementPayload.isAbsence,
+          isCollected: measurementPayload.isCollected,
 
-          isAbsence: featurePayload.isAbsence,
-          isCollected: featurePayload.isCollected,
-
-          comments: featurePayload.comments,
+          comments: measurementPayload.comments,
         };
       }
     );
@@ -161,20 +162,22 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       timestamp: newObservationPayload.timestamp.toISOString(),
       comments: newObservationPayload.comments,
       isMatched: false,
-      features: newFeatures,
+      measurements: newMeasurements,
     };
 
+    /*
     const allFeatureImages: Array<
       FeatureImage | undefined
-    > = newFeatures.filter((f) => f.image !== undefined).map((f) => f.image);
+    > = newMeasurements.filter((f) => f.image !== undefined).map((f) => f.image);
+    */
 
     await processSubmitObservation(api, localDB, [newObservation]);
-    await processSubmitFeatures(api, localDB, newFeatures);
-    await processSubmitFeatureImages(api, localDB, allFeatureImages);
+    await processSubmitMeasurements(api, localDB, newMeasurements);
+    //await processSubmitFeatureImages(api, localDB, allFeatureImages);
 
     dispatch(addNewObservation(newObservation));
-    dispatch(resetFeaturesToAdd());
-    dispatch(fetchCachedFeatureImages());
+    dispatch(resetMeasurementsToAdd());
+    //dispatch(fetchCachedFeatureImages());
     navigation.navigate("observationListScreen");
   } catch (e) {
     console.log(e);
@@ -227,18 +230,19 @@ export const syncOfflineEntries: Thunk = () => async (
       EntityType.Observation,
       false
     );
-    const features: Array<Feature> = await localDB.getEntities<Feature>(
-      EntityType.Feature,
+    const measurements: Array<Measurement> = await localDB.getEntities<Measurement>(
+      EntityType.Measurement,
       false
     );
+    /*
     const featureImages: Array<FeatureImage> = await localDB.getEntities<FeatureImage>(
       EntityType.FeatureImage,
       false
     );
-
+    */
     await processSubmitObservation(api, localDB, observations);
-    await processSubmitFeatures(api, localDB, features);
-    await processSubmitFeatureImages(api, localDB, featureImages);
+    await processSubmitMeasurements(api, localDB, measurements);
+    //await processSubmitFeatureImages(api, localDB, featureImages);
   } catch (e) {
     console.log(e);
   }
@@ -305,10 +309,11 @@ export const deleteObservation: Thunk = () => async (
   } else {
     // If success, delete from localDB
     const observationId: string = currentObservation.id;
-    const observationFeatures: Array<Feature> = getState().features.featureEntries.filter(
+    const observationMeasurements: Array<Measurement> = getState().measurements.measurementEntries.filter(
       (f) => f.observationId === observationId
     );
-    const featureIds: Array<string> = observationFeatures.map((f) => f.id);
+    const measurementIds: Array<string> = observationMeasurements.map((m) => m.id);
+    /*
     const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
       (f) => featureIds.includes(f.featureId)
     );
@@ -317,6 +322,13 @@ export const deleteObservation: Thunk = () => async (
       observationId,
       ...featureIds,
       ...featureImageIds,
+    ];
+    if (ids.length > 0) await localDB.deleteEntities(ids);
+    */
+
+    const ids: Array<string> = [
+      observationId,
+      ...measurementIds,
     ];
     if (ids.length > 0) await localDB.deleteEntities(ids);
 

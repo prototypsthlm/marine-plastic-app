@@ -1,13 +1,13 @@
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
 import { HttpResponse } from "../genericTypes";
-import { FeatureTypesResponse } from "../types";
+import { LitterTypesResponse } from "../types";
 
-const modulePath = "/featureTypes";
+const modulePath = "/litterTypes";
 
-export const featureTypesModule = {
-  async getAllFeatureTypes() {
-    const response: HttpResponse<FeatureTypesResponse> = await baseApi.get(
+export const litterTypesModule = {
+  async getAllLitterTypes() {
+    const response: HttpResponse<LitterTypesResponse> = await baseApi.get(
       modulePath
     );
     if (!response.ok) return createGenericProblem(response);
