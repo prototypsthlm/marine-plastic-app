@@ -140,18 +140,6 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
           observationId: newObservationId,
           litterTypeId: measurementPayload.litterType.id,
-          /*
-          imageUrl: measurementPayload.imageUrl,
-          image: measurementPayload.imageUrl
-            ? {
-                id: generateUUIDv4(),
-                creatorId: creatorId,
-                creatorApp: CreatorApps.DATA_COLLECTION_APP,
-                featureId: featureId,
-                url: measurementPayload.imageUrl,
-              }
-            : undefined,
-          */
           quantity: measurementPayload.quantity,
           quantityUnits: measurementPayload.quantityUnits,
           estimatedWeightKg: measurementPayload.estimatedWeightKg,
@@ -189,6 +177,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       timestamp: newObservationPayload.timestamp.toISOString(),
       comments: newObservationPayload.comments,
       isMatched: false,
+      isAbsence: newObservationPayload.isAbsence,
       measurements: newMeasurements,
     };
 
