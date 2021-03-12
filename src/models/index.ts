@@ -43,16 +43,17 @@ export interface Observation extends BaseEntity {
   geometry: Geometry;
   timestamp: string;
   comments?: string;
+  imageUrl?: string;
+  image?: ObservationImage;
   extra?: any;
   isMatched: boolean;
+  isAbsence: boolean;
   measurements: Array<Measurement>;
 }
 
 export interface Measurement extends BaseEntity {
   observationId: string;
   litterTypeId: string;
-  imageUrl?: string;
-  image?: FeatureImage;
 
   quantity?: number;
   quantityUnits?: string;
@@ -60,15 +61,13 @@ export interface Measurement extends BaseEntity {
   estimatedSizeM2?: number;
   estimatedVolumeM3?: number;
   depthM?: number;
-
-  isAbsence: boolean;
   isCollected: boolean;
 
   comments?: string;
 }
 
-export interface FeatureImage extends BaseEntity {
-  featureId: string;
+export interface ObservationImage extends BaseEntity {
+  observationId: string;
   url?: string;
   status?: string;
 }
@@ -93,19 +92,6 @@ export interface LitterType {
   isCore: boolean;
   environmentalCompartments: EnvCompartments;
 }
-
-/* Deprecated
-export interface FeatureType {
-  id: string;
-  name: string;
-  tsgMlCode: string | null;
-  osparCode: string | null;
-  unepCode: string | null;
-  material: string | null;
-  isCore: boolean;
-  environmentalCompartments: EnvCompartments;
-}
-*/
 
 export interface Campaign extends BaseEntity {
   name: string;

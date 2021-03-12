@@ -3,11 +3,13 @@ import {
   //FeatureImage,
   Measurement,
   Observation,
+  ObservationImage,
 } from "../../../models";
 import { Thunk } from "../../store";
 import {
   addEditedObservation,
   addFetchedObservations,
+  addFetchedObservationImages,
   addNewObservation,
   resetPagination,
   selectObservation,
@@ -22,6 +24,7 @@ import { EntityType } from "../../../services/localDB/types";
 import {
   //fetchCachedFeatureImages,
   //processSubmitFeatureImages,
+  processSubmitObservationImages,
   processSubmitMeasurements,
   resetMeasurementsToAdd,
   resetPagination as resetFeaturePagination,
@@ -97,6 +100,21 @@ export const fetchCachedObservations: Thunk = () => async (
   }
 };
 
+export const fetchCachedObservationImages: Thunk = () => async (
+  dispatch,
+  _,
+  { localDB }
+) => {
+  try {
+    const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
+      EntityType.ObservationImage,
+    );
+    dispatch(addFetchedObservationImages(observationImages));
+  } catch (e) {
+    console.log({ e });
+  }
+};
+
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
 ) => async (dispatch, getState, { api, localDB, navigation }) => {
@@ -140,8 +158,6 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
           estimatedSizeM2: measurementPayload.estimatedSizeM2,
           estimatedVolumeM3: measurementPayload.estimatedVolumeM3,
           depthM: measurementPayload.depthM,
-
-          isAbsence: measurementPayload.isAbsence,
           isCollected: measurementPayload.isCollected,
 
           comments: measurementPayload.comments,
@@ -157,6 +173,17 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       isDeleted: false,
       deletedAt: undefined,
 
+      imageUrl: newObservationPayload.imageUrl,
+      image: newObservationPayload.imageUrl
+        ? {
+            id: generateUUIDv4(),
+            creatorId: creatorId,
+            creatorApp: CreatorApps.DATA_COLLECTION_APP,
+            observationId: newObservationId,
+            url: newObservationPayload.imageUrl,
+          }
+        : undefined,
+
       campaignId: campaignId || null,
       geometry: newObservationPayload.geometry,
       timestamp: newObservationPayload.timestamp.toISOString(),
@@ -165,19 +192,17 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       measurements: newMeasurements,
     };
 
-    /*
-    const allFeatureImages: Array<
-      FeatureImage | undefined
-    > = newMeasurements.filter((f) => f.image !== undefined).map((f) => f.image);
-    */
-
+    const allObservationImages: Array<
+      ObservationImage | undefined
+    > = [newObservation.image];
+    
     await processSubmitObservation(api, localDB, [newObservation]);
+    await processSubmitObservationImages(api, localDB, allObservationImages);
     await processSubmitMeasurements(api, localDB, newMeasurements);
-    //await processSubmitFeatureImages(api, localDB, allFeatureImages);
-
+    
     dispatch(addNewObservation(newObservation));
     dispatch(resetMeasurementsToAdd());
-    //dispatch(fetchCachedFeatureImages());
+    dispatch(fetchCachedObservationImages());
     navigation.navigate("observationListScreen");
   } catch (e) {
     console.log(e);
@@ -234,15 +259,15 @@ export const syncOfflineEntries: Thunk = () => async (
       EntityType.Measurement,
       false
     );
-    /*
-    const featureImages: Array<FeatureImage> = await localDB.getEntities<FeatureImage>(
-      EntityType.FeatureImage,
+    
+    const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
+      EntityType.ObservationImage,
       false
     );
-    */
+  
     await processSubmitObservation(api, localDB, observations);
     await processSubmitMeasurements(api, localDB, measurements);
-    //await processSubmitFeatureImages(api, localDB, featureImages);
+    await processSubmitObservationImages(api, localDB, observationImages);
   } catch (e) {
     console.log(e);
   }
@@ -313,25 +338,19 @@ export const deleteObservation: Thunk = () => async (
       (f) => f.observationId === observationId
     );
     const measurementIds: Array<string> = observationMeasurements.map((m) => m.id);
-    /*
-    const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
-      (f) => featureIds.includes(f.featureId)
+    
+    const observationImages: Array<ObservationImage> = getState().observations.observationImages.filter(
+      (fi) => fi.observationId === observationId
     );
-    const featureImageIds: Array<string> = featureImages.map((f) => f.id);
+    const observationImageIds: Array<string> = observationImages.map((fi) => fi.id);
     const ids: Array<string> = [
-      observationId,
-      ...featureIds,
-      ...featureImageIds,
+      observationId, 
+      ...measurementIds, 
+      ...observationImageIds
     ];
+    
     if (ids.length > 0) await localDB.deleteEntities(ids);
-    */
-
-    const ids: Array<string> = [
-      observationId,
-      ...measurementIds,
-    ];
-    if (ids.length > 0) await localDB.deleteEntities(ids);
-
+    
     dispatch(fetchCachedObservations());
     navigation.goBack();
   }

@@ -23,7 +23,7 @@ import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
 import { theme } from "../theme";
 import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
-import { Measurement, FeatureImage, LitterType } from "../models";
+import { Measurement, LitterType } from "../models";
 import BasicHeaderButtons from "./BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
 
@@ -36,7 +36,6 @@ interface InitialFormValuesShape {
   estimatedVolumeM3?: string;
   depthM?: string;
 
-  isAbsence: boolean;
   isCollected: boolean;
 
   comments?: string;
@@ -78,7 +77,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     estimatedSizeM2: String(measurementEntry?.estimatedSizeM2 || ""),
     estimatedVolumeM3: String(measurementEntry?.estimatedVolumeM3 || ""),
     depthM: String(measurementEntry?.depthM || ""),
-    isAbsence: measurementEntry?.isAbsence || false,
     isCollected: measurementEntry?.isCollected || false,
     comments: measurementEntry?.comments || "",
   };
@@ -256,17 +254,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
               </FlexColumn>
             )}
           </ListItem>
-          <ListItemNonTouchable>
-            <Text>Is absent</Text>
-            <Switch
-              trackColor={{
-                false: "#767577",
-                true: theme.color.palette.curiousBlue,
-              }}
-              onValueChange={(value) => setFieldValue("isAbsence", value)}
-              value={values.isAbsence}
-            />
-          </ListItemNonTouchable>
           <ListItemNonTouchable>
             <Text>Is collected</Text>
             <Switch

@@ -1,4 +1,4 @@
-import { Measurement, FeatureImage, LitterType } from "../../../models";
+import { Measurement, LitterType, ObservationImage } from "../../../models";
 import { Thunk } from "../../store";
 import {
   addEditedMeasurement,
@@ -74,23 +74,6 @@ export const fetchCachedMeasurements: Thunk = () => async (
     console.log({ e });
   }
 };
-
-/*
-export const fetchCachedFeatureImages: Thunk = () => async (
-  dispatch,
-  _,
-  { localDB }
-) => {
-  try {
-    const featureImages: Array<FeatureImage> = await localDB.getEntities<FeatureImage>(
-      EntityType.FeatureImage
-    );
-    dispatch(addFetchedFeatureImages(featureImages));
-  } catch (e) {
-    console.log({ e });
-  }
-};
-*/
 
 export const fetchAllLitterTypes: Thunk = () => async (
   dispatch,
@@ -174,7 +157,7 @@ export const processSubmitMeasurements = async (
     for (let i = 0; i < measurements.length; i++) {
       // POST endpoint
       const measurement: Measurement = measurements[i];
-      const response = await api.postFeature(measurement);
+      const response = await api.postMeasurement(measurement);
 
       if (!response.ok || !response.data?.result) {
         // Store offline
@@ -207,41 +190,41 @@ export const processSubmitMeasurements = async (
   }
 };
 
-export const processSubmitFeatureImages = async (
+export const processSubmitObservationImages = async (
   api: any,
   localDB: any,
-  featureImages: Array<FeatureImage | undefined>
+  observationImages: Array<ObservationImage | undefined>
 ) => {
   try {
     // Upload feature images
-    for (let i = 0; i < featureImages.length; i++) {
+    for (let i = 0; i < observationImages.length; i++) {
       // POST endpoint
-      const featureImage: FeatureImage | undefined = featureImages[i];
-      if (featureImage && featureImage.url) {
-        const response = await api.postFeatureImage(featureImage);
+      const observationImage: ObservationImage | undefined = observationImages[i];
+      if (observationImage && observationImage.url) {
+        const response = await api.postObservationImage(observationImage);
 
         if (!response.ok || !response.data?.result) {
           // Store offline
           if (response.problem === "cannot-connect" || response.problem === "timeout") {
             await localDB.upsertEntities(
-              [featureImage],
-              EntityType.FeatureImage,
+              [observationImage],
+              EntityType.ObservationImage,
               false,
               null,
               null,
-              featureImage.featureId
+              observationImage.observationId
             );
           }
           else throw new ActionError(`Couldn't post/sync feature image: ${response.problem}`);
         } else {
           // Upsert if success
           await localDB.upsertEntities(
-            [featureImage],
-            EntityType.FeatureImage,
+            [observationImage],
+            EntityType.ObservationImage,
             true,
             null,
             null,
-            featureImage.featureId
+            observationImage.observationId
           );
         }
       }
@@ -267,15 +250,6 @@ export const deleteMeasurement: Thunk = () => async (
   } else {
     // If success, delete from localDB
     const measurementId: string = currentMeasurement.id;
-    /*
-    const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
-      (fi) => fi.featureId === featureId
-    );
-    const featureImageIds: Array<string> = featureImages.map((fi) => fi.id);
-    const ids: Array<string> = [featureId, ...featureImageIds];
-    
-    if (ids.length > 0) await localDB.deleteEntities(ids);
-    */
 
     const ids: Array<string> = [measurementId];
     if (ids.length > 0) await localDB.deleteEntities(ids);

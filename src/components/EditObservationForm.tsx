@@ -17,11 +17,13 @@ import {
 } from "../store/slices/observations";
 
 interface InitialFormValuesShape {
-  [key: string]: string | undefined;
+  [key: string]: string | boolean | undefined;
   comments: string;
+  isAbsence: boolean;
 }
 
 const validation = Yup.object().shape({
+  isAbsence: Yup.boolean(),
   comments: Yup.string(),
 });
 
@@ -56,6 +58,7 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
 
   const InitialFormValues: InitialFormValuesShape = {
     comments: observationEntry?.comments || "",
+    isAbsence: observationEntry?.isAbsence || false,
   };
 
   const handleFormSubmit = (values: any, actions: any) => {

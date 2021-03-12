@@ -1,4 +1,4 @@
-import { CreatorApps, Measurement, FeatureImage } from "../../../models";
+import { CreatorApps, Measurement, ObservationImage } from "../../../models";
 import { EditMeasurementPayload } from "../../../store/slices/measurements";
 import { baseApi } from "../api";
 import { createGenericProblem } from "../createGenericProblem";
@@ -8,7 +8,7 @@ import { PagedResponse, SingleResponse } from "../types";
 const measurementPath = "/measurement";
 const measurementsPath = "/measurements";
 
-const featureImagePath = "/featureImage";
+const observationImagePath = "/image";
 
 export const measurementsModule = {
   async getMeasurements(observationId: string | null, cursor: string | null) {
@@ -16,9 +16,6 @@ export const measurementsModule = {
       observationId: observationId === null ? "null" : observationId,
       cursor,
     };
-
-    console.log("!!!!!!!!!PARAMS!!!!!!!!!!");
-    console.log(params);
 
     const response: HttpResponse<PagedResponse<Measurement>> = await baseApi.get(
       measurementsPath,
@@ -71,28 +68,28 @@ export const measurementsModule = {
     return response;
   },
 
-  // FeatureImages
-  async postFeatureImage(featureImage: FeatureImage) {
-    const imageUri = featureImage.url || "";
+  // ObservationImages
+  async postObservationImage(observationImage: ObservationImage) {
+    const imageUri = observationImage.url || "";
 
     const form = new FormData();
-    form.append("id", featureImage.id);
+    form.append("id", observationImage.id);
     form.append(
       "creatorApp",
-      featureImage.creatorApp || CreatorApps.DATA_COLLECTION_APP
+      observationImage.creatorApp || CreatorApps.DATA_COLLECTION_APP
     );
-    form.append("featureId", featureImage.featureId);
+    form.append("observationId", observationImage.observationId);
 
     const fileExt = imageUri.split(".").pop() || "jpg";
     form.append("image", {
-      name: featureImage.id + "-featureImage." + fileExt,
+      name: observationImage.id + "-observationImage." + fileExt,
       uri: imageUri,
       type: "image/" + fileExt === "jpg" ? "jpeg" : fileExt,
     });
 
     const response: HttpResponse<
-      SingleResponse<FeatureImage>
-    > = await baseApi.post(featureImagePath, form, {
+      SingleResponse<ObservationImage>
+    > = await baseApi.post(observationImagePath, form, {
       headers: {
         Accept: "application/json",
         "Content-Type": "multipart/form-data",
@@ -101,10 +98,10 @@ export const measurementsModule = {
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
-  async deleteFeatureImage(featureImage: FeatureImage) {
-    const featureImageId = featureImage.id;
+  async deleteFeatureImage(observationImage: ObservationImage) {
+    const observationImageId = observationImage.id;
     const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
-      featureImagePath + "/" + featureImageId
+      observationImagePath + "/" + observationImageId
     );
     if (!response.ok) return createGenericProblem(response);
     return response;
