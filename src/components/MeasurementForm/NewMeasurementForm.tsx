@@ -79,8 +79,6 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
       : dispatch(resetLitterType());
   }, []);
 
-  const [isExtraInfoOpen, setIsExtraInfoOpen] = useState<boolean>(false);
-
   const handleFormSubmit = (values: any, actions: any) => {
     if (selectedLitterType === undefined) return;
     const newMeasurement: NewMeasurementPayload = {
@@ -136,134 +134,114 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
         touched,
       }) => (
         <>
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            EXTRA INFO
-          </SectionHeader>
-          {!isExtraInfoOpen && (
-            <ListItem onPress={() => setIsExtraInfoOpen(true)}>
+          <ListItem
+            onPress={() => navigation.navigate("featureTypePickerScreen")}
+          >
+            {selectedLitterType === undefined && (
               <Text
                 style={{
-                  color: theme.color.palette.gray,
+                  color: theme.color.palette.curiousBlue,
                   paddingTop: theme.spacing.small,
                   paddingBottom: theme.spacing.small,
                 }}
               >
-                Tap to expand form...
+                Select feature type...
               </Text>
-            </ListItem>
-          )}
-          {isExtraInfoOpen && (
-            <>
-              <ListItem
-                onPress={() => navigation.navigate("featureTypePickerScreen")}
+            )}
+            {selectedLitterType !== undefined && (
+              <FlexColumn
+                style={{
+                  width: "100%",
+                  paddingTop: theme.spacing.small,
+                  paddingBottom: theme.spacing.small,
+                }}
               >
-                {selectedLitterType === undefined && (
+                <FlexRow>
                   <Text
                     style={{
-                      color: theme.color.palette.curiousBlue,
-                      paddingTop: theme.spacing.small,
-                      paddingBottom: theme.spacing.small,
+                      fontSize: 12,
+                      marginBottom: theme.spacing.small,
                     }}
                   >
-                    Select feature type...
+                    TYPE
                   </Text>
-                )}
-                {selectedLitterType !== undefined && (
-                  <FlexColumn
+                  <Text
                     style={{
-                      width: "100%",
-                      paddingTop: theme.spacing.small,
-                      paddingBottom: theme.spacing.small,
+                      fontSize: 12,
+                      color: theme.color.palette.curiousBlue,
                     }}
                   >
-                    <FlexRow>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          marginBottom: theme.spacing.small,
-                        }}
-                      >
-                        TYPE
-                      </Text>
-                      <Text
-                        style={{
-                          fontSize: 12,
-                          color: theme.color.palette.curiousBlue,
-                        }}
-                      >
-                        Change
-                      </Text>
-                    </FlexRow>
-                    <FlexRow>
-                      <Text bold>{selectedLitterType.tsgMlCode}</Text>
-                      <Text style={{ color: theme.color.palette.gray }}>
-                        {selectedLitterType.material}
-                      </Text>
-                    </FlexRow>
-                    <Text>{selectedLitterType.name}</Text>
-                  </FlexColumn>
-                )}
-              </ListItem>
-              <ListItemNonTouchable>
-                <Text>Is collected</Text>
-                <Switch
-                  trackColor={{
-                    false: "#767577",
-                    true: theme.color.palette.curiousBlue,
-                  }}
-                  onValueChange={(value) => setFieldValue("isCollected", value)}
-                  value={values.isCollected}
-                />
-              </ListItemNonTouchable>
-              <FormSection>
-                <FlexRow>
-                  <InputField
-                    halfWidth
-                    keyboardType="numeric"
-                    label="Quantity"
-                    preset="default"
-                    onChangeText={handleChange("quantity")}
-                    onBlur={handleBlur("quantity")}
-                    value={values.quantity}
-                    error={
-                      touched.quantity && errors.quantity
-                        ? errors.quantity
-                        : undefined
-                    }
-                  />
-                  <InputField
-                    halfWidth
-                    label="Quantity units"
-                    preset="default"
-                    onChangeText={handleChange("quantityUnits")}
-                    onBlur={handleBlur("quantityUnits")}
-                    value={values.quantityUnits}
-                    error={
-                      touched.quantityUnits && errors.quantityUnits
-                        ? errors.quantityUnits
-                        : undefined
-                    }
-                  />
+                    Change
+                  </Text>
                 </FlexRow>
-                {extraFields.map((item, index) => (
-                  <InputField
-                    key={index}
-                    label={item.label}
-                    keyboardType={item.kbType}
-                    preset="default"
-                    onChangeText={handleChange(item.field)}
-                    onBlur={handleBlur(item.field)}
-                    value={values[item.field] as string}
-                    error={
-                      touched[item.field] && errors[item.field]
-                        ? errors[item.field]
-                        : undefined
-                    }
-                  />
-                ))}
-              </FormSection>
-            </>
-          )}
+                <FlexRow>
+                  <Text bold>{selectedLitterType.tsgMlCode}</Text>
+                  <Text style={{ color: theme.color.palette.gray }}>
+                    {selectedLitterType.material}
+                  </Text>
+                </FlexRow>
+                <Text>{selectedLitterType.name}</Text>
+              </FlexColumn>
+            )}
+          </ListItem>
+          <ListItemNonTouchable>
+            <Text>Is collected</Text>
+            <Switch
+              trackColor={{
+                false: "#767577",
+                true: theme.color.palette.curiousBlue,
+              }}
+              onValueChange={(value) => setFieldValue("isCollected", value)}
+              value={values.isCollected}
+            />
+          </ListItemNonTouchable>
+          <FormSection>
+            <FlexRow>
+              <InputField
+                halfWidth
+                keyboardType="numeric"
+                label="Quantity"
+                preset="default"
+                onChangeText={handleChange("quantity")}
+                onBlur={handleBlur("quantity")}
+                value={values.quantity}
+                error={
+                  touched.quantity && errors.quantity
+                    ? errors.quantity
+                    : undefined
+                }
+              />
+              <InputField
+                halfWidth
+                label="Quantity units"
+                preset="default"
+                onChangeText={handleChange("quantityUnits")}
+                onBlur={handleBlur("quantityUnits")}
+                value={values.quantityUnits}
+                error={
+                  touched.quantityUnits && errors.quantityUnits
+                    ? errors.quantityUnits
+                    : undefined
+                }
+              />
+            </FlexRow>
+            {extraFields.map((item, index) => (
+              <InputField
+                key={index}
+                label={item.label}
+                keyboardType={item.kbType}
+                preset="default"
+                onChangeText={handleChange(item.field)}
+                onBlur={handleBlur(item.field)}
+                value={values[item.field] as string}
+                error={
+                  touched[item.field] && errors[item.field]
+                    ? errors[item.field]
+                    : undefined
+                }
+              />
+            ))}
+          </FormSection>
           <Button
             disabled={
               Boolean(touched.imageUri && errors.imageUri) ||
