@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { InputField } from "./InputField";
-import { Button, Image } from "react-native";
+import { Button, Image, Switch } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
@@ -10,24 +10,37 @@ import {
   submitNewObservation,
 } from "../store/slices/observations";
 import { NewMeasurementPayload } from "../store/slices/measurements";
-import { Campaign, Geometry } from "../models";
+import { Campaign } from "../models";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProps } from "../navigation/types";
 import { ListItem, SectionHeader, Text } from "./elements";
 import { theme } from "../theme";
-import { getGeometryFromFeatures } from "../utils/geoUtils";
+import { getGeometryFromLocation } from "../utils/geoUtils";
+import PictureSection from "./MeasurementForm/PictureSection";
+import MapItem from "./MeasurementForm/MapItem";
+import { LatLng } from "react-native-maps";
 
 interface InitialFormValuesShape {
   comments: string;
+  isAbsence: boolean;
+  imageUri?: string;
+  location?: LatLng;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
+  isAbsence: false,
   comments: "",
 };
 
 const validation = Yup.object().shape({
   comments: Yup.string(),
+  isAbsence: Yup.boolean().required(),
+  imageUri: Yup.string().required(),
+  location: Yup.object({
+    latitude: Yup.number().required(),
+    longitude: Yup.number().required(),
+  }).required(),
 });
 
 const NewObservationForm = ({ navigation }: NavigationProps) => {
@@ -54,8 +67,12 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     const newObservation: NewObservationPayload = {
       comments: values.comments,
       timestamp: new Date(Date.now()), // TODO: Timestamp from exif
-      geometry: getGeometryFromFeatures(measurementsToAdd),
+      geometry: getGeometryFromLocation(values.location),
       measurements: measurementsToAdd,
+      isAbsence: values.isAbsence,
+      imageUrl: values.imageUri,
+      imageGPSLatitude: values.location.latitude,
+      imageGPSLongitude: values.location.longitude,
     };
     dispatch(submitNewObservation(newObservation));
     actions.resetForm(InitialFormValues);
@@ -67,7 +84,12 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       onSubmit={handleFormSubmit}
       validationSchema={validation}
     >
-      {({ handleBlur, handleChange, handleSubmit, values }) => (
+      {({ 
+        handleBlur, 
+        handleChange, 
+        handleSubmit,
+        setFieldValue, 
+        values }) => (
         <>
           <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
           <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
@@ -82,6 +104,26 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 : "Campaign-less observations"}
             </Text>
           </ListItem>
+          
+          <SectionHeader style={{ marginTop: theme.spacing.large }}>
+            PICTURE
+          </SectionHeader>
+          <PictureSection
+            onImageUriChange={handleChange("imageUri")}
+            onLocationChange={(value) => setFieldValue("location", value)}
+          />
+
+          {Boolean(values.imageUri) && values.location !== undefined ? (
+            <>
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>
+                GEOLOCATION
+              </SectionHeader>
+              <MapItem
+                location={values.location}
+                onLocationChange={(value) => setFieldValue("location", value)}
+              />
+            </>
+          ) : null}
 
           <FormSection>
             <InputField
@@ -94,6 +136,18 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               value={values.comments}
             />
           </FormSection>
+
+          <ListItemNonTouchable>
+            <Text>Is absent</Text>
+            <Switch
+              trackColor={{
+                false: "#767577",
+                true: theme.color.palette.curiousBlue,
+              }}
+              onValueChange={(value) => setFieldValue("isAbsence", value)}
+              value={values.isAbsence}
+            />
+          </ListItemNonTouchable>
 
           <Row>
             <Title>Measurements / Items</Title>
@@ -135,7 +189,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <FormSection>
             <Button
-              disabled={measurementsToAdd.length < 1}
+              disabled={false}
               title="Submit"
               onPress={handleSubmit as any}
             />
@@ -170,6 +224,19 @@ const CenteredGrayText = styled.Text`
 const Row = styled.View`
   flex-direction: row;
   align-items: center;
+`;
+
+const ListItemNonTouchable = styled.View`
+  background-color: ${(p) => p.theme.color.background};
+  border-bottom-color: ${(p) => p.theme.color.palette.gray};
+  margin-bottom: 1px;
+  padding: ${(props) => props.theme.spacing.small}px
+    ${(props) => props.theme.spacing.medium}px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  justify-content: space-between;
 `;
 
 const ButtonWithIcon = styled.TouchableOpacity``;

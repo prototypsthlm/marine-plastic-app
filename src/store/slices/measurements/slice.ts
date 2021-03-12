@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { FeatureImage, LitterType, Measurement } from "../../../models";
+import { LitterType, Measurement } from "../../../models";
 import { NewMeasurementPayload } from "./types";
 
 interface MeasurementsState {
@@ -83,14 +83,6 @@ export const measurementsSlice = createSlice({
     setFetchedMeasurements: (state, { payload }: PayloadAction<Array<Measurement>>) => {
       state.measurementEntries = payload;
     },
-    /*
-    addFetchedFeatureImages: (
-      state,
-      { payload }: PayloadAction<Array<FeatureImage>>
-    ) => {
-      state.featureImages = payload;
-    },
-    */
     addFetchedLitterTypes: (
       state,
       { payload }: PayloadAction<Array<LitterType>>

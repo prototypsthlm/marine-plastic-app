@@ -1,8 +1,9 @@
-import { Geometry } from "../models";
-import { NewFeaturePayload } from "../store/slices/features";
+import { Geometry, Observation } from "../models";
 import convex from "@turf/convex";
 import rewind from "@turf/rewind";
 import { point, featureCollection, lineString, Position } from "@turf/helpers";
+import { NewObservationPayload } from "../store/slices/observations";
+import { LatLng } from "react-native-maps";
 
 export function formatGPSLocation(dd: number, ref: string) {
   if (ref == "S" || ref == "W") {
@@ -33,8 +34,26 @@ export function getImageLocation(image: any) {
     };
 }
 
-export function getGeometryFromFeatures(
-  features: Array<NewFeaturePayload>
+export function getGeometryFromLocation(location: LatLng) {
+  if(!location.latitude && !location.latitude || location === undefined) {
+    return {
+      type: "Point",
+      coordinates: [0, 0],
+    };
+  }  
+
+  return {
+    type: "Point",
+    coordinates: [
+      (location.longitude as number) || 0,
+      (location.latitude as number) || 0,
+    ],
+  };
+}
+
+// NOT USED RIGHT NOW: later on we could generate geometries from a list of images, not just a single image
+export function getGeometryFromImages(
+  features: Array<NewObservationPayload>
 ): Geometry {
   // If no feature just return Point at 0 0
   if (features.length === 0)
@@ -52,7 +71,7 @@ export function getGeometryFromFeatures(
   }
 }
 
-function getPoint(features: Array<NewFeaturePayload>) {
+function getPoint(features: Array<NewObservationPayload>) {
   return {
     type: "Point",
     coordinates: [
@@ -62,7 +81,7 @@ function getPoint(features: Array<NewFeaturePayload>) {
   };
 }
 
-function getLine(features: Array<NewFeaturePayload>) {
+function getLine(features: Array<NewObservationPayload>) {
   const point1: Position = [
     (features[0].imageGPSLongitude as number) || 0,
     (features[0].imageGPSLatitude as number) || 0,
@@ -75,7 +94,7 @@ function getLine(features: Array<NewFeaturePayload>) {
   return line.geometry;
 }
 
-function getConvexHullPolygon(features: Array<NewFeaturePayload>) {
+function getConvexHullPolygon(features: Array<NewObservationPayload>) {
   const coords: Array<Array<number>> = features.map((feature) => [
     (feature.imageGPSLongitude as number) || 0,
     (feature.imageGPSLatitude as number) || 0,

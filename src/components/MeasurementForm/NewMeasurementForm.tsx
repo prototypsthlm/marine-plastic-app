@@ -8,8 +8,6 @@ import { RootState, useThunkDispatch } from "../../store/store";
 
 import { useSelector } from "react-redux";
 import { LitterType } from "../../models";
-import MapItem from "./MapItem";
-import PictureSection from "./PictureSection";
 import { LatLng } from "react-native-maps";
 import { NavigationProps } from "../../navigation/types";
 import {
@@ -35,18 +33,12 @@ interface InitialFormValuesShape {
   estimatedSizeM2?: string;
   estimatedVolumeM3?: string;
   depthM?: string;
-
-  isAbsence: boolean;
   isCollected: boolean;
 
   comments?: string;
-
-  imageUri?: string;
-  location?: LatLng;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
-  isAbsence: false,
   isCollected: false,
 };
 
@@ -65,20 +57,12 @@ const validation = Yup.object().shape({
   estimatedSizeM2: numberValidation(),
   estimatedVolumeM3: numberValidation(),
   depthM: numberValidation(),
-
-  isAbsence: Yup.boolean(),
   isCollected: Yup.boolean(),
 
   comments: Yup.string(),
-
-  imageUri: Yup.string().required(),
-  location: Yup.object({
-    latitude: Yup.number().required(),
-    longitude: Yup.number().required(),
-  }).required(),
 });
 
-const NewFeatureForm = ({ navigation }: NavigationProps) => {
+const NewMeasurementForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
   const defaultLitterType = useSelector<RootState, LitterType | undefined>(
@@ -102,18 +86,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     const newMeasurement: NewMeasurementPayload = {
       litterType: selectedLitterType,
 
-      imageUrl: values.imageUri,
-      imageGPSLatitude: values.location.latitude,
-      imageGPSLongitude: values.location.longitude,
-
       quantity: Number(values.quantity?.replace(/,/, ".")),
       quantityUnits: values.quantityUnits,
       estimatedWeightKg: Number(values.estimatedWeightKg?.replace(/,/, ".")),
       estimatedSizeM2: Number(values.estimatedSizeM2?.replace(/,/, ".")),
       estimatedVolumeM3: Number(values.estimatedVolumeM3?.replace(/,/, ".")),
       depthM: Number(values.depthM?.replace(/,/, ".")),
-
-      isAbsence: values.isAbsence,
       isCollected: values.isCollected,
 
       comments: values.comments,
@@ -158,26 +136,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
         touched,
       }) => (
         <>
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            PICTURE
-          </SectionHeader>
-          <PictureSection
-            onImageUriChange={handleChange("imageUri")}
-            onLocationChange={(value) => setFieldValue("location", value)}
-          />
-
-          {Boolean(values.imageUri) && values.location !== undefined ? (
-            <>
-              <SectionHeader style={{ marginTop: theme.spacing.large }}>
-                GEOLOCATION
-              </SectionHeader>
-              <MapItem
-                location={values.location}
-                onLocationChange={(value) => setFieldValue("location", value)}
-              />
-            </>
-          ) : null}
-
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
@@ -247,17 +205,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                 )}
               </ListItem>
               <ListItemNonTouchable>
-                <Text>Is absent</Text>
-                <Switch
-                  trackColor={{
-                    false: "#767577",
-                    true: theme.color.palette.curiousBlue,
-                  }}
-                  onValueChange={(value) => setFieldValue("isAbsence", value)}
-                  value={values.isAbsence}
-                />
-              </ListItemNonTouchable>
-              <ListItemNonTouchable>
                 <Text>Is collected</Text>
                 <Switch
                   trackColor={{
@@ -322,7 +269,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
               Boolean(touched.imageUri && errors.imageUri) ||
               selectedLitterType === undefined
             }
-            title="Add feature to observation"
+            title="Add measurement to observation"
             onPress={handleSubmit as any}
           />
         </>
@@ -353,4 +300,4 @@ const ListItemNonTouchable = styled.View`
   justify-content: space-between;
 `;
 
-export default NewFeatureForm;
+export default NewMeasurementForm;

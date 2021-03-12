@@ -6,6 +6,10 @@ export interface NewObservationPayload {
   timestamp: Date;
   geometry: Geometry;
   measurements: Array<NewMeasurementPayload>;
+  isAbsence: boolean;
+  imageUrl?: string;
+  imageGPSLatitude?: number;
+  imageGPSLongitude?: number;
 }
 
 export interface EditObservationPayload {
