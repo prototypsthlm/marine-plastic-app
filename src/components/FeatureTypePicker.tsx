@@ -1,25 +1,25 @@
 import * as React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { EnvCompartmentsEnum, FeatureType } from "../models";
+import { EnvCompartmentsEnum, LitterType } from "../models";
 import {
-  addFeatureType,
-  selectFeatureTypeByMaterial,
-} from "../store/slices/features";
+  addLitterType,
+  selectLitterTypeByMaterial,
+} from "../store/slices/measurements";
 import { RootState, useThunkDispatch } from "../store/store";
 import styled from "../styled";
 import { theme } from "../theme";
 import { ListItem, SectionHeader, Text, FlexColumn, FlexRow } from "./elements";
 import MultiSelectPicker from "./MultiSelectPicker";
 
-export default function FeatureTypePicker() {
+export default function LitterTypePicker() {
   const dispatch = useThunkDispatch();
 
-  const featureTypes = useSelector<RootState, Array<FeatureType>>(
-    (state) => state.features.featureTypes
+  const litterTypes = useSelector<RootState, Array<LitterType>>(
+    (state) => state.measurements.litterTypes
   );
 
-  const optionsMaterial = useSelector(selectFeatureTypeByMaterial);
+  const optionsMaterial = useSelector(selectLitterTypeByMaterial);
   const optionsEnvCompts = [
     EnvCompartmentsEnum.BEACH,
     EnvCompartmentsEnum.BIOTA,
@@ -42,7 +42,7 @@ export default function FeatureTypePicker() {
     setSelectedEnvComptsFilter(options);
   };
 
-  const filterReducer = (featureType: FeatureType) => {
+  const filterReducer = (litterType: LitterType) => {
     const isMaterialFilterApplied = !(selectedMaterialFilter === "");
     const isEnvComptsFilterApplied = !(selectedEnvComptsFilter.length === 0);
     const isEitherFitersApplied =
@@ -50,8 +50,8 @@ export default function FeatureTypePicker() {
     const areBothFitersApplied =
       isMaterialFilterApplied && isEnvComptsFilterApplied;
 
-    const checkMaterial = featureType.material === selectedMaterialFilter;
-    const checkEnvCompts = featureType.environmentalCompartments.some(
+    const checkMaterial = litterType.material === selectedMaterialFilter;
+    const checkEnvCompts = litterType.environmentalCompartments.some(
       (envCompt) => selectedEnvComptsFilter.includes(envCompt)
     );
 
@@ -66,7 +66,7 @@ export default function FeatureTypePicker() {
     return false;
   };
 
-  const filteredFeatureTypes = featureTypes.filter(filterReducer);
+  const filteredFeatureTypes = litterTypes.filter(filterReducer);
 
   return (
     <>
@@ -95,19 +95,19 @@ export default function FeatureTypePicker() {
         </ListItem>
       )}
 
-      {filteredFeatureTypes.map((featureType, index) => (
+      {filteredFeatureTypes.map((litterType, index) => (
         <ListItem
           key={index}
-          onPress={() => dispatch(addFeatureType(featureType))}
+          onPress={() => dispatch(addLitterType(litterType))}
         >
           <FlexColumn style={{ width: "100%" }}>
             <FlexRow>
-              <Text bold>{featureType.tsgMlCode}</Text>
+              <Text bold>{litterType.tsgMlCode}</Text>
               <Text style={{ color: theme.color.palette.gray }}>
-                {featureType.material}
+                {litterType.material}
               </Text>
             </FlexRow>
-            <Text>{featureType.name}</Text>
+            <Text>{litterType.name}</Text>
           </FlexColumn>
         </ListItem>
       ))}

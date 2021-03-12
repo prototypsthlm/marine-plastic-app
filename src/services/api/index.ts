@@ -1,13 +1,13 @@
 import { userModule } from "./module/user";
 import { observationsModule } from "./module/observations";
-import { featuresModule } from "./module/features";
-import { featureTypesModule } from "./module/featureTypes";
+import { measurementsModule } from "./module/measurements";
+import { litterTypesModule } from "./module/litterTypes";
 import { campaignsModule } from "./module/campaigns";
 
 const api = {
   ...observationsModule,
-  ...featuresModule,
-  ...featureTypesModule,
+  ...measurementsModule,
+  ...litterTypesModule,
   ...campaignsModule,
   ...userModule,
 };

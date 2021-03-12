@@ -45,15 +45,14 @@ export interface Observation extends BaseEntity {
   comments?: string;
   extra?: any;
   isMatched: boolean;
-  features: Array<Feature>;
+  measurements: Array<Measurement>;
 }
 
-export interface Feature extends BaseEntity {
+export interface Measurement extends BaseEntity {
   observationId: string;
-  featureTypeId: string;
+  litterTypeId: string;
   imageUrl?: string;
   image?: FeatureImage;
-  featureImages?: Array<FeatureImage>;
 
   quantity?: number;
   quantityUnits?: string;
@@ -84,6 +83,18 @@ export enum EnvCompartmentsEnum {
 
 export type EnvCompartments = Array<string>;
 
+export interface LitterType {
+  id: string;
+  name: string;
+  tsgMlCode: string | null;
+  osparCode: string | null;
+  unepCode: string | null;
+  material: string | null;
+  isCore: boolean;
+  environmentalCompartments: EnvCompartments;
+}
+
+/* Deprecated
 export interface FeatureType {
   id: string;
   name: string;
@@ -94,6 +105,7 @@ export interface FeatureType {
   isCore: boolean;
   environmentalCompartments: EnvCompartments;
 }
+*/
 
 export interface Campaign extends BaseEntity {
   name: string;

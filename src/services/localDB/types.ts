@@ -1,6 +1,6 @@
 export enum EntityType {
   Campaign = "CAMAIGN",
   Observation = "OBSERVATION",
-  Feature = "FEATURE",
+  Measurement = "MEASUREMENT",
   FeatureImage = "FEATURE_IMAGE",
 }

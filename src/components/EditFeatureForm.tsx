@@ -5,16 +5,25 @@ import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
 import { RootState, useThunkDispatch } from "../store/store";
+/*
 import {
   submitEditFeature,
   EditFeaturePayload,
   selectFeatureType,
 } from "../store/slices/features";
+*/
+
+import {
+  submitEditMeasurement,
+  selectLitterType,
+  EditMeasurementPayload
+} from '../store/slices/measurements';
+
 import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
 import { theme } from "../theme";
 import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
-import { Feature, FeatureImage, FeatureType } from "../models";
+import { Measurement, FeatureImage, LitterType } from "../models";
 import BasicHeaderButtons from "./BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
 
@@ -58,46 +67,49 @@ const validation = Yup.object().shape({
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
-  const featureEntry = useSelector<RootState, Feature | undefined>(
-    (state) => state.features.selectedFeatureEntry
+  const measurementEntry = useSelector<RootState, Measurement | undefined>(
+    (state) => state.measurements.selectedMeasurementEntry
   );
 
   const InitialFormValues: InitialFormValuesShape = {
-    quantity: String(featureEntry?.quantity || ""),
-    quantityUnits: String(featureEntry?.quantityUnits || ""),
-    estimatedWeightKg: String(featureEntry?.estimatedWeightKg || ""),
-    estimatedSizeM2: String(featureEntry?.estimatedSizeM2 || ""),
-    estimatedVolumeM3: String(featureEntry?.estimatedVolumeM3 || ""),
-    depthM: String(featureEntry?.depthM || ""),
-    isAbsence: featureEntry?.isAbsence || false,
-    isCollected: featureEntry?.isCollected || false,
-    comments: featureEntry?.comments || "",
+    quantity: String(measurementEntry?.quantity || ""),
+    quantityUnits: String(measurementEntry?.quantityUnits || ""),
+    estimatedWeightKg: String(measurementEntry?.estimatedWeightKg || ""),
+    estimatedSizeM2: String(measurementEntry?.estimatedSizeM2 || ""),
+    estimatedVolumeM3: String(measurementEntry?.estimatedVolumeM3 || ""),
+    depthM: String(measurementEntry?.depthM || ""),
+    isAbsence: measurementEntry?.isAbsence || false,
+    isCollected: measurementEntry?.isCollected || false,
+    comments: measurementEntry?.comments || "",
   };
 
-  const selectedFeatureTypes = useSelector<RootState, FeatureType | undefined>(
-    (state) => state.features.selectedFeatureType
+  const selectedLitterTypes = useSelector<RootState, LitterType | undefined>(
+    (state) => state.measurements.selectedLitterType
   );
 
-  const featureTypes = useSelector<RootState, Array<FeatureType>>(
-    (state) => state.features.featureTypes
+  const litterTypes = useSelector<RootState, Array<LitterType>>(
+    (state) => state.measurements.litterTypes
   );
 
-  const currentFeatureType: FeatureType | undefined = featureTypes.find(
-    (ft) => ft.id === featureEntry?.featureTypeId
+  const currentLitterType: LitterType | undefined = litterTypes.find(
+    (ft) => ft.id === measurementEntry?.litterTypeId
   );
 
   useEffect(() => {
-    if (currentFeatureType) dispatch(selectFeatureType(currentFeatureType));
+    if (currentLitterType) dispatch(selectLitterType(currentLitterType));
   }, []);
 
+  /*
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.features.featureImages
+    (state) => state.measurements.featureImages
   );
+  */
 
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
   );
 
+  /*
   const onlineImage: FeatureImage | undefined =
     isOnline &&
     featureEntry?.featureImages &&
@@ -107,11 +119,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const image: FeatureImage | undefined =
     onlineImage ||
     featureImages.find((fi) => fi.featureId === featureEntry?.id);
+  */
 
   const formRef = useRef<FormikProps<InitialFormValuesShape>>(null);
 
   const handleSubmit = () => {
-    if (formRef.current && selectedFeatureTypes !== undefined) {
+    if (formRef.current && selectedLitterTypes !== undefined) {
       !formRef.current.isSubmitting && formRef.current.handleSubmit();
     }
   };
@@ -131,9 +144,9 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   }, [navigation]);
 
   const handleFormSubmit = (values: any, actions: any) => {
-    if (selectedFeatureTypes === undefined) return;
-    const editedFeature: EditFeaturePayload = {
-      featureTypeId: selectedFeatureTypes.id,
+    if (selectedLitterTypes === undefined) return;
+    const editedFeature: EditMeasurementPayload = {
+      litterTypeId: selectedLitterTypes.id,
 
       quantity: Number(values.quantity?.replace(/,/, ".")),
       quantityUnits: values.quantityUnits,
@@ -147,7 +160,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
 
       comments: values.comments,
     };
-    dispatch(submitEditFeature(editedFeature));
+    dispatch(submitEditMeasurement(editedFeature));
     actions.setSubmitting(false);
   };
 
@@ -188,21 +201,21 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
       }) => (
         <>
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            PICTURE
+            PICTURE (deprecated)
           </SectionHeader>
-          {image ? (
+          {/*image ? (
             <Image
               source={{ uri: image.url }}
               style={{ width: "100%", height: 200 }}
             />
-          ) : null}
+          ) : null*/}
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
           <ListItem
             onPress={() => navigation.navigate("featureTypePickerScreen")}
           >
-            {selectedFeatureTypes === undefined && (
+            {selectedLitterTypes === undefined && (
               <Text
                 style={{
                   color: theme.color.palette.curiousBlue,
@@ -213,7 +226,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                 Select feature type...
               </Text>
             )}
-            {selectedFeatureTypes !== undefined && (
+            {selectedLitterTypes !== undefined && (
               <FlexColumn style={{ 
                   width: "100%", 
                   paddingTop: theme.spacing.small,
@@ -234,12 +247,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                   </Text>
                 </FlexRow>
                 <FlexRow>
-                  <Text bold>{selectedFeatureTypes.tsgMlCode}</Text>
+                  <Text bold>{selectedLitterTypes.tsgMlCode}</Text>
                   <Text style={{ color: theme.color.palette.gray }}>
-                    {selectedFeatureTypes.material}
+                    {selectedLitterTypes.material}
                   </Text>
                 </FlexRow>
-                <Text>{selectedFeatureTypes.name}</Text>
+                <Text>{selectedLitterTypes.name}</Text>
               </FlexColumn>
             )}
           </ListItem>

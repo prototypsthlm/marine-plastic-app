@@ -1,11 +1,11 @@
 import { Geometry } from "../../../models";
-import { NewFeaturePayload } from "../features";
+import { NewMeasurementPayload } from "../measurements";
 
 export interface NewObservationPayload {
   comments?: string;
   timestamp: Date;
   geometry: Geometry;
-  features: Array<NewFeaturePayload>;
+  measurements: Array<NewMeasurementPayload>;
 }
 
 export interface EditObservationPayload {

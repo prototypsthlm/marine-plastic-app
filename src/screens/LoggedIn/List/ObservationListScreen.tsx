@@ -12,9 +12,9 @@ import {
   selectObservationDetails,
 } from "../../../store/slices/observations";
 import {
-  fetchCachedFeatureImages,
-  fetchAllFeatureTypes,
-} from "../../../store/slices/features";
+  //fetchCachedFeatureImages,
+  fetchAllLitterTypes
+} from "../../../store/slices/measurements";
 import { NavigationProps } from "../../../navigation/types";
 import {
   FlexColumn,
@@ -33,9 +33,11 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     (state) => state.campaigns.selectedCampaignEntry
   );
 
+  /*
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.features.featureImages
+    (state) => state.measurments.featureImages
   );
+  */
 
   const user = useSelector<RootState, User | undefined>(
     (state) => state.account.user
@@ -44,8 +46,8 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
   const username = `${user?.givenNames} ${user?.familyName}`;
 
   useEffect(() => {
-    dispatch(fetchAllFeatureTypes());
-    dispatch(fetchCachedFeatureImages());
+    dispatch(fetchAllLitterTypes());
+    //dispatch(fetchCachedFeatureImages());
     dispatch(fetchObservations({}));
   }, []);
 
@@ -54,31 +56,20 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     navigation.navigate("observationDetailScreen");
   };
 
+  /*
   const getFeatureImage = (featureId: string) =>
     featureImages.find((f) => f.featureId === featureId);
+  */
 
   const renderItem = ({ item }: { item: Observation }) => (
     <ListItem style={{}}onPress={() => navigateToDetailScreen(item)}>
-      {item.features &&
-      item.features.length > 0 &&
-      getFeatureImage(item.features[0].id) ? (
-        <Image
-          source={{ uri: getFeatureImage(item.features[0].id)?.url }}
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 6,
-            marginRight: 12,
-          }}
-        />
-      ) : 
       <View style={{
         width: 50,
         height: 50,
         borderRadius: 6,
         marginRight: 12,
         backgroundColor: "#efefef",
-      }} />}
+      }} />
       <FlexColumn>
         { user?.id === item.creatorId ? (
           <Text style={{ fontFamily: theme.typography.primaryBold, color: theme.color.palette.curiousBlue }}>{username}</Text>

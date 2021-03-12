@@ -2,9 +2,10 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import {
-  Feature,
-  FeatureImage,
-  FeatureType,
+  //FeatureImage,
+  //FeatureType,
+  LitterType,
+  Measurement,
   Observation,
   User,
 } from "../../../models";
@@ -13,7 +14,6 @@ import { Alert, FlatList, Image } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { NavigationProps } from "../../../navigation/types";
-import { fetchFeatures, selectFeature } from "../../../store/slices/features";
 import {
   FlexColumn,
   ListItem,
@@ -25,6 +25,7 @@ import { theme } from "../../../theme";
 import { Item } from "react-navigation-header-buttons";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 import { deleteObservation } from "../../../store/slices/observations";
+import { fetchMeasurements, selectMeasurement } from "../../../store/slices/measurements";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -41,28 +42,30 @@ export default function ObservationDetailScreen({
     (state) => state.observations.selectedObservationEntry
   );
 
-  const featureEntries = useSelector<RootState, Array<Feature>>(
-    (state) => state.features.featureEntries
+  const measurementEntries = useSelector<RootState, Array<Measurement>>(
+    (state) => state.measurements.measurementEntries
   );
 
-  const filteredFeatureEntriesBySelectedObservation = featureEntries.filter(
-    (f) => f.observationId === observationEntry?.id
+  const filteredMeasurementEntriesBySelectedObservation = measurementEntries.filter(
+    (m) => m.observationId === observationEntry?.id
   );
 
-  const featureTypes = useSelector<RootState, Array<FeatureType>>(
-    (state) => state.features.featureTypes
+  const litterTypes = useSelector<RootState, Array<LitterType>>(
+    (state) => state.measurements.litterTypes
   );
 
+  /*
   const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.features.featureImages
+    (state) => state.measurements.featureImages
   );
-
+  */
+  
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
   );
 
   useEffect(() => {
-    dispatch(fetchFeatures({}));
+    dispatch(fetchMeasurements({}));
   }, []);
 
   useLayoutEffect(() => {
@@ -103,8 +106,9 @@ export default function ObservationDetailScreen({
     );
 
   const getFeatureTypeById = (id: string) =>
-    featureTypes.find((ft) => ft.id === id);
+    litterTypes.find((lt) => lt.id === id);
 
+  /*
   const getFeatureImage = (feature: Feature) => {
     const onlineImage: FeatureImage | undefined =
       isOnline && feature?.featureImages && feature?.featureImages?.length > 0
@@ -114,15 +118,16 @@ export default function ObservationDetailScreen({
       onlineImage || featureImages.find((fi) => fi.featureId === feature?.id);
     return image?.url || "";
   };
+  */
 
-  const navigateToDetailScreen = (featureEntry: Feature) => {
-    dispatch(selectFeature(featureEntry));
+  const navigateToDetailScreen = (measurementEntry: Measurement) => {
+    dispatch(selectMeasurement(measurementEntry));
     navigation.navigate("featureDetailScreen");
   };
 
-  const renderItem = ({ item }: { item: Feature }) => (
+  const renderItem = ({ item }: { item: Measurement }) => (
     <ListItem onPress={() => navigateToDetailScreen(item)}>
-      {getFeatureImage(item) ? (
+      {/*getFeatureImage(item) ? (
         <Image
           source={{ uri: getFeatureImage(item) }}
           style={{
@@ -132,21 +137,21 @@ export default function ObservationDetailScreen({
             marginRight: 12,
           }}
         ></Image>
-      ) : null}
-      <Text>{getFeatureTypeById(item.featureTypeId)?.name}</Text>
+        ) : null*/}
+      <Text>{getFeatureTypeById(item.litterTypeId)?.name}</Text>
     </ListItem>
   );
 
   const refreshingFeaturesList = useSelector<RootState, boolean>(
-    (state) => state.features.refreshing
+    (state) => state.measurements.refreshing
   );
 
   return (
     <Screen>
       <FlatList
         refreshing={refreshingFeaturesList}
-        onRefresh={() => dispatch(fetchFeatures({ forceRefresh: true }))}
-        data={filteredFeatureEntriesBySelectedObservation}
+        onRefresh={() => dispatch(fetchMeasurements({ forceRefresh: true }))}
+        data={filteredMeasurementEntriesBySelectedObservation}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => (
@@ -181,7 +186,7 @@ export default function ObservationDetailScreen({
             </SectionHeader>
           </>
         )}
-        onEndReached={() => dispatch(fetchFeatures({}))}
+        onEndReached={() => dispatch(fetchMeasurements({}))}
         onEndReachedThreshold={0.1}
       />
     </Screen>

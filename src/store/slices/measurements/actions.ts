@@ -1,80 +1,81 @@
-import { Feature, FeatureImage, FeatureType } from "../../../models";
+import { Measurement, FeatureImage, LitterType } from "../../../models";
 import { Thunk } from "../../store";
 import {
-  addEditedFeature,
-  addFetchedFeatureImages,
-  addFetchedFeatures,
-  addFetchedFeatureTypes,
-  addNewFeatureToAdd,
-  resetFeatureType,
+  addEditedMeasurement,
+  //addFetchedFeatureImages,
+  addFetchedMeasurements,
+  addFetchedLitterTypes,
+  addNewMeasurementToAdd,
+  resetLitterType,
   resetPagination,
-  selectFeature,
-  selectFeatureType,
-  setFeatureCursor,
-  setFetchedFeatures,
+  selectMeasurement,
+  selectLitterType,
+  setMeasurementCursor,
+  setFetchedMeasurements,
   setRefreshing,
 } from "./slice";
-import { EditFeaturePayload, NewFeaturePayload } from "./types";
+import { EditMeasurementPayload, NewMeasurementPayload } from "./types";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 
-export const fetchFeatures: Thunk<{ forceRefresh?: boolean }> = (
+export const fetchMeasurements: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {
-  if (getState().features.refreshing) return;
+  if (getState().measurements.refreshing) return;
   dispatch(setRefreshing(true));
   const { forceRefresh } = options;
   const refresh: boolean = forceRefresh || false;
   const isObservationSelected =
     getState().observations.selectedObservationEntry !== undefined;
   if (
-    (refresh || !getState().features.reachedPageEnd) &&
+    (refresh || !getState().measurements.reachedPageEnd) &&
     getState().ui.isOnline &&
     isObservationSelected
   ) {
-    if (refresh && getState().features.reachedPageEnd)
+    if (refresh && getState().measurements.reachedPageEnd)
       dispatch(resetPagination());
 
     // 1. Get next page
-    const result = await api.getFeatures(
+    const result = await api.getMeasurements(
       getState().observations.selectedObservationEntry?.id || "",
-      getState().features.nextPageCursor
+      getState().measurements.nextPageCursor
     );
     if (!result.ok || !result.data?.results)
       throw new ActionError("Couldn't get/sync features.");
 
-    const features: Array<Feature> = result.data.results;
+    const measurements: Array<Measurement> = result.data.results;
     const cursor: string | null = result.data?.nextPage;
 
     // 2. Upsert to localDB
-    if (features.length > 0)
-      await localDB.upsertEntities(features, EntityType.Feature, true);
+    if (measurements.length > 0)
+      await localDB.upsertEntities(measurements, EntityType.Measurement, true);
 
-    dispatch(setFeatureCursor(cursor));
-    dispatch(addFetchedFeatures(features));
+    dispatch(setMeasurementCursor(cursor));
+    dispatch(addFetchedMeasurements(measurements));
   }
 
   if (!getState().ui.isOnline) {
-    dispatch(fetchCachedFeatures());
+    dispatch(fetchCachedMeasurements());
   }
   dispatch(setRefreshing(false));
 };
 
-export const fetchCachedFeatures: Thunk = () => async (
+export const fetchCachedMeasurements: Thunk = () => async (
   dispatch,
   _,
   { localDB }
 ) => {
   try {
-    const featureEntries: Array<Feature> = await localDB.getEntities<Feature>(
-      EntityType.Feature
+    const measurementEntries: Array<Measurement> = await localDB.getEntities<Measurement>(
+      EntityType.Measurement
     );
-    dispatch(setFetchedFeatures(featureEntries));
+    dispatch(setFetchedMeasurements(measurementEntries));
   } catch (e) {
     console.log({ e });
   }
 };
 
+/*
 export const fetchCachedFeatureImages: Thunk = () => async (
   dispatch,
   _,
@@ -89,114 +90,115 @@ export const fetchCachedFeatureImages: Thunk = () => async (
     console.log({ e });
   }
 };
+*/
 
-export const fetchAllFeatureTypes: Thunk = () => async (
+export const fetchAllLitterTypes: Thunk = () => async (
   dispatch,
   _,
   { api, localStorage }
 ) => {
-  let featureTypes: Array<FeatureType> = await localStorage.getFeatureTypes();
+  let litterTypes: Array<LitterType> = await localStorage.getLitterTypes();
 
-  if (featureTypes.length < 1) {
-    const result = await api.getAllFeatureTypes();
+  if (litterTypes.length < 1) {
+    const result = await api.getAllLitterTypes();
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get/sync feature types.");
+      throw new ActionError("Couldn't get/sync litter types.");
 
-    featureTypes = result.data?.results;
+      litterTypes = result.data?.results;
 
-    await localStorage.saveFeatureTypes(featureTypes);
+    await localStorage.saveLitterTypes(litterTypes);
   }
-  dispatch(addFetchedFeatureTypes(featureTypes));
+  dispatch(addFetchedLitterTypes(litterTypes));
 };
 
-export const addNewFeature: Thunk<NewFeaturePayload> = (newFeaturePayload) => (
+export const addNewMeasurement: Thunk<NewMeasurementPayload> = (newMeasurementPayload) => (
   dispatch,
   _,
   { navigation }
 ) => {
-  dispatch(addNewFeatureToAdd(newFeaturePayload));
-  dispatch(resetFeatureType());
+  dispatch(addNewMeasurementToAdd(newMeasurementPayload));
+  dispatch(resetLitterType());
   navigation.navigate("newObservationScreen");
 };
 
-export const addFeatureType: Thunk<FeatureType> = (featureTypePayload) => (
+export const addLitterType: Thunk<LitterType> = (litterTypePayload) => (
   dispatch,
   _,
   { navigation }
 ) => {
-  dispatch(selectFeatureType(featureTypePayload));
+  dispatch(selectLitterType(litterTypePayload));
   navigation.goBack();
 };
 
-export const submitEditFeature: Thunk<EditFeaturePayload> = (
-  editFeaturePayload
+export const submitEditMeasurement: Thunk<EditMeasurementPayload> = (
+  editMeasurementPayload
 ) => async (dispatch, getState, { api, localDB, navigation }) => {
   // 1. Patch to backend
-  const currentFeature: Feature | undefined = getState().features
-    .selectedFeatureEntry;
-  if (!currentFeature) return;
-  const response = await api.patchFeature(currentFeature, editFeaturePayload);
+  const currentMeasurement: Measurement | undefined = getState().measurements
+    .selectedMeasurementEntry;
+  if (!currentMeasurement) return;
+  const response = await api.patchMeasurement(currentMeasurement, editMeasurementPayload);
 
   // 2. Upsert to localDB
   if (!response.ok || !response.data?.result) {
     throw new ActionError("Couldn't sync updated feature.");
   } else {
     // Upsert if success
-    const updatedFeature: Feature = {
-      ...currentFeature,
-      ...editFeaturePayload,
+    const updatedMeasurement: Measurement = {
+      ...currentMeasurement,
+      ...editMeasurementPayload,
     };
     await localDB.upsertEntities(
-      [updatedFeature],
-      EntityType.Feature,
+      [updatedMeasurement],
+      EntityType.Measurement,
       true,
       null,
-      updatedFeature.observationId
+      updatedMeasurement.observationId
     );
 
     // 3. Refresh store with new data
-    dispatch(addEditedFeature(updatedFeature));
-    dispatch(selectFeature(updatedFeature));
+    dispatch(addEditedMeasurement(updatedMeasurement));
+    dispatch(selectMeasurement(updatedMeasurement));
 
     navigation.goBack();
   }
 };
 
-export const processSubmitFeatures = async (
+export const processSubmitMeasurements = async (
   api: any,
   localDB: any,
-  features: Array<Feature>
+  measurements: Array<Measurement>
 ) => {
   try {
     // Upload features
-    for (let i = 0; i < features.length; i++) {
+    for (let i = 0; i < measurements.length; i++) {
       // POST endpoint
-      const feature: Feature = features[i];
-      const response = await api.postFeature(feature);
+      const measurement: Measurement = measurements[i];
+      const response = await api.postFeature(measurement);
 
       if (!response.ok || !response.data?.result) {
         // Store offline
 
         if (response.problem === "cannot-connect" || response.problem === "timeout") {
           await localDB.upsertEntities(
-            [feature],
-            EntityType.Feature,
+            [measurement],
+            EntityType.Measurement,
             false,
             null,
-            feature.observationId,
-            feature.id
+            measurement.observationId,
+            measurement.id
           );
-        } else throw new ActionError(`Couldn't post/sync feature: ${response.problem}`);
+        } else throw new ActionError(`Couldn't post/sync measurement: ${response.problem}`);
       } else {
         // Upsert if success
-        const syncedFeature: Feature = response.data?.result;
+        const syncedMeasurement: Measurement = response.data?.result;
         await localDB.upsertEntities(
-          [syncedFeature],
-          EntityType.Feature,
+          [syncedMeasurement],
+          EntityType.Measurement,
           true,
           null,
-          feature.observationId,
-          feature.id
+          syncedMeasurement.observationId,
+          syncedMeasurement.id
         );
       }
     }
@@ -249,30 +251,36 @@ export const processSubmitFeatureImages = async (
   }
 };
 
-export const deleteFeature: Thunk = () => async (
+export const deleteMeasurement: Thunk = () => async (
   dispatch,
   getState,
   { api, localDB, navigation }
 ) => {
   // Delete Feature from backend
-  const currentFeature: Feature | undefined = getState().features
-    .selectedFeatureEntry;
-  if (!currentFeature) return;
-  const response = await api.deleteFeature(currentFeature);
+  const currentMeasurement: Measurement | undefined = getState().measurements
+    .selectedMeasurementEntry;
+  if (!currentMeasurement) return;
+  const response = await api.deleteMeasurement(currentMeasurement);
 
   if (!response.ok) {
-    throw new ActionError("Couldn't delete feature.");
+    throw new ActionError("Couldn't delete measurement.");
   } else {
     // If success, delete from localDB
-    const featureId: string = currentFeature.id;
+    const measurementId: string = currentMeasurement.id;
+    /*
     const featureImages: Array<FeatureImage> = getState().features.featureImages.filter(
       (fi) => fi.featureId === featureId
     );
     const featureImageIds: Array<string> = featureImages.map((fi) => fi.id);
     const ids: Array<string> = [featureId, ...featureImageIds];
+    
+    if (ids.length > 0) await localDB.deleteEntities(ids);
+    */
+
+    const ids: Array<string> = [measurementId];
     if (ids.length > 0) await localDB.deleteEntities(ids);
 
-    dispatch(fetchFeatures({}));
+    dispatch(fetchMeasurements({}));
     navigation.goBack();
   }
 };
