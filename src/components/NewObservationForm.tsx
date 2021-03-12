@@ -9,7 +9,7 @@ import {
   NewObservationPayload,
   submitNewObservation,
 } from "../store/slices/observations";
-import { NewFeaturePayload } from "../store/slices/features";
+import { NewMeasurementPayload } from "../store/slices/measurements";
 import { Campaign, Geometry } from "../models";
 import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -37,23 +37,25 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.campaigns.selectedCampaignEntry
   );
 
-  const featuresToAdd = useSelector<RootState, Array<NewFeaturePayload>>(
-    (state) => state.features.featuresToAdd
+  const measurementsToAdd = useSelector<RootState, Array<NewMeasurementPayload>>(
+    (state) => state.measurements.measurementsToAdd
   );
 
+  /*
   useEffect(() => {
     // If there are no features added to the obs., 
     // go to new feature screen directly
-    if(featuresToAdd.length===0) 
+    if(measurementsToAdd.length===0) 
       navigation.navigate("newFeatureScreen")
-  }, [featuresToAdd])
+  }, [measurementsToAdd])
+  */
 
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
       comments: values.comments,
       timestamp: new Date(Date.now()), // TODO: Timestamp from exif
-      geometry: getGeometryFromFeatures(featuresToAdd),
-      features: featuresToAdd,
+      geometry: getGeometryFromFeatures(measurementsToAdd),
+      measurements: measurementsToAdd,
     };
     dispatch(submitNewObservation(newObservation));
     actions.resetForm(InitialFormValues);
@@ -94,7 +96,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           </FormSection>
 
           <Row>
-            <Title>Features / Items</Title>
+            <Title>Measurements / Items</Title>
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
             >
@@ -106,19 +108,19 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             </ButtonWithIcon>
           </Row>
 
-          {!(featuresToAdd.length > 0) && (
+          {!(measurementsToAdd.length > 0) && (
             <ListItem>
               <CenteredGrayText>
-                You haven't added any feature.
+                You haven't added any measurement.
               </CenteredGrayText>
             </ListItem>
           )}
 
-          {featuresToAdd.map((feature, index) => (
+          {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
-              {Boolean(feature.imageUrl) && (
+              {/*Boolean(measurement.imageUrl) && (
                 <Image
-                  source={{ uri: feature.imageUrl }}
+                  source={{ uri: measurement.imageUrl }}
                   style={{
                     width: 50,
                     height: 50,
@@ -126,14 +128,14 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                     marginRight: 12,
                   }}
                 ></Image>
-              )}
-              <Text>{feature.feaureType.name}</Text>
+                )*/}
+              <Text>{measurement.litterType.name}</Text>
             </ListItem>
           ))}
 
           <FormSection>
             <Button
-              disabled={featuresToAdd.length < 1}
+              disabled={measurementsToAdd.length < 1}
               title="Submit"
               onPress={handleSubmit as any}
             />
