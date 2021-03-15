@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
-import { Campaign, FeatureImage, Observation, User } from "../../../models";
+import { Campaign, Observation, ObservationImage, User } from "../../../models";
 
 import { FlatList, Image, View } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import {
+  fetchCachedObservationImages,
   fetchObservations,
   selectFilteredObservationsByCampaign,
   selectObservationDetails,
@@ -33,11 +34,9 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     (state) => state.campaigns.selectedCampaignEntry
   );
 
-  /*
-  const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.measurments.featureImages
+  const observationImages = useSelector<RootState, Array<ObservationImage>>(
+    (state) => state.observations.observationImages
   );
-  */
 
   const user = useSelector<RootState, User | undefined>(
     (state) => state.account.user
@@ -47,7 +46,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllLitterTypes());
-    //dispatch(fetchCachedFeatureImages());
+    dispatch(fetchCachedObservationImages());
     dispatch(fetchObservations({}));
   }, []);
 
@@ -55,21 +54,35 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     dispatch(selectObservationDetails(observationEntry));
     navigation.navigate("observationDetailScreen");
   };
-
-  /*
-  const getFeatureImage = (featureId: string) =>
-    featureImages.find((f) => f.featureId === featureId);
-  */
+  
+  const getObservationImage = (observationId: string) => {
+    const image = observationImages.find((f) => f.observationId === observationId);
+    if(image) {
+      return image.url;
+    }
+    return undefined;
+  }
 
   const renderItem = ({ item }: { item: Observation }) => (
     <ListItem style={{}}onPress={() => navigateToDetailScreen(item)}>
-      <View style={{
-        width: 50,
-        height: 50,
-        borderRadius: 6,
-        marginRight: 12,
-        backgroundColor: "#efefef",
-      }} />
+      { getObservationImage(item.id) ? (
+         <Image style={{
+            width: 50,
+            height: 50,
+            borderRadius: 6,
+            marginRight: 12
+          }} source={{ uri: getObservationImage(item.id) }} />
+      ) :
+      (
+        <View style={{
+          width: 50,
+          height: 50,
+          borderRadius: 6,
+          marginRight: 12,
+          backgroundColor: "#efefef",
+        }} />
+      )}
+     
       <FlexColumn>
         { user?.id === item.creatorId ? (
           <Text style={{ fontFamily: theme.typography.primaryBold, color: theme.color.palette.curiousBlue }}>{username}</Text>
