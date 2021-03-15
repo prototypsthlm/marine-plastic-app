@@ -22,8 +22,6 @@ export interface EditMeasurementPayload {
   estimatedSizeM2?: number;
   estimatedVolumeM3?: number;
   depthM?: number;
-
-  isAbsence: boolean;
   isCollected: boolean;
 
   comments?: string;
