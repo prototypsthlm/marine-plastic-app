@@ -57,8 +57,6 @@ export default function ObservationDetailScreen({
     (state) => state.observations.observationImages
   );
 
-  const currentObservationImage = observationImages.filter(img => img.observationId===observationEntry?.id);
-  
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
   );
@@ -107,17 +105,17 @@ export default function ObservationDetailScreen({
   const getFeatureTypeById = (id: string) =>
     litterTypes.find((lt) => lt.id === id);
 
-  /*
+  
   const getObservationImage = (observation: Observation) => {
-    const onlineImage: FeatureImage | undefined =
-      isOnline && feature?.featureImages && feature?.featureImages?.length > 0
-        ? feature?.featureImages[0]
+    const onlineImage: ObservationImage | undefined =
+      isOnline && observation?.image
+        ? observation?.image
         : undefined;
-    const image: FeatureImage | undefined =
-      onlineImage || featureImages.find((fi) => fi.featureId === feature?.id);
+    const image: ObservationImage | undefined =
+      onlineImage || observationImages.find((fi) => fi.observationId === observation?.id);
     return image?.url || "";
   };
-  */
+
 
   const navigateToDetailScreen = (measurementEntry: Measurement) => {
     dispatch(selectMeasurement(measurementEntry));
@@ -130,14 +128,14 @@ export default function ObservationDetailScreen({
     </ListItem>
   );
 
-  const refreshingFeaturesList = useSelector<RootState, boolean>(
+  const refreshingMeasurementsList = useSelector<RootState, boolean>(
     (state) => state.measurements.refreshing
   );
 
   return (
     <Screen>
       <FlatList
-        refreshing={refreshingFeaturesList}
+        refreshing={refreshingMeasurementsList}
         onRefresh={() => dispatch(fetchMeasurements({ forceRefresh: true }))}
         data={filteredMeasurementEntriesBySelectedObservation}
         renderItem={renderItem}
@@ -149,6 +147,12 @@ export default function ObservationDetailScreen({
                 <Text>
                   <Text bold>Observer:</Text> {username}
                 </Text>
+                { getObservationImage(observationEntry) !== "" && (
+                  <>
+                  <Text bold>Picture:</Text>
+                  <Image source={{ uri: getObservationImage(observationEntry) }} style={{ width: "100%", height: 200}} />
+                  </>
+                )}
                 <Text>
                   <Text bold>{"Date: "}</Text>
                   {observationEntry.timestamp
@@ -169,9 +173,11 @@ export default function ObservationDetailScreen({
                 ) : null}
               </Section>
             )}
-            <SectionHeader style={{ marginTop: theme.spacing.large }}>
-              ADDED FEATURES / ITEMS
-            </SectionHeader>
+            { filteredMeasurementEntriesBySelectedObservation.length > 0 && (
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>
+                ADDED MEASUREMENTS / ITEMS
+              </SectionHeader>
+            )}
           </>
         )}
         onEndReached={() => dispatch(fetchMeasurements({}))}
