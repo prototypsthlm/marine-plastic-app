@@ -1,6 +1,5 @@
 import {
   CreatorApps,
-  //FeatureImage,
   Measurement,
   Observation,
   ObservationImage,
@@ -16,14 +15,13 @@ import {
   setFetchedObservations,
   setObservationCursor,
   setRefreshing,
+  addFetchedObservationUser,
 } from "./slice";
 import { EditObservationPayload, NewObservationPayload } from "./types";
 import { generateUUIDv4 } from "../../../utils";
 import { ActionError } from "../../errors/ActionError";
 import { EntityType } from "../../../services/localDB/types";
 import {
-  //fetchCachedFeatureImages,
-  //processSubmitFeatureImages,
   processSubmitObservationImages,
   processSubmitMeasurements,
   resetMeasurementsToAdd,
@@ -114,6 +112,25 @@ export const fetchCachedObservationImages: Thunk = () => async (
     console.log({ e });
   }
 };
+
+
+export const fetchObservationCreator: Thunk<{ creatorId: string }> = 
+  ({ creatorId }) => 
+  async (dispatch, getState, { api }) => {
+  try {
+    const response = await api.getUser(creatorId);
+    if (!response.ok || !response.data?.result) {
+      throw Error('failed to fetch observation creator');
+    } else {
+      if(!getState().observations.observationUsers.find(x => x.id===response.data?.result.id)) {
+        dispatch(addFetchedObservationUser(response.data?.result));
+      }
+    }
+  } catch(e) {
+    console.log({e});
+  }
+};
+
 
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload

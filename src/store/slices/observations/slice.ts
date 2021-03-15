@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { Observation, ObservationImage } from "../../../models";
+import { Observation, ObservationImage, User } from "../../../models";
 
 interface ObservationsState {
   // Pagination
@@ -12,6 +12,7 @@ interface ObservationsState {
   // Entries
   observationEntries: Array<Observation>;
   observationImages: Array<ObservationImage>;
+  observationUsers: Array<User>;
 
   // Selection
   selectedObservationEntry?: Observation;
@@ -27,6 +28,7 @@ const initialState: ObservationsState = {
   // Entries
   observationEntries: [],
   observationImages: [],
+  observationUsers: [],
 
   // Selection
   selectedObservationEntry: undefined,
@@ -80,6 +82,12 @@ export const observationsSlice = createSlice({
         state.observationEntries = [...state.observationEntries, ...payload];
       }
     },
+    addFetchedObservationUser: (
+      state, 
+      { payload }: PayloadAction<User>
+    ) => {
+      state.observationUsers = [ ...state.observationUsers, payload];
+    },
     addFetchedObservationImages: (
       state,
       { payload }: PayloadAction<Array<ObservationImage>>
@@ -112,6 +120,7 @@ export const {
   addEditedObservation,
   addFetchedObservations,
   addFetchedObservationImages,
+  addFetchedObservationUser,
   setFetchedObservations,
 
   // Selection
