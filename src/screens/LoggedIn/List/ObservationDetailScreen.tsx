@@ -2,11 +2,10 @@ import React, { useEffect, useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import {
-  //FeatureImage,
-  //FeatureType,
   LitterType,
   Measurement,
   Observation,
+  ObservationImage,
   User,
 } from "../../../models";
 
@@ -54,11 +53,11 @@ export default function ObservationDetailScreen({
     (state) => state.measurements.litterTypes
   );
 
-  /*
-  const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.measurements.featureImages
+  const observationImages = useSelector<RootState, Array<ObservationImage>>(
+    (state) => state.observations.observationImages
   );
-  */
+
+  const currentObservationImage = observationImages.filter(img => img.observationId===observationEntry?.id);
   
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
@@ -109,7 +108,7 @@ export default function ObservationDetailScreen({
     litterTypes.find((lt) => lt.id === id);
 
   /*
-  const getFeatureImage = (feature: Feature) => {
+  const getObservationImage = (observation: Observation) => {
     const onlineImage: FeatureImage | undefined =
       isOnline && feature?.featureImages && feature?.featureImages?.length > 0
         ? feature?.featureImages[0]
@@ -127,17 +126,6 @@ export default function ObservationDetailScreen({
 
   const renderItem = ({ item }: { item: Measurement }) => (
     <ListItem onPress={() => navigateToDetailScreen(item)}>
-      {/*getFeatureImage(item) ? (
-        <Image
-          source={{ uri: getFeatureImage(item) }}
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 6,
-            marginRight: 12,
-          }}
-        ></Image>
-        ) : null*/}
       <Text>{getFeatureTypeById(item.litterTypeId)?.name}</Text>
     </ListItem>
   );
