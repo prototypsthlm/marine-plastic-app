@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
-import { Measurement, FeatureImage } from "../../../models";
+import { Measurement } from "../../../models";
 
 import { Alert, Image } from "react-native";
 
@@ -18,16 +18,6 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
 
   const measurementEntry = useSelector<RootState, Measurement | undefined>(
     (state) => state.measurements.selectedMeasurementEntry
-  );
-
-  /*
-  const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.features.featureImages
-  );
-  */
-
-  const isOnline = useSelector<RootState, boolean>(
-    (state) => state.ui.isOnline
   );
 
   useLayoutEffect(() => {
@@ -67,18 +57,6 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
       { cancelable: false }
     );
 
-  /*
-  const onlineImage: FeatureImage | undefined =
-    isOnline &&
-    featureEntry?.featureImages &&
-    featureEntry?.featureImages?.length > 0
-      ? featureEntry?.featureImages[0]
-      : undefined;
-  const image: FeatureImage | undefined =
-    onlineImage ||
-    featureImages.find((fi) => fi.featureId === featureEntry?.id);
-  */
-
   const fields = [
     { label: "Observer: ", value: "John Smith" },
     { label: "Comments: ", value: measurementEntry?.comments },
@@ -94,7 +72,6 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
       value: measurementEntry?.estimatedVolumeM3,
     },
     { label: "Depth (m): ", value: measurementEntry?.depthM },
-    { label: "Is Absence: ", value: measurementEntry?.isAbsence ? "Yes" : "No" },
     {
       label: "Is Collected: ",
       value: measurementEntry?.isCollected ? "Yes" : "No",
@@ -110,12 +87,6 @@ export default function FeatureDetailScreen({ navigation }: NavigationProps) {
     >
       {measurementEntry && (
         <>
-          {/*Boolean(image) && (
-            <Image
-              source={{ uri: image?.url }}
-              style={{ width: "100%", height: 400 }}
-            ></Image>
-          )*/}
           <Section>
             <FlexColumn>
               {fields.map((item, index) => (
