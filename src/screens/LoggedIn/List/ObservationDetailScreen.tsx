@@ -23,7 +23,7 @@ import {
 import { theme } from "../../../theme";
 import { Item } from "react-navigation-header-buttons";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
-import { deleteObservation } from "../../../store/slices/observations";
+import { deleteObservation, fetchObservationCreator } from "../../../store/slices/observations";
 import { fetchMeasurements, selectMeasurement } from "../../../store/slices/measurements";
 
 export default function ObservationDetailScreen({
@@ -35,8 +35,6 @@ export default function ObservationDetailScreen({
     (state) => state.account.user
   );
 
-  const username = `${user?.givenNames} ${user?.familyName}`;
-
   const observationEntry = useSelector<RootState, Observation | undefined>(
     (state) => state.observations.selectedObservationEntry
   );
@@ -44,6 +42,12 @@ export default function ObservationDetailScreen({
   const measurementEntries = useSelector<RootState, Array<Measurement>>(
     (state) => state.measurements.measurementEntries
   );
+
+  const observationUsers = useSelector<RootState, Array<User>>(
+    (state) => state.observations.observationUsers
+  )
+
+  const observationCreator = observationUsers.find(x => x.id === observationEntry?.creatorId);
 
   const filteredMeasurementEntriesBySelectedObservation = measurementEntries.filter(
     (m) => m.observationId === observationEntry?.id
@@ -61,7 +65,20 @@ export default function ObservationDetailScreen({
     (state) => state.ui.isOnline
   );
 
+  const getObserverName = (creatorId:string): string | undefined => {
+    if(creatorId !==user?.id) {
+      if(observationCreator)
+        return `${observationCreator.givenNames} ${observationCreator?.familyName}`
+      else
+        return ""
+    } 
+    return `${user?.givenNames} ${user?.familyName}`
+  }
+
   useEffect(() => {
+    if(observationEntry && observationEntry.creatorId !==user?.id) { 
+      dispatch(fetchObservationCreator({ creatorId: observationEntry.creatorId }));   
+    }
     dispatch(fetchMeasurements({}));
   }, []);
 
@@ -145,7 +162,7 @@ export default function ObservationDetailScreen({
             {observationEntry && (
               <Section>
                 <Text>
-                  <Text bold>Observer:</Text> {username}
+                  <Text bold>Observer:</Text> {getObserverName(observationEntry.creatorId)}
                 </Text>
                 { getObservationImage(observationEntry) !== "" && (
                   <>
