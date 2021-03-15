@@ -5,14 +5,6 @@ import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
 import { RootState, useThunkDispatch } from "../store/store";
-/*
-import {
-  submitEditFeature,
-  EditFeaturePayload,
-  selectFeatureType,
-} from "../store/slices/features";
-*/
-
 import {
   submitEditMeasurement,
   selectLitterType,
@@ -57,7 +49,6 @@ const validation = Yup.object().shape({
   estimatedVolumeM3: numberValidation(),
   depthM: numberValidation(),
 
-  isAbsence: Yup.boolean(),
   isCollected: Yup.boolean(),
 
   comments: Yup.string(),
@@ -97,28 +88,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     if (currentLitterType) dispatch(selectLitterType(currentLitterType));
   }, []);
 
-  /*
-  const featureImages = useSelector<RootState, Array<FeatureImage>>(
-    (state) => state.measurements.featureImages
-  );
-  */
-
-  const isOnline = useSelector<RootState, boolean>(
-    (state) => state.ui.isOnline
-  );
-
-  /*
-  const onlineImage: FeatureImage | undefined =
-    isOnline &&
-    featureEntry?.featureImages &&
-    featureEntry?.featureImages?.length > 0
-      ? featureEntry?.featureImages[0]
-      : undefined;
-  const image: FeatureImage | undefined =
-    onlineImage ||
-    featureImages.find((fi) => fi.featureId === featureEntry?.id);
-  */
-
   const formRef = useRef<FormikProps<InitialFormValuesShape>>(null);
 
   const handleSubmit = () => {
@@ -152,8 +121,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
       estimatedSizeM2: Number(values.estimatedSizeM2?.replace(/,/, ".")),
       estimatedVolumeM3: Number(values.estimatedVolumeM3?.replace(/,/, ".")),
       depthM: Number(values.depthM?.replace(/,/, ".")),
-
-      isAbsence: values.isAbsence,
       isCollected: values.isCollected,
 
       comments: values.comments,
@@ -198,15 +165,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
         touched,
       }) => (
         <>
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            PICTURE (deprecated)
-          </SectionHeader>
-          {/*image ? (
-            <Image
-              source={{ uri: image.url }}
-              style={{ width: "100%", height: 200 }}
-            />
-          ) : null*/}
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
