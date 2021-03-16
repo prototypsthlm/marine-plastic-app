@@ -125,8 +125,8 @@ export default function ObservationDetailScreen({
   
   const getObservationImage = (observation: Observation) => {
     const onlineImage: ObservationImage | undefined =
-      isOnline && observation?.image
-        ? observation?.image
+      isOnline && observation?.images && observation.images.length>0
+        ? observation?.images[0]
         : undefined;
     const image: ObservationImage | undefined =
       onlineImage || observationImages.find((fi) => fi.observationId === observation?.id);

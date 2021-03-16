@@ -44,7 +44,7 @@ export interface Observation extends BaseEntity {
   timestamp: string;
   comments?: string;
   imageUrl?: string;
-  image?: ObservationImage;
+  images?: ObservationImage[];
   extra?: any;
   isMatched: boolean;
   isAbsence: boolean;

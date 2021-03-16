@@ -2,10 +2,10 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import ObservationListScreen from "../../screens/LoggedIn/List/ObservationListScreen";
 import ObservationDetailScreen from "../../screens/LoggedIn/List/ObservationDetailScreen";
-import FeatureDetailScreen from "../../screens/LoggedIn/List/MeasurementDetailScreen";
+import MeasurementDetailScreen from "../../screens/LoggedIn/List/MeasurementDetailScreen";
 import CampaignPickerScreen from "../../screens/LoggedIn/List/CampaignPickerScreen";
 import ObservationEditScreen from "../../screens/LoggedIn/List/ObservationEditScreen";
-import FeatureEditScreen from "../../screens/LoggedIn/List/MeasurementEditScreen";
+import MeasurementEditScreen from "../../screens/LoggedIn/List/MeasurementEditScreen";
 
 import LitterTypePickerScreen from "../../screens/LoggedIn/Add/LitterTypePickerScreen";
 
@@ -31,12 +31,12 @@ export default function ListNavigator() {
       />
       <Stack.Screen
         name="featureDetailScreen"
-        component={FeatureDetailScreen}
+        component={MeasurementDetailScreen}
         options={{ headerTitle: "Feature details" }}
       />
       <Stack.Screen
         name="featureEditScreen"
-        component={FeatureEditScreen}
+        component={MeasurementEditScreen}
         options={{ headerTitle: "Edit Feature" }}
       />
       <Stack.Screen
