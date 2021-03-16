@@ -13,7 +13,6 @@ import {
   selectObservationDetails,
 } from "../../../store/slices/observations";
 import {
-  //fetchCachedFeatureImages,
   fetchAllLitterTypes
 } from "../../../store/slices/measurements";
 import { NavigationProps } from "../../../navigation/types";
@@ -27,6 +26,10 @@ import { theme } from "../../../theme";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
+
+  const isOnline = useSelector<RootState, boolean>(
+    (state) => state.ui.isOnline
+  );
 
   const observationsEntries = useSelector(selectFilteredObservationsByCampaign);
 
@@ -55,23 +58,28 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     navigation.navigate("observationDetailScreen");
   };
   
-  const getObservationImage = (observationId: string) => {
-    const image = observationImages.find((f) => f.observationId === observationId);
-    if(image) {
-      return image.url;
-    }
-    return undefined;
+  const getObservationImage = (observation: Observation) => {
+
+    let image;
+
+    if(isOnline && observation.images && observation.images?.length>0) {
+      image = observation.images[0];
+    } else {
+      image = observationImages.find((f) => f.observationId === observation.id)
+    } 
+  
+    return image?.url || "";
   }
 
   const renderItem = ({ item }: { item: Observation }) => (
     <ListItem style={{}}onPress={() => navigateToDetailScreen(item)}>
-      { getObservationImage(item.id) ? (
+      { getObservationImage(item) ? (
          <Image style={{
             width: 50,
             height: 50,
             borderRadius: 6,
             marginRight: 12
-          }} source={{ uri: getObservationImage(item.id) }} />
+          }} source={{ uri: getObservationImage(item) }} />
       ) :
       (
         <View style={{

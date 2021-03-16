@@ -3,7 +3,7 @@ import { Screen } from "../../../components/Screen";
 import NewMeasurementForm from "../../../components/MeasurementForm/NewMeasurementForm";
 import { NavigationProps } from "../../../navigation/types";
 
-export default function NewFeatureScreen({ navigation }: NavigationProps) {
+export default function NewMeasurementScreen({ navigation }: NavigationProps) {
   return (
     <Screen scroll>
       <NewMeasurementForm navigation={navigation} />

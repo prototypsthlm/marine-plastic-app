@@ -1,5 +1,6 @@
 import {
   CreatorApps,
+  //FeatureImage,
   Measurement,
   Observation,
   ObservationImage,
@@ -14,7 +15,7 @@ import {
   selectObservation,
   setFetchedObservations,
   setObservationCursor,
-  setRefreshing,
+  setRefreshing, 
   addFetchedObservationUser,
 } from "./slice";
 import { EditObservationPayload, NewObservationPayload } from "./types";
@@ -112,8 +113,6 @@ export const fetchCachedObservationImages: Thunk = () => async (
     console.log({ e });
   }
 };
-
-
 export const fetchObservationCreator: Thunk<{ creatorId: string }> = 
   ({ creatorId }) => 
   async (dispatch, getState, { api }) => {
@@ -130,8 +129,6 @@ export const fetchObservationCreator: Thunk<{ creatorId: string }> =
     console.log({e});
   }
 };
-
-
 export const submitNewObservation: Thunk<NewObservationPayload> = (
   newObservationPayload
 ) => async (dispatch, getState, { api, localDB, navigation }) => {
@@ -179,16 +176,16 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       deletedAt: undefined,
 
       imageUrl: newObservationPayload.imageUrl,
-      image: newObservationPayload.imageUrl
-        ? {
+      images: newObservationPayload.imageUrl
+        ? [{
             id: generateUUIDv4(),
             creatorId: creatorId,
             creatorApp: CreatorApps.DATA_COLLECTION_APP,
             observationId: newObservationId,
             url: newObservationPayload.imageUrl,
-          }
-        : undefined,
-
+          }]
+        : 
+        undefined,
       campaignId: campaignId || null,
       geometry: newObservationPayload.geometry,
       timestamp: newObservationPayload.timestamp.toISOString(),
@@ -198,9 +195,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       measurements: newMeasurements,
     };
 
-    const allObservationImages: Array<
-      ObservationImage | undefined
-    > = [newObservation.image];
+    const allObservationImages: Array<ObservationImage> = newObservation.images || [];
     
     await processSubmitObservation(api, localDB, [newObservation]);
     await processSubmitObservationImages(api, localDB, allObservationImages);
