@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { InputField } from "./InputField";
-import { Button, Image, Switch } from "react-native";
-import { Formik } from "formik";
+import { Button, Switch } from "react-native";
+import {  Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
 import { RootState, useThunkDispatch } from "../store/store";
@@ -24,13 +24,14 @@ import { LatLng } from "react-native-maps";
 interface InitialFormValuesShape {
   comments: string;
   isAbsence: boolean;
-  imageUri?: string;
+  imageUri?: string | undefined;
   location?: LatLng;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
   isAbsence: false,
   comments: "",
+  imageUri: undefined
 };
 
 const validation = Yup.object().shape({
@@ -53,15 +54,6 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   const measurementsToAdd = useSelector<RootState, Array<NewMeasurementPayload>>(
     (state) => state.measurements.measurementsToAdd
   );
-
-  /*
-  useEffect(() => {
-    // If there are no features added to the obs., 
-    // go to new feature screen directly
-    if(measurementsToAdd.length===0) 
-      navigation.navigate("newFeatureScreen")
-  }, [measurementsToAdd])
-  */
 
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
@@ -109,6 +101,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             PICTURE
           </SectionHeader>
           <PictureSection
+            imageUri={values.imageUri}
             onImageUriChange={handleChange("imageUri")}
             onLocationChange={(value) => setFieldValue("location", value)}
           />
@@ -172,17 +165,6 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
-              {/*Boolean(measurement.imageUrl) && (
-                <Image
-                  source={{ uri: measurement.imageUrl }}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: 6,
-                    marginRight: 12,
-                  }}
-                ></Image>
-                )*/}
               <Text>{measurement.litterType.name}</Text>
             </ListItem>
           ))}

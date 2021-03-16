@@ -1,21 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LatLng } from "react-native-maps";
 import styled from "../../styled";
 import { getImageLocation } from "../../utils/geoUtils";
 import UploadImage from "../UploadImage";
 
 interface PictureSectionProps {
+  imageUri?: string | undefined;
   onImageUriChange?: (imageUri: string) => void;
   onLocationChange?: (location: LatLng) => void;
   onTimestampChange?: (timestamp: string) => void;
 }
 
 export default function PictureSection({
+  imageUri,
   onImageUriChange,
   onLocationChange,
   onTimestampChange,
 }: PictureSectionProps) {
   const [image, setImage] = useState<any>();
+
+  useEffect(() => {
+    if(!imageUri) {
+      resetState();
+    }
+  }, [imageUri]);
+
+  const resetState = () => {
+    setImage(null);
+  }
 
   const handleImageChange = (image: any) => {
     setImage(image);
