@@ -85,7 +85,7 @@ export const fetchAllLitterTypes: Thunk = () => async (
   if (litterTypes.length < 1) {
     const result = await api.getAllLitterTypes();
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get/sync litter types.");
+      throw new ActionError(`Couldn't get/sync litter types: ${result.problem ?? result.problem} ${result.originalError ?? result.originalError.message}`);
 
       litterTypes = result.data?.results;
 
@@ -124,7 +124,7 @@ export const submitEditMeasurement: Thunk<EditMeasurementPayload> = (
 
   // 2. Upsert to localDB
   if (!response.ok || !response.data?.result) {
-    throw new ActionError("Couldn't sync updated feature.");
+    throw new ActionError(`Couldn't sync updated feature: ${response.problem} ${response.originalError.message}`);
   } else {
     // Upsert if success
     const updatedMeasurement: Measurement = {
@@ -171,7 +171,7 @@ export const processSubmitMeasurements = async (
             measurement.observationId,
             measurement.id
           );
-        } else throw new ActionError(`Couldn't post/sync measurement: ${response.problem}`);
+        } else throw new ActionError(`Couldn't post/sync measurement: ${response.problem} ${response.originalError.message}`);
       } else {
         // Upsert if success
         const syncedMeasurement: Measurement = response.data?.result;
@@ -215,7 +215,7 @@ export const processSubmitObservationImages = async (
               observationImage.observationId
             );
           }
-          else throw new ActionError(`Couldn't post/sync feature image: ${response.problem}`);
+          else throw new ActionError(`Couldn't post/sync feature image: ${response.problem} ${response.originalError.message}`);
         } else {
           // Upsert if success
           await localDB.upsertEntities(
@@ -246,7 +246,7 @@ export const deleteMeasurement: Thunk = () => async (
   const response = await api.deleteMeasurement(currentMeasurement);
 
   if (!response.ok) {
-    throw new ActionError("Couldn't delete measurement.");
+    throw new ActionError(`Couldn't delete measurement: ${response.problem} ${response.originalError.message}`);
   } else {
     // If success, delete from localDB
     const measurementId: string = currentMeasurement.id;

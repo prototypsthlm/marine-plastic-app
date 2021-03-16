@@ -32,7 +32,7 @@ export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
     // 1. Get next page
     const result = await api.getCampaigns(getState().campaigns.nextPageCursor);
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get/sync campaigns.");
+      throw new ActionError(`Couldn't get/sync campaigns: ${result.problem} ${result.originalError.message}`);
 
     const campaigns: Array<Campaign> = result.data.results;
     const cursor: string | null = result.data?.nextPage;

@@ -4,27 +4,32 @@ import { GenericApiProblem } from "./genericTypes";
 function getProblemPayload(
   apiResponse: ApiResponse<any>
 ): Omit<GenericApiProblem, "ok"> {
+
+  const problemPayload = { 
+    originalError: apiResponse.originalError
+  }
+
   switch (apiResponse.problem) {
     case "CONNECTION_ERROR":
     case "NETWORK_ERROR":
-      return { problem: "cannot-connect", temporary: true };
+      return { ...problemPayload, problem: "cannot-connect", temporary: true};
     case "TIMEOUT_ERROR":
-      return { problem: "timeout", temporary: true };
+      return { ...problemPayload, problem: "timeout", temporary: true };
     case "SERVER_ERROR":
-      return { problem: "server" };
+      return { ...problemPayload, problem: "server" };
     case "UNKNOWN_ERROR":
     default:
-      return { problem: "unknown", temporary: true };
+      return { ...problemPayload, problem: "unknown", temporary: true };
     case "CLIENT_ERROR":
       switch (apiResponse.status) {
         case 401:
-          return { problem: "unauthorized" };
+          return { ...problemPayload, problem: "unauthorized" };
         case 403:
-          return { problem: "forbidden" };
+          return { ...problemPayload, problem: "forbidden" };
         case 404:
-          return { problem: "not-found" };
+          return { ...problemPayload, problem: "not-found" };
         default:
-          return { problem: "rejected" };
+          return { ...problemPayload, problem: "rejected" };
       }
   }
 }
