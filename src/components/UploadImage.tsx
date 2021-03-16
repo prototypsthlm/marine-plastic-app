@@ -18,7 +18,21 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [canUseMediaLibrary, setCanUseMediaLibrary] = useState<boolean>(false);
   const [canUseCamera, setCanUseCamera] = useState<boolean>(false);
+  const [canUseLocation, setCanUseLocation] = useState<boolean>(false);
   const [location, setLocation] = useState<LocationObject | null>();
+
+  const defaultLocation: LocationObject = {
+      coords: {
+          latitude: 0,
+          longitude: 0,
+          altitude: null,
+          accuracy: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+      },
+      timestamp: 0
+  }
 
   const requestMediaLibrary = async () => {
     if (Platform.OS !== "web") {
@@ -48,10 +62,14 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       if (status !== "granted") {
         alert("Permission to access location was denied");
         return;
-      }
+      } else setCanUseLocation(true);
 
-      const loc = await Location.getLastKnownPositionAsync();
-      setLocation(loc);
+      if(canUseLocation) {
+        const loc = await Location.getLastKnownPositionAsync();
+        setLocation(loc);
+      } else {
+        setLocation(defaultLocation);
+      }
     }
   };
 
@@ -71,8 +89,10 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     }
     setIsLoading(true);
 
-    const loc = await Location.getLastKnownPositionAsync();
-    setLocation(loc);
+    if(canUseLocation) {
+      const loc = await Location.getLastKnownPositionAsync();
+      setLocation(loc);
+    } else setLocation(defaultLocation);
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
