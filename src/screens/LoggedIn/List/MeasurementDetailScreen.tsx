@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import { Measurement } from "../../../models";
 
-import { Alert, Image } from "react-native";
+import { Alert } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { FlexColumn, Section, Text } from "../../../components/elements";
@@ -13,7 +13,7 @@ import { Item } from "react-navigation-header-buttons";
 import { theme } from "../../../theme";
 import { deleteMeasurement } from "../../../store/slices/measurements";
 
-export default function FeatureDetailScreen({ navigation }: NavigationProps) {
+export default function MeasurementDetailScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
 
   const measurementEntry = useSelector<RootState, Measurement | undefined>(
