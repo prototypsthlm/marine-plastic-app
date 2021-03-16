@@ -5,6 +5,7 @@ export type HttpResponse<T> = ApiErrorResponse<void> | ApiOkResponse<T>;
 export interface GenericApiProblem {
   ok: false;
   problem: ApiErrorTypes;
+  originalError?: any;
   temporary?: boolean;
 }
 
