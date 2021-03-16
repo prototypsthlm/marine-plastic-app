@@ -16,7 +16,7 @@ export const setUserInfo: Thunk = () => async (
     const result = await api.getUserMe();
 
     if (!result.ok || !result.data?.result)
-      throw new ActionError("Couldn't get user info.");
+      throw new ActionError(`Couldn't get user info: ${result.problem ?? result.problem} ${ result.originalError ?? result.originalError.message}`);
 
     user = result.data?.result;
 

@@ -51,7 +51,7 @@ export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
       const response = await api.getObservations(campaignId, nextPage);
 
       if (!response.ok || !response.data?.results)
-        throw new ActionError("Couldn't get observations.");
+        throw new ActionError(`Couldn't get observations: ${response.problem} ${response.originalError.message}`);
 
       const observationsEntries: Array<Observation> = response.data.results;
       const cursor: string | null = response.data?.nextPage;
@@ -224,7 +224,7 @@ export const submitEditObservation: Thunk<EditObservationPayload> = (
 
   // 2. Upsert to localDB
   if (!response.ok || !response.data?.result) {
-    throw new ActionError("Couldn't sync updated observation.");
+    throw new ActionError(`Couldn't sync updated observation: ${response.problem} ${response.originalError.message}`);
   } else {
     // Upsert if success
     const updatedObservation: Observation = {
@@ -302,7 +302,7 @@ export const processSubmitObservation = async (
             false,
             observation.campaignId
           );
-        } else throw new ActionError(`Couldn't post/sync observation: ${response.problem}}`);
+        } else throw new ActionError(`Couldn't post/sync observation: ${response.problem} ${response.originalError.message}`);
       } else {
         // Upsert if success
         const syncedObservation: Observation = response.data?.result;
@@ -331,7 +331,7 @@ export const deleteObservation: Thunk = () => async (
   const response = await api.deleteObservation(currentObservation);
 
   if (!response.ok) {
-    throw new ActionError("Couldn't delete observation.");
+    throw new ActionError(`Couldn't delete observation: ${response.problem} ${response.originalError.message}`);
   } else {
     // If success, delete from localDB
     const observationId: string = currentObservation.id;
