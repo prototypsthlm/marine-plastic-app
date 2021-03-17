@@ -30,6 +30,7 @@ import {
   resetMeasurementsToAdd,
   resetPagination as resetFeaturePagination,
 } from "../measurements";
+import { Alert } from "react-native";
 
 export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
   options
@@ -250,35 +251,45 @@ export const submitEditObservation: Thunk<EditObservationPayload> = (
 
 export const syncOfflineEntries: Thunk = () => async (
   dispatch,
-  _,
+  getState,
   { api, localDB }
 ) => {
-  
-  dispatch(setIsSyncing(true));
 
-  try {
-    const observations: Array<Observation> = await localDB.getEntities<Observation>(
-      EntityType.Observation,
-      false
-    );
-    const measurements: Array<Measurement> = await localDB.getEntities<Measurement>(
-      EntityType.Measurement,
-      false
-    );
-    
-    const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
-      EntityType.ObservationImage,
-      false
-    );
+  if (!getState().ui.isSyncing) {
 
-    await processSubmitObservation(api, localDB, observations);
-    await processSubmitMeasurements(api, localDB, measurements);
-    await processSubmitObservationImages(api, localDB, observationImages);
-  } catch (e) {
-    console.log(e);
+    dispatch(setIsSyncing(true));
+
+    try {
+      const observations: Array<Observation> = await localDB.getEntities<Observation>(
+        EntityType.Observation,
+        false
+      );
+      const measurements: Array<Measurement> = await localDB.getEntities<Measurement>(
+        EntityType.Measurement,
+        false
+      );
+      
+      const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
+        EntityType.ObservationImage,
+        false
+      );
+
+      const idsToSync = observations.length + measurements.length + observationImages.length;
+
+      Alert.alert(`Debug: Sync was triggered, has ${idsToSync} offline entities to sync to database`);
+
+      await processSubmitObservation(api, localDB, observations);
+      await processSubmitMeasurements(api, localDB, measurements);
+      await processSubmitObservationImages(api, localDB, observationImages);
+      
+    } catch (e) {
+      console.log(e);
+    }
+
+    dispatch(setIsSyncing(false));
+
+    Alert.alert("Debug: Sync was completed ");
   }
-
-  dispatch(setIsSyncing(false));
 };
 
 export const selectObservationDetails: Thunk<Observation> = (observation) => (
