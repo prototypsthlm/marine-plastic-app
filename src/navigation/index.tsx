@@ -1,13 +1,13 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { firebaseAuth } from "../services/firebaseAuth";
 
 import { navigationRef } from "../services/navigation";
 import { selectIsLoggedIn, setUserWithNewToken } from "../store/slices/session";
-import { useThunkDispatch } from "../store/store";
+import { RootState, useThunkDispatch } from "../store/store";
 
 import BottomTabNavigator from "./BottomTabNavigator";
 import { LoggedOutStackNavigator } from "./LoggedOutStackNavigator";
@@ -46,6 +46,13 @@ const Stack = createStackNavigator<{
 function RootNavigator() {
   const dispatch = useThunkDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  const isSyncing = useSelector<RootState, boolean>(state => (state.ui.isSyncing));
+
+  const handleNetworkChange = useCallback((state) => {
+    // Don't start syncing any entries before logged in and has token 
+    if (state.isConnected && isLoggedIn) dispatch(syncOfflineEntries());
+    dispatch(setIsOnline(state.isConnected));
+  },[isLoggedIn, isSyncing])
 
   useEffect(() => {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
@@ -53,17 +60,12 @@ function RootNavigator() {
     ) {
       if (user) dispatch(setUserWithNewToken());
     });
-    const unsubscribeNetInfo = NetInfo.addEventListener((state) => {
-      // Don't start syncing any entries before logged in and has token 
-      if (state.isConnected && isLoggedIn) dispatch(syncOfflineEntries());
-      dispatch(setIsOnline(state.isConnected));
-    });
-
+    const unsubscribeNetInfo = NetInfo.addEventListener(handleNetworkChange);
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
     };
-  }, [isLoggedIn]);
+  }, []);
 
   if (!isLoggedIn) return <LoggedOutStackNavigator />;
 
