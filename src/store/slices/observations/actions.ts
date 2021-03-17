@@ -1,11 +1,13 @@
 import {
   CreatorApps,
-  //FeatureImage,
   Measurement,
   Observation,
   ObservationImage,
 } from "../../../models";
 import { Thunk } from "../../store";
+import {
+  setIsSyncing,
+} from '../ui';
 import {
   addEditedObservation,
   addFetchedObservations,
@@ -247,10 +249,13 @@ export const submitEditObservation: Thunk<EditObservationPayload> = (
 };
 
 export const syncOfflineEntries: Thunk = () => async (
-  _dispatch,
+  dispatch,
   _,
   { api, localDB }
 ) => {
+  
+  dispatch(setIsSyncing(true));
+
   try {
     const observations: Array<Observation> = await localDB.getEntities<Observation>(
       EntityType.Observation,
@@ -265,13 +270,15 @@ export const syncOfflineEntries: Thunk = () => async (
       EntityType.ObservationImage,
       false
     );
-  
+
     await processSubmitObservation(api, localDB, observations);
     await processSubmitMeasurements(api, localDB, measurements);
     await processSubmitObservationImages(api, localDB, observationImages);
   } catch (e) {
     console.log(e);
   }
+
+  dispatch(setIsSyncing(false));
 };
 
 export const selectObservationDetails: Thunk<Observation> = (observation) => (
