@@ -48,19 +48,23 @@ function RootNavigator() {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isSyncing = useSelector<RootState, boolean>(state => (state.ui.isSyncing));
 
-  const handleNetworkChange = useCallback((state) => {
-    // Don't start syncing any entries before logged in and has token 
-    if (state.isConnected && isLoggedIn) dispatch(syncOfflineEntries());
-    dispatch(setIsOnline(state.isConnected));
-  },[isLoggedIn, isSyncing])
-
   useEffect(() => {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
       user
     ) {
-      if (user) dispatch(setUserWithNewToken());
+      if (user) {
+        dispatch(setUserWithNewToken());
+
+        // Check if user has anything to sync after login
+        dispatch(syncOfflineEntries());
+      }
     });
-    const unsubscribeNetInfo = NetInfo.addEventListener(handleNetworkChange);
+    
+    const unsubscribeNetInfo = NetInfo.addEventListener((state) => {
+      if (state.isConnected && isLoggedIn && !isSyncing) dispatch(syncOfflineEntries());
+      dispatch(setIsOnline(state.isConnected));
+    });
+
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
