@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { LatLng } from "react-native-maps";
 import styled from "../../styled";
 import { getImageLocation } from "../../utils/geoUtils";
+import { getImageTimestamp } from "../../utils/timeUtils";
 import UploadImage from "../UploadImage";
 
 interface PictureSectionProps {
   imageUri?: string | undefined;
   onImageUriChange?: (imageUri: string) => void;
   onLocationChange?: (location: LatLng) => void;
-  onTimestampChange?: (timestamp: string) => void;
+  onTimestampChange?: (timestamp: Date | undefined) => void;
 }
 
 export default function PictureSection({
@@ -34,8 +35,13 @@ export default function PictureSection({
 
     const imageLocation: LatLng = getImageLocation(image);
 
+    console.log(imageLocation);
+
+    const imageTimestamp: Date | undefined = getImageTimestamp(image);
+
     onImageUriChange && onImageUriChange(image.uri);
     onLocationChange && onLocationChange(imageLocation);
+    onTimestampChange && onTimestampChange(imageTimestamp)
   };
 
   return (
