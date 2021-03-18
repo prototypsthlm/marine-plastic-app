@@ -34,9 +34,6 @@ export default function PictureSection({
     setImage(image);
 
     const imageLocation: LatLng = getImageLocation(image);
-
-    console.log(imageLocation);
-
     const imageTimestamp: Date | undefined = getImageTimestamp(image);
 
     onImageUriChange && onImageUriChange(image.uri);
