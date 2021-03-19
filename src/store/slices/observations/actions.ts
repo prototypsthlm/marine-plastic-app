@@ -274,15 +274,10 @@ export const syncOfflineEntries: Thunk = () => async (
         false
       );
 
-      const idsToSync = observations.length + measurements.length + observationImages.length;
-
       await processSubmitObservation(api, localDB, observations);
       await processSubmitMeasurements(api, localDB, measurements);
       await processSubmitObservationImages(api, localDB, observationImages);
       
-      if(idsToSync)
-        Alert.alert(`Debug: Sync was completed, ${idsToSync} offline entities were synced.`);
-
     } catch (e) {
       console.log(e);
     }
