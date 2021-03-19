@@ -21,18 +21,6 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   const [canUseLocation, setCanUseLocation] = useState<boolean>(false);
   const [location, setLocation] = useState<LocationObject | null>();
 
-  const defaultLocation: LocationObject = {
-      coords: {
-          latitude: 0,
-          longitude: 0,
-          altitude: null,
-          accuracy: null,
-          altitudeAccuracy: null,
-          heading: null,
-          speed: null,
-      },
-      timestamp: 0
-  }
 
   const requestMediaLibrary = async () => {
     if (Platform.OS !== "web") {
@@ -67,8 +55,6 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       if(canUseLocation) {
         const loc = await Location.getLastKnownPositionAsync();
         setLocation(loc);
-      } else {
-        setLocation(defaultLocation);
       }
     }
   };
@@ -92,7 +78,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     if(canUseLocation) {
       const loc = await Location.getLastKnownPositionAsync();
       setLocation(loc);
-    } else setLocation(defaultLocation);
+    }
 
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
