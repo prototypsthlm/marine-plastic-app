@@ -13,12 +13,21 @@ export function formatGPSLocation(dd: number, ref: string) {
 }
 
 export function getImageLocation(image: any) {
-  if (!image.exif?.GPSLongitude && image.location)
+
+  const defaultLocation =  {
+    coords: {
+      // Greenwich
+      longitude: -0.0304748,
+      latitude: 51.487397, 
+    }
+  }
+
+  if (!image.exif?.GPSLongitude && image.location && image.location !== null)
     return {
       longitude: image.location.coords.longitude,
       latitude: image.location.coords.latitude,
     };
-  else
+  else {
     return {
       longitude:
         image.exif && image.exif.GPSLongitude && image.exif.GPSLongitudeRef
@@ -26,12 +35,13 @@ export function getImageLocation(image: any) {
               image.exif.GPSLongitude,
               image.exif.GPSLongitudeRef
             )
-          : image.location.coords.longitude,
+          : image.location?.coords.longitude || defaultLocation.coords.longitude,
       latitude:
         image.exif && image.exif.GPSLatitude && image.exif.GPSLatitudeRef
           ? formatGPSLocation(image.exif.GPSLatitude, image.exif.GPSLatitudeRef)
-          : image.location.coords.latitude,
+          : image.location?.coords.latitude || defaultLocation.coords.latitude,
     };
+  }
 }
 
 export function getGeometryFromLocation(location: LatLng) {
