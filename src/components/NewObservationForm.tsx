@@ -20,18 +20,21 @@ import { getGeometryFromLocation } from "../utils/geoUtils";
 import PictureSection from "./MeasurementForm/PictureSection";
 import MapItem from "./MeasurementForm/MapItem";
 import { LatLng } from "react-native-maps";
+import TimestampPicker from "./MeasurementForm/TimestampPicker";
 
 interface InitialFormValuesShape {
   comments: string;
   isAbsence: boolean;
   imageUri?: string | undefined;
   location?: LatLng;
+  timestamp?: Date | undefined;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
   isAbsence: false,
   comments: "",
-  imageUri: undefined
+  imageUri: undefined,
+  timestamp: new Date(Date.now())
 };
 
 const validation = Yup.object().shape({
@@ -58,7 +61,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
       comments: values.comments,
-      timestamp: new Date(Date.now()), // TODO: Timestamp from exif
+      timestamp: values.timestamp,
       geometry: getGeometryFromLocation(values.location),
       measurements: measurementsToAdd,
       isAbsence: values.isAbsence,
@@ -104,6 +107,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             imageUri={values.imageUri}
             onImageUriChange={handleChange("imageUri")}
             onLocationChange={(value) => setFieldValue("location", value)}
+            onTimestampChange={(value) => setFieldValue("timestamp", value)}
           />
 
           {Boolean(values.imageUri) && values.location !== undefined ? (
@@ -118,6 +122,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             </>
           ) : null}
 
+          {Boolean(values.imageUri) ? (
+            <>
+            <SectionHeader style={{ marginTop: theme.spacing.large }}>
+              TIMESTAMP
+            </SectionHeader>
+            <TimestampPicker 
+              value={values.timestamp} 
+              onTimestampChange={(value => setFieldValue("timestamp", value))} 
+            />
+          </>): null}
+          
           <FormSection>
             <InputField
               invertColors={false}
