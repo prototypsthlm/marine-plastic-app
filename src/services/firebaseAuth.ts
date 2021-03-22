@@ -23,4 +23,8 @@ const initAuth = () => {
   return firebase.auth();
 };
 
+export const authSignOut = () => {
+  return firebase.auth().signOut();
+}
+
 export const firebaseAuth = initAuth();
