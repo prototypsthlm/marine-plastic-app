@@ -41,7 +41,7 @@ export const fetchMeasurements: Thunk<{ forceRefresh?: boolean }> = (
       getState().measurements.nextPageCursor
     );
     if (!result.ok || !result.data?.results)
-      throw new ActionError("Couldn't get/sync features.");
+      throw new ActionError("Couldn't get/sync measurements.");
 
     const measurements: Array<Measurement> = result.data.results;
     const cursor: string | null = result.data?.nextPage;
