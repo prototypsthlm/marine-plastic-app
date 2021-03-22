@@ -1,8 +1,8 @@
-import { Campaign, Measurement, FeatureImage, Observation } from "../../../models";
+import { Campaign, Measurement, ObservationImage, Observation } from "../../../models";
 import { db } from "../db";
 import { EntityType } from "../types";
 
-type EntityPayload = Array<Observation | Measurement | Campaign | FeatureImage>;
+type EntityPayload = Array<Observation | Measurement | Campaign | ObservationImage>;
 
 export const baseEntityModule = {
   upsertEntities(

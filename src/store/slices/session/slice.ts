@@ -30,8 +30,8 @@ export const sessionSlice = createSlice({
       state.token = payload;
       state.status = "READY";
     },
-    userLoggedOut: (state) => {
-      state = initialState;
+    userLoggedOut: () => {
+      return initialState;
     },
   },
 });
