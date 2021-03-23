@@ -30,7 +30,6 @@ import {
   resetMeasurementsToAdd,
   resetPagination as resetFeaturePagination,
 } from "../measurements";
-import { Alert } from "react-native";
 
 export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
   options
@@ -248,6 +247,42 @@ export const submitEditObservation: Thunk<EditObservationPayload> = (
     navigation.goBack();
   }
 };
+
+export const clearOfflineEntries: Thunk = () => async (
+  dispatch,
+  _,
+  { localDB }
+) => {
+
+  try {
+    const observations: Array<Observation> = await localDB.getEntities<Observation>(
+      EntityType.Observation,
+      false
+    );
+    const measurements: Array<Measurement> = await localDB.getEntities<Measurement>(
+      EntityType.Measurement,
+      false
+    );
+    
+    const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
+      EntityType.ObservationImage,
+      false
+    );
+
+    // collect all ids
+    const idsToDelete = [ 
+      ... observations.map(o => o.id), 
+      ... observationImages.map(om => om.id),
+      ...  measurements.map(m => m.id) 
+    ];
+
+    // delete collected ids
+    if (idsToDelete.length > 0) await localDB.deleteEntities(idsToDelete);
+
+  } catch(e) {
+    console.log(e);
+  }
+}
 
 export const syncOfflineEntries: Thunk = () => async (
   dispatch,
