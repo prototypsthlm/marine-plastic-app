@@ -5,6 +5,7 @@ import {
 import { ActionError } from "../../errors/ActionError";
 import { Thunk } from "../../store";
 import { setUserInfo } from "../account";
+import { clearOfflineEntries } from "../observations";
 import {
   sessionError,
   userLoggedIn,
@@ -53,7 +54,10 @@ export const setUserWithNewToken: Thunk = () => async (
   dispatch(setUserInfo());
 };
 
-export const logOut: Thunk = () => (dispatch) => {
+export const logOut: Thunk = () => (
+  dispatch
+  ) => {
   clearTokenFromRequestPayloads();
+  dispatch(clearOfflineEntries());
   dispatch(userLoggedOut());
 };

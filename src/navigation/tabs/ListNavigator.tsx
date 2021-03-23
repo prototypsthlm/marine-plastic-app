@@ -8,6 +8,7 @@ import ObservationEditScreen from "../../screens/LoggedIn/List/ObservationEditSc
 import MeasurementEditScreen from "../../screens/LoggedIn/List/MeasurementEditScreen";
 
 import LitterTypePickerScreen from "../../screens/LoggedIn/Add/LitterTypePickerScreen";
+import LogoutButton from "../../components/LogoutButton";
 
 const Stack = createStackNavigator();
 
@@ -17,7 +18,7 @@ export default function ListNavigator() {
       <Stack.Screen
         name="observationListScreen"
         component={ObservationListScreen}
-        options={{ headerTitle: "My observations list" }}
+        options={{ headerTitle: "My observations list", headerRight: LogoutButton }}
       />
       <Stack.Screen
         name="observationDetailScreen"
