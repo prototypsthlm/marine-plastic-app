@@ -14,7 +14,7 @@ import { LoggedOutStackNavigator } from "./LoggedOutStackNavigator";
 
 import NetInfo from "@react-native-community/netinfo";
 import { setIsOnline } from "../store/slices/ui";
-import { syncOfflineEntries } from "../store/slices/observations";
+import useSync from '../hooks/useSync';
 import { theme } from '../theme';
 
 const OceanScanTheme = {
@@ -46,32 +46,24 @@ const Stack = createStackNavigator<{
 function RootNavigator() {
   const dispatch = useThunkDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
-  const isSyncing = useSelector<RootState, boolean>(state => (state.ui.isSyncing));
-
-  const handleNetworkChange = useCallback((state) => {
-    if (state.isConnected && isLoggedIn && !isSyncing) {
-      dispatch(syncOfflineEntries());
-    }
-    dispatch(setIsOnline(state.isConnected));
-  }, [isLoggedIn, isSyncing])
-  
+ 
   useEffect(() => {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
       user
     ) {
-      if (user) {
-        dispatch(setUserWithNewToken());
-        dispatch(syncOfflineEntries()); // Check if user has anything to sync after login
-      }
+      if (user) dispatch(setUserWithNewToken());      
     });
     
-    const unsubscribeNetInfo = NetInfo.addEventListener(handleNetworkChange);
+    const unsubscribeNetInfo = NetInfo.addEventListener((state) => dispatch(setIsOnline(state.isConnected)));
 
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
     };
   }, []);
+  
+  // Custom sync hook
+  useSync();
 
   if (!isLoggedIn) return <LoggedOutStackNavigator />;
 
