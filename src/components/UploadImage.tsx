@@ -51,11 +51,8 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         alert("Permission to access location was denied");
         return;
       } else setCanUseLocation(true);
-
-      if(canUseLocation) {
-        const loc = await Location.getLastKnownPositionAsync();
-        setLocation(loc);
-      }
+      const loc = await Location.getLastKnownPositionAsync();
+      setLocation(loc);
     }
   };
 
@@ -120,8 +117,10 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     }
     setIsLoading(true);
 
-    const loc = await Location.getLastKnownPositionAsync();
-    setLocation(loc);
+    if(canUseLocation) {
+      const loc = await Location.getLastKnownPositionAsync();
+      setLocation(loc);
+    }
 
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
