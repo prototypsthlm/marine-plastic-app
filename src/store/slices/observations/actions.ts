@@ -30,6 +30,7 @@ import {
   resetMeasurementsToAdd,
   resetPagination as resetFeaturePagination,
 } from "../measurements";
+import { Alert } from "react-native";
 
 export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
   options
@@ -312,6 +313,9 @@ export const syncOfflineEntries: Thunk = () => async (
       await processSubmitObservation(api, localDB, observations);
       await processSubmitMeasurements(api, localDB, measurements);
       await processSubmitObservationImages(api, localDB, observationImages);
+
+      if(observations.length + measurements.length + observationImages.length >0)
+        Alert.alert("Synced offline entries");
       
     } catch (e) {
       console.log(e);
