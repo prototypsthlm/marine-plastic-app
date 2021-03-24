@@ -25,15 +25,16 @@ import TimestampPicker from "./MeasurementForm/TimestampPicker";
 interface InitialFormValuesShape {
   comments: string;
   isAbsence: boolean;
-  imageUri?: string | undefined;
+  imageUri?: string;
   location?: LatLng;
-  timestamp?: Date | undefined;
+  timestamp?: Date;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
   isAbsence: false,
   comments: "",
   imageUri: undefined,
+  location: undefined,
   timestamp: new Date(Date.now())
 };
 
@@ -186,7 +187,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <FormSection>
             <Button
-              disabled={false}
+              disabled={
+                !values.imageUri || 
+                !values.location || 
+                !values.timestamp
+              }
               title="Submit"
               onPress={handleSubmit as any}
             />
