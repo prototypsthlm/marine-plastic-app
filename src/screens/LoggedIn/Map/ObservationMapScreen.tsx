@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "../../../styled";
-import MapView, { Marker } from "react-native-maps";
-import { Dimensions } from "react-native";
+import MapView, { Callout, Marker } from "react-native-maps";
+import { Dimensions, View, Image } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import { Geometry, Observation } from "../../../models";
@@ -43,14 +43,27 @@ export default function ObservationMapScreen({ navigation }:NavigationProps) {
         {observationsEntries.map((observationEntry, index) => {
           if(isValidGeometry(observationEntry.geometry)) { 
 
-            console.log(observationEntry)
+            const imageUrl = observationEntry.images && observationEntry.images.length>0 ? observationEntry.images[0].url : undefined;
 
             return <Marker 
               key={index} 
               coordinate={getLatLng(observationEntry.geometry.coordinates)} 
-              onPress={() => handleOnPress(index)}
+              onCalloutPress={() => handleOnPress(index)}
               pinColor={theme.color.palette.cyan} 
-              />
+              >
+                <Callout>
+                  <CustomCallOutView>
+                    { imageUrl && (
+                      <Image source={{uri: imageUrl }} style={{width: 50, height: 50}}/>
+                    )}
+                    { observationEntry.comments !== undefined && (
+                      <Text style={{ maxWidth: 100, fontSize: 12, fontFamily: theme.typography.primary }}>
+                        {observationEntry.comments}
+                      </Text>
+                    )}
+                  </CustomCallOutView>
+                </Callout>
+              </Marker>
           } else return null;
         })}
       </MapView>
@@ -59,6 +72,12 @@ export default function ObservationMapScreen({ navigation }:NavigationProps) {
 }
 
 const Screen = styled.View`
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CustomCallOutView = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
