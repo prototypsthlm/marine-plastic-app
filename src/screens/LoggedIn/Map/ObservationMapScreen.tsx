@@ -1,16 +1,36 @@
 import * as React from "react";
 import styled from "../../../styled";
-import MapView, { Geojson } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { Dimensions } from "react-native";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
-import { Observation } from "../../../models";
+import { RootState, useThunkDispatch } from "../../../store/store";
+import { Geometry, Observation } from "../../../models";
 import { theme } from "../../../theme";
+import { NavigationProps } from "../../../navigation/types";
+import { selectObservationDetails } from "../../../store/slices/observations";
+import { getLatLng } from '../../../utils/geoUtils';
 
-export default function ObservationMapScreen() {
+export default function ObservationMapScreen({ navigation }:NavigationProps) {
+
+  const dispatch = useThunkDispatch();
+
   const observationsEntries = useSelector<RootState, Array<Observation>>(
     (state) => state.observations.observationEntries
   );
+
+  const handleOnPress = (index: number) => {
+    const selectedEntry = observationsEntries[index];
+
+    dispatch(selectObservationDetails(selectedEntry));
+    navigation.navigate("observationDetailScreen");
+  }
+
+  const isValidGeometry = (geometry: Geometry): boolean => {
+    if(!geometry || !geometry.coordinates) return false;
+    if(geometry.coordinates.length < 2) return false;
+    if(geometry.coordinates[0] === undefined || geometry.coordinates[1] === undefined) return false;
+    return true;
+  }
 
   return (
     <Screen>
@@ -21,21 +41,17 @@ export default function ObservationMapScreen() {
         }}
       >
         {observationsEntries.map((observationEntry, index) => {
-          return <Geojson
-            key={index}
-            //@ts-ignore
-            color={theme.color.palette.cyan}
-            geojson={{
-              type: "FeatureCollection",
-              features: [
-                {
-                  type: "Feature",
-                  properties: {},
-                  geometry: observationEntry.geometry,
-                },
-              ],
-            }}
-          />
+          if(isValidGeometry(observationEntry.geometry)) { 
+
+            console.log(observationEntry)
+
+            return <Marker 
+              key={index} 
+              coordinate={getLatLng(observationEntry.geometry.coordinates)} 
+              onPress={() => handleOnPress(index)}
+              pinColor={theme.color.palette.cyan} 
+              />
+          } else return null;
         })}
       </MapView>
     </Screen>

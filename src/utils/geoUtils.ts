@@ -81,6 +81,13 @@ export function getGeometryFromImages(
   }
 }
 
+export function getLatLng(coordinates: any) {
+  return { 
+    longitude: coordinates[0], 
+    latitude: coordinates[1]
+  }
+}
+
 function getPoint(features: Array<NewObservationPayload>) {
   return {
     type: "Point",
