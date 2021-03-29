@@ -5,6 +5,14 @@ import { point, featureCollection, lineString, Position } from "@turf/helpers";
 import { NewObservationPayload } from "../store/slices/observations";
 import { LatLng } from "react-native-maps";
 
+
+export function isValidMapPoint(geometry: Geometry): boolean {
+  if(!geometry || !geometry.coordinates) return false;
+  if(geometry.coordinates.length < 2) return false;
+  if(geometry.coordinates[0] === undefined || geometry.coordinates[1] === undefined) return false;
+  return true;
+}
+
 export function formatGPSLocation(dd: number, ref: string) {
   if (ref == "S" || ref == "W") {
     dd = dd * -1;
