@@ -84,20 +84,25 @@ export default function ObservationDetailScreen({
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <BasicHeaderButtons>
-          <Item
-            title="Edit"
-            onPress={() => navigation.navigate("observationEditScreen")}
-          />
-          <Item
-            title="Delete"
-            iconName="ios-trash"
-            color={theme.color.palette.red}
-            onPress={() => deleteAlert()}
-          />
-        </BasicHeaderButtons>
-      ),
+      headerRight: () => {
+        
+        if(user && observationEntry && user.id !== observationEntry.creatorId) return null;
+
+        return (
+          <BasicHeaderButtons>
+            <Item
+              title="Edit"
+              onPress={() => navigation.navigate("observationEditScreen")}
+            />
+            <Item
+              title="Delete"
+              iconName="ios-trash"
+              color={theme.color.palette.red}
+              onPress={() => deleteAlert()}
+            />
+          </BasicHeaderButtons>
+        )
+      },
     });
   }, [navigation]);
 
