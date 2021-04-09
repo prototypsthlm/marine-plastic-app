@@ -160,15 +160,18 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <Row>
             <Title>Measurements / Items</Title>
+            { /*
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
             >
+               
               <Ionicons
                 size={30}
                 style={{ color: theme.color.palette.curiousBlue }}
                 name="ios-add-circle"
               />
             </ButtonWithIcon>
+            */ }
           </Row>
 
           {!(measurementsToAdd.length > 0) && (
