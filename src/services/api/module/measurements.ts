@@ -16,11 +16,11 @@ export const measurementsModule = {
       observationId: observationId === null ? "null" : observationId,
       cursor,
     };
+    console.log(params);
 
-    const response: HttpResponse<PagedResponse<Measurement>> = await baseApi.get(
-      measurementsPath,
-      params
-    );
+    const response: HttpResponse<
+      PagedResponse<Measurement>
+    > = await baseApi.get(measurementsPath, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
@@ -37,25 +37,25 @@ export const measurementsModule = {
       estimatedSizeM2: measurement.estimatedSizeM2,
       estimatedVolumeM3: measurement.estimatedVolumeM3,
       depthM: measurement.depthM,
-      isAbsence: measurement.isAbsence,
       isCollected: measurement.isCollected,
       comments: measurement.comments,
     };
-    const response: HttpResponse<SingleResponse<Measurement>> = await baseApi.post(
-      measurementPath,
-      params
-    );
+    const response: HttpResponse<
+      SingleResponse<Measurement>
+    > = await baseApi.post(measurementPath, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
-  async patchMeasurement(measurement: Measurement, fieldsToUpdate: EditMeasurementPayload) {
+  async patchMeasurement(
+    measurement: Measurement,
+    fieldsToUpdate: EditMeasurementPayload
+  ) {
     const params = {
       ...fieldsToUpdate,
     };
-    const response: HttpResponse<SingleResponse<Measurement>> = await baseApi.patch(
-      measurementPath + "/" + measurement.id,
-      params
-    );
+    const response: HttpResponse<
+      SingleResponse<Measurement>
+    > = await baseApi.patch(measurementPath + "/" + measurement.id, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },

@@ -12,7 +12,7 @@ export default function MapNavigator() {
       <Stack.Screen
         name="observationMapScreen"
         component={ObservationMapScreen}
-        options={{ headerTitle: "My observations map", headerRight: LogoutButton }}
+        options={{ headerTitle: "Observations map", headerRight: LogoutButton }}
       />
       <Stack.Screen
         name="observationDetailScreen"

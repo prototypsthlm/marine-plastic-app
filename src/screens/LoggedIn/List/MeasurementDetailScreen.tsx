@@ -13,7 +13,9 @@ import { Item } from "react-navigation-header-buttons";
 import { theme } from "../../../theme";
 import { deleteMeasurement } from "../../../store/slices/measurements";
 
-export default function MeasurementDetailScreen({ navigation }: NavigationProps) {
+export default function MeasurementDetailScreen({
+  navigation,
+}: NavigationProps) {
   const dispatch = useThunkDispatch();
 
   const measurementEntry = useSelector<RootState, Measurement | undefined>(
@@ -58,7 +60,6 @@ export default function MeasurementDetailScreen({ navigation }: NavigationProps)
     );
 
   const fields = [
-    { label: "Observer: ", value: "John Smith" },
     { label: "Comments: ", value: measurementEntry?.comments },
     { label: "Quantity: ", value: measurementEntry?.quantity },
     { label: "Quantity units: ", value: measurementEntry?.quantityUnits },
@@ -66,7 +67,10 @@ export default function MeasurementDetailScreen({ navigation }: NavigationProps)
       label: "Estimated Weight (Kg): ",
       value: measurementEntry?.estimatedWeightKg,
     },
-    { label: "Estimated Size (m2): ", value: measurementEntry?.estimatedSizeM2 },
+    {
+      label: "Estimated Size (m2): ",
+      value: measurementEntry?.estimatedSizeM2,
+    },
     {
       label: "Estimated Volume (m3): ",
       value: measurementEntry?.estimatedVolumeM3,

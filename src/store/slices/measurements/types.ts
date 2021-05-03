@@ -1,7 +1,7 @@
 import { LitterType } from "../../../models";
 
 export interface NewMeasurementPayload {
-  litterType: LitterType;
+  litterType?: LitterType;
   quantity?: number;
   quantityUnits?: string;
   estimatedWeightKg?: number;
