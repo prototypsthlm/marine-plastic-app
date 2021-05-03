@@ -23,8 +23,14 @@ import {
 import { theme } from "../../../theme";
 import { Item } from "react-navigation-header-buttons";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
-import { deleteObservation, fetchObservationCreator } from "../../../store/slices/observations";
-import { fetchMeasurements, selectMeasurement } from "../../../store/slices/measurements";
+import {
+  deleteObservation,
+  fetchObservationCreator,
+} from "../../../store/slices/observations";
+import {
+  fetchMeasurements,
+  selectMeasurement,
+} from "../../../store/slices/measurements";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -45,16 +51,14 @@ export default function ObservationDetailScreen({
 
   const observationUsers = useSelector<RootState, Array<User>>(
     (state) => state.observations.observationUsers
-  )
+  );
 
-  const observationCreator = observationUsers.find(x => x.id === observationEntry?.creatorId);
+  const observationCreator = observationUsers.find(
+    (x) => x.id === observationEntry?.creatorId
+  );
 
   const filteredMeasurementEntriesBySelectedObservation = measurementEntries.filter(
     (m) => m.observationId === observationEntry?.id
-  );
-
-  const litterTypes = useSelector<RootState, Array<LitterType>>(
-    (state) => state.measurements.litterTypes
   );
 
   const observationImages = useSelector<RootState, Array<ObservationImage>>(
@@ -65,19 +69,20 @@ export default function ObservationDetailScreen({
     (state) => state.ui.isOnline
   );
 
-  const getObserverName = (creatorId:string): string | undefined => {
-    if(creatorId !==user?.id) {
-      if(observationCreator)
-        return `${observationCreator.givenNames} ${observationCreator?.familyName}`
-      else
-        return ""
-    } 
-    return `${user?.givenNames} ${user?.familyName}`
-  }
+  const getObserverName = (creatorId: string): string | undefined => {
+    if (creatorId !== user?.id) {
+      if (observationCreator)
+        return `${observationCreator.givenNames} ${observationCreator?.familyName}`;
+      else return "";
+    }
+    return `${user?.givenNames} ${user?.familyName}`;
+  };
 
   useEffect(() => {
-    if(observationEntry && observationEntry.creatorId !==user?.id) { 
-      dispatch(fetchObservationCreator({ creatorId: observationEntry.creatorId }));   
+    if (observationEntry && observationEntry.creatorId !== user?.id) {
+      dispatch(
+        fetchObservationCreator({ creatorId: observationEntry.creatorId })
+      );
     }
     dispatch(fetchMeasurements({}));
   }, []);
@@ -85,8 +90,8 @@ export default function ObservationDetailScreen({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        
-        if(user && observationEntry && user.id !== observationEntry.creatorId) return null;
+        if (user && observationEntry && user.id !== observationEntry.creatorId)
+          return null;
 
         return (
           <BasicHeaderButtons>
@@ -101,7 +106,7 @@ export default function ObservationDetailScreen({
               onPress={() => deleteAlert()}
             />
           </BasicHeaderButtons>
-        )
+        );
       },
     });
   }, [navigation]);
@@ -124,29 +129,33 @@ export default function ObservationDetailScreen({
       { cancelable: false }
     );
 
-  const getFeatureTypeById = (id: string) =>
-    litterTypes.find((lt) => lt.id === id);
-
-  
   const getObservationImage = (observation: Observation) => {
     const onlineImage: ObservationImage | undefined =
-      isOnline && observation?.images && observation.images.length>0
+      isOnline && observation?.images && observation.images.length > 0
         ? observation?.images[0]
         : undefined;
     const image: ObservationImage | undefined =
-      onlineImage || observationImages.find((fi) => fi.observationId === observation?.id);
+      onlineImage ||
+      observationImages.find((fi) => fi.observationId === observation?.id);
     return image?.url || "";
   };
-
 
   const navigateToDetailScreen = (measurementEntry: Measurement) => {
     dispatch(selectMeasurement(measurementEntry));
     navigation.navigate("featureDetailScreen");
   };
 
-  const renderItem = ({ item }: { item: Measurement }) => (
+  const renderItem = ({
+    item,
+    index,
+  }: {
+    item: Measurement;
+    index: number;
+  }) => (
     <ListItem onPress={() => navigateToDetailScreen(item)}>
-      <Text>{getFeatureTypeById(item.litterTypeId)?.name}</Text>
+      <Text>
+        Measurement #{index + 1} {item.comments}
+      </Text>
     </ListItem>
   );
 
@@ -167,12 +176,16 @@ export default function ObservationDetailScreen({
             {observationEntry && (
               <Section>
                 <Text>
-                  <Text bold>Observer:</Text> {getObserverName(observationEntry.creatorId)}
+                  <Text bold>Observer:</Text>{" "}
+                  {getObserverName(observationEntry.creatorId)}
                 </Text>
-                { getObservationImage(observationEntry) !== "" && (
+                {getObservationImage(observationEntry) !== "" && (
                   <>
-                  <Text bold>Picture:</Text>
-                  <Image source={{ uri: getObservationImage(observationEntry) }} style={{ width: "100%", height: 200}} />
+                    <Text bold>Picture:</Text>
+                    <Image
+                      source={{ uri: getObservationImage(observationEntry) }}
+                      style={{ width: "100%", height: 200 }}
+                    />
                   </>
                 )}
                 <Text>
@@ -195,7 +208,7 @@ export default function ObservationDetailScreen({
                 ) : null}
               </Section>
             )}
-            { filteredMeasurementEntriesBySelectedObservation.length > 0 && (
+            {filteredMeasurementEntriesBySelectedObservation.length > 0 && (
               <SectionHeader style={{ marginTop: theme.spacing.large }}>
                 ADDED MEASUREMENTS / ITEMS
               </SectionHeader>
