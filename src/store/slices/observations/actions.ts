@@ -5,9 +5,7 @@ import {
   ObservationImage,
 } from "../../../models";
 import { Thunk } from "../../store";
-import {
-  setIsSyncing,
-} from '../ui';
+import { setIsSyncing } from "../ui";
 import {
   addEditedObservation,
   addFetchedObservations,
@@ -17,7 +15,7 @@ import {
   selectObservation,
   setFetchedObservations,
   setObservationCursor,
-  setRefreshing, 
+  setRefreshing,
   addFetchedObservationUser,
 } from "./slice";
 import { EditObservationPayload, NewObservationPayload } from "./types";
@@ -54,7 +52,9 @@ export const fetchObservations: Thunk<{ forceRefresh?: boolean }> = (
       const response = await api.getObservations(campaignId, nextPage);
 
       if (!response.ok || !response.data?.results)
-        throw new ActionError(`Couldn't get observations: ${response.problem} ${response.originalError.message}`);
+        throw new ActionError(
+          `Couldn't get observations: ${response.problem} ${response.originalError.message}`
+        );
 
       const observationsEntries: Array<Observation> = response.data.results;
       const cursor: string | null = response.data?.nextPage;
@@ -109,27 +109,31 @@ export const fetchCachedObservationImages: Thunk = () => async (
 ) => {
   try {
     const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
-      EntityType.ObservationImage,
+      EntityType.ObservationImage
     );
     dispatch(addFetchedObservationImages(observationImages));
   } catch (e) {
     console.log({ e });
   }
 };
-export const fetchObservationCreator: Thunk<{ creatorId: string }> = 
-  ({ creatorId }) => 
-  async (dispatch, getState, { api }) => {
+export const fetchObservationCreator: Thunk<{ creatorId: string }> = ({
+  creatorId,
+}) => async (dispatch, getState, { api }) => {
   try {
     const response = await api.getUser(creatorId);
     if (!response.ok || !response.data?.result) {
-      throw Error('failed to fetch observation creator');
+      throw Error("failed to fetch observation creator");
     } else {
-      if(!getState().observations.observationUsers.find(x => x.id===response.data?.result.id)) {
+      if (
+        !getState().observations.observationUsers.find(
+          (x) => x.id === response.data?.result.id
+        )
+      ) {
         dispatch(addFetchedObservationUser(response.data?.result));
       }
     }
-  } catch(e) {
-    console.log({e});
+  } catch (e) {
+    console.log({ e });
   }
 };
 export const submitNewObservation: Thunk<NewObservationPayload> = (
@@ -156,7 +160,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
           deletedAt: undefined,
 
           observationId: newObservationId,
-          litterTypeId: measurementPayload.litterType.id,
+          litterTypeId: measurementPayload.litterType?.id,
           quantity: measurementPayload.quantity,
           quantityUnits: measurementPayload.quantityUnits,
           estimatedWeightKg: measurementPayload.estimatedWeightKg,
@@ -180,15 +184,16 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
 
       imageUrl: newObservationPayload.imageUrl,
       images: newObservationPayload.imageUrl
-        ? [{
-            id: generateUUIDv4(),
-            creatorId: creatorId,
-            creatorApp: CreatorApps.DATA_COLLECTION_APP,
-            observationId: newObservationId,
-            url: newObservationPayload.imageUrl,
-          }]
-        : 
-        undefined,
+        ? [
+            {
+              id: generateUUIDv4(),
+              creatorId: creatorId,
+              creatorApp: CreatorApps.DATA_COLLECTION_APP,
+              observationId: newObservationId,
+              url: newObservationPayload.imageUrl,
+            },
+          ]
+        : undefined,
       campaignId: campaignId || null,
       geometry: newObservationPayload.geometry,
       timestamp: newObservationPayload.timestamp.toISOString(),
@@ -198,15 +203,17 @@ export const submitNewObservation: Thunk<NewObservationPayload> = (
       measurements: newMeasurements,
     };
 
-    const allObservationImages: Array<ObservationImage> = newObservation.images || [];
-    
+    const allObservationImages: Array<ObservationImage> =
+      newObservation.images || [];
+
     await processSubmitObservation(api, localDB, [newObservation]);
     await processSubmitObservationImages(api, localDB, allObservationImages);
     await processSubmitMeasurements(api, localDB, newMeasurements);
-    
+
     dispatch(addNewObservation(newObservation));
     dispatch(resetMeasurementsToAdd());
     dispatch(fetchCachedObservationImages());
+    dispatch(fetchObservations({}));
     navigation.navigate("observationListScreen");
   } catch (e) {
     console.log(e);
@@ -227,7 +234,9 @@ export const submitEditObservation: Thunk<EditObservationPayload> = (
 
   // 2. Upsert to localDB
   if (!response.ok || !response.data?.result) {
-    throw new ActionError(`Couldn't sync updated observation: ${response.problem} ${response.originalError.message}`);
+    throw new ActionError(
+      `Couldn't sync updated observation: ${response.problem} ${response.originalError.message}`
+    );
   } else {
     // Upsert if success
     const updatedObservation: Observation = {
@@ -254,7 +263,6 @@ export const clearOfflineEntries: Thunk = () => async (
   _,
   { localDB }
 ) => {
-
   try {
     const observations: Array<Observation> = await localDB.getEntities<Observation>(
       EntityType.Observation,
@@ -264,35 +272,32 @@ export const clearOfflineEntries: Thunk = () => async (
       EntityType.Measurement,
       false
     );
-    
+
     const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
       EntityType.ObservationImage,
       false
     );
 
     // collect all ids
-    const idsToDelete = [ 
-      ... observations.map(o => o.id), 
-      ... observationImages.map(om => om.id),
-      ...  measurements.map(m => m.id) 
+    const idsToDelete = [
+      ...observations.map((o) => o.id),
+      ...observationImages.map((om) => om.id),
+      ...measurements.map((m) => m.id),
     ];
 
     // delete collected ids
     if (idsToDelete.length > 0) await localDB.deleteEntities(idsToDelete);
-
-  } catch(e) {
+  } catch (e) {
     console.log(e);
   }
-}
+};
 
 export const syncOfflineEntries: Thunk = () => async (
   dispatch,
   getState,
   { api, localDB }
 ) => {
-
   if (!getState().ui.isSyncing) {
-
     dispatch(setIsSyncing(true));
 
     try {
@@ -304,7 +309,7 @@ export const syncOfflineEntries: Thunk = () => async (
         EntityType.Measurement,
         false
       );
-      
+
       const observationImages: Array<ObservationImage> = await localDB.getEntities<ObservationImage>(
         EntityType.ObservationImage,
         false
@@ -313,7 +318,6 @@ export const syncOfflineEntries: Thunk = () => async (
       await processSubmitObservation(api, localDB, observations);
       await processSubmitMeasurements(api, localDB, measurements);
       await processSubmitObservationImages(api, localDB, observationImages);
-      
     } catch (e) {
       console.log(e);
     }
@@ -343,14 +347,20 @@ export const processSubmitObservation = async (
 
       if (!response.ok || !response.data?.result) {
         // Store offline
-        if (response.problem === "cannot-connect" || response.problem === "timeout") {
+        if (
+          response.problem === "cannot-connect" ||
+          response.problem === "timeout"
+        ) {
           await localDB.upsertEntities(
             [observation],
             EntityType.Observation,
             false,
             observation.campaignId
           );
-        } else throw new ActionError(`Couldn't post/sync observation: ${response.problem} ${response.originalError.message}`);
+        } else
+          throw new ActionError(
+            `Couldn't post/sync observation: ${response.problem} ${response.originalError.message}`
+          );
       } else {
         // Upsert if success
         const syncedObservation: Observation = response.data?.result;
@@ -379,27 +389,33 @@ export const deleteObservation: Thunk = () => async (
   const response = await api.deleteObservation(currentObservation);
 
   if (!response.ok) {
-    throw new ActionError(`Couldn't delete observation: ${response.problem} ${response.originalError.message}`);
+    throw new ActionError(
+      `Couldn't delete observation: ${response.problem} ${response.originalError.message}`
+    );
   } else {
     // If success, delete from localDB
     const observationId: string = currentObservation.id;
     const observationMeasurements: Array<Measurement> = getState().measurements.measurementEntries.filter(
       (f) => f.observationId === observationId
     );
-    const measurementIds: Array<string> = observationMeasurements.map((m) => m.id);
-    
+    const measurementIds: Array<string> = observationMeasurements.map(
+      (m) => m.id
+    );
+
     const observationImages: Array<ObservationImage> = getState().observations.observationImages.filter(
       (fi) => fi.observationId === observationId
     );
-    const observationImageIds: Array<string> = observationImages.map((fi) => fi.id);
+    const observationImageIds: Array<string> = observationImages.map(
+      (fi) => fi.id
+    );
     const ids: Array<string> = [
-      observationId, 
-      ...measurementIds, 
-      ...observationImageIds
+      observationId,
+      ...measurementIds,
+      ...observationImageIds,
     ];
-    
+
     if (ids.length > 0) await localDB.deleteEntities(ids);
-    
+
     dispatch(fetchCachedObservations());
     navigation.goBack();
   }

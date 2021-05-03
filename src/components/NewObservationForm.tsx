@@ -1,7 +1,7 @@
 import React from "react";
 import { InputField } from "./InputField";
 import { Button, Switch } from "react-native";
-import {  Formik } from "formik";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../styled";
 import { RootState, useThunkDispatch } from "../store/store";
@@ -35,7 +35,7 @@ const InitialFormValues: InitialFormValuesShape = {
   comments: "",
   imageUri: undefined,
   location: undefined,
-  timestamp: new Date(Date.now())
+  timestamp: new Date(Date.now()),
 };
 
 const validation = Yup.object().shape({
@@ -55,9 +55,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.campaigns.selectedCampaignEntry
   );
 
-  const measurementsToAdd = useSelector<RootState, Array<NewMeasurementPayload>>(
-    (state) => state.measurements.measurementsToAdd
-  );
+  const measurementsToAdd = useSelector<
+    RootState,
+    Array<NewMeasurementPayload>
+  >((state) => state.measurements.measurementsToAdd);
 
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
@@ -80,12 +81,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       onSubmit={handleFormSubmit}
       validationSchema={validation}
     >
-      {({ 
-        handleBlur, 
-        handleChange, 
-        handleSubmit,
-        setFieldValue, 
-        values }) => (
+      {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
           <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
           <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
@@ -100,7 +96,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 : "Campaign-less observations"}
             </Text>
           </ListItem>
-          
+
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             PICTURE
           </SectionHeader>
@@ -125,15 +121,16 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {Boolean(values.imageUri) ? (
             <>
-            <SectionHeader style={{ marginTop: theme.spacing.large }}>
-              TIMESTAMP
-            </SectionHeader>
-            <TimestampPicker 
-              value={values.timestamp} 
-              onTimestampChange={(value => setFieldValue("timestamp", value))} 
-            />
-          </>): null}
-          
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>
+                TIMESTAMP
+              </SectionHeader>
+              <TimestampPicker
+                value={values.timestamp}
+                onTimestampChange={(value) => setFieldValue("timestamp", value)}
+              />
+            </>
+          ) : null}
+
           <FormSection>
             <InputField
               invertColors={false}
@@ -147,7 +144,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           </FormSection>
 
           <ListItemNonTouchable>
-            <Text>Is absent</Text>
+            <Text>No litter present in observation?</Text>
             <Switch
               trackColor={{
                 false: "#767577",
@@ -160,18 +157,15 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <Row>
             <Title>Measurements / Items</Title>
-            { /*
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
             >
-               
               <Ionicons
                 size={30}
                 style={{ color: theme.color.palette.curiousBlue }}
                 name="ios-add-circle"
               />
             </ButtonWithIcon>
-            */ }
           </Row>
 
           {!(measurementsToAdd.length > 0) && (
@@ -184,16 +178,16 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
-              <Text>{measurement.litterType.name}</Text>
+              <Text>
+                Measurement #{index + 1} {measurement.comments}
+              </Text>
             </ListItem>
           ))}
 
           <FormSection>
             <Button
               disabled={
-                !values.imageUri || 
-                !values.location || 
-                !values.timestamp
+                !values.imageUri || !values.location || !values.timestamp
               }
               title="Submit"
               onPress={handleSubmit as any}

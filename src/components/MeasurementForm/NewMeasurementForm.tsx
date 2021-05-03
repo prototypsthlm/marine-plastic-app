@@ -1,29 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { InputField, KBType } from "../InputField";
 import { Button, Switch } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../../styled";
-import { RootState, useThunkDispatch } from "../../store/store";
+import { useThunkDispatch } from "../../store/store";
 
-import { useSelector } from "react-redux";
-import { LitterType } from "../../models";
 import { LatLng } from "react-native-maps";
 import { NavigationProps } from "../../navigation/types";
 import {
-  selectLitterType,
-  resetLitterType,
   NewMeasurementPayload,
   addNewMeasurement,
 } from "../../store/slices/measurements";
 import { theme } from "../../theme";
-import {
-  SectionHeader,
-  ListItem,
-  FlexColumn,
-  FlexRow,
-  Text,
-} from "../elements";
+import { FlexRow, Text } from "../elements";
 
 interface InitialFormValuesShape {
   [key: string]: string | boolean | LatLng | undefined;
@@ -65,25 +55,8 @@ const validation = Yup.object().shape({
 const NewMeasurementForm = ({ navigation }: NavigationProps) => {
   const dispatch = useThunkDispatch();
 
-  const defaultLitterType = useSelector<RootState, LitterType | undefined>(
-    (state) => state.measurements.litterTypes.find((x) => x.tsgMlCode === "G999")
-  );
-
-  const selectedLitterType = useSelector<RootState, LitterType | undefined>(
-    (state) => state.measurements.selectedLitterType
-  );
-
-  useEffect(() => {
-    defaultLitterType
-      ? dispatch(selectLitterType(defaultLitterType))
-      : dispatch(resetLitterType());
-  }, []);
-
   const handleFormSubmit = (values: any, actions: any) => {
-    if (selectedLitterType === undefined) return;
     const newMeasurement: NewMeasurementPayload = {
-      litterType: selectedLitterType,
-
       quantity: Number(values.quantity?.replace(/,/, ".")),
       quantityUnits: values.quantityUnits,
       estimatedWeightKg: Number(values.estimatedWeightKg?.replace(/,/, ".")),
@@ -91,7 +64,6 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
       estimatedVolumeM3: Number(values.estimatedVolumeM3?.replace(/,/, ".")),
       depthM: Number(values.depthM?.replace(/,/, ".")),
       isCollected: values.isCollected,
-
       comments: values.comments,
     };
     dispatch(addNewMeasurement(newMeasurement));
@@ -134,56 +106,6 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
         touched,
       }) => (
         <>
-          <ListItem
-            onPress={() => navigation.navigate("featureTypePickerScreen")}
-          >
-            {selectedLitterType === undefined && (
-              <Text
-                style={{
-                  color: theme.color.palette.curiousBlue,
-                  paddingTop: theme.spacing.small,
-                  paddingBottom: theme.spacing.small,
-                }}
-              >
-                Select feature type...
-              </Text>
-            )}
-            {selectedLitterType !== undefined && (
-              <FlexColumn
-                style={{
-                  width: "100%",
-                  paddingTop: theme.spacing.small,
-                  paddingBottom: theme.spacing.small,
-                }}
-              >
-                <FlexRow>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      marginBottom: theme.spacing.small,
-                    }}
-                  >
-                    TYPE
-                  </Text>
-                  <Text
-                    style={{
-                      fontSize: 12,
-                      color: theme.color.palette.curiousBlue,
-                    }}
-                  >
-                    Change
-                  </Text>
-                </FlexRow>
-                <FlexRow>
-                  <Text bold>{selectedLitterType.tsgMlCode}</Text>
-                  <Text style={{ color: theme.color.palette.gray }}>
-                    {selectedLitterType.material}
-                  </Text>
-                </FlexRow>
-                <Text>{selectedLitterType.name}</Text>
-              </FlexColumn>
-            )}
-          </ListItem>
           <ListItemNonTouchable>
             <Text>Is collected</Text>
             <Switch
@@ -243,10 +165,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
             ))}
           </FormSection>
           <Button
-            disabled={
-              Boolean(touched.imageUri && errors.imageUri) ||
-              selectedLitterType === undefined
-            }
+            disabled={Boolean(touched.imageUri && errors.imageUri)}
             title="Add measurement to observation"
             onPress={handleSubmit as any}
           />

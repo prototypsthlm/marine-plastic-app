@@ -14,17 +14,20 @@ export default function AddNavigator() {
       <Stack.Screen
         name="newObservationScreen"
         component={NewObservationScreen}
-        options={{ headerTitle: "Submit observation", headerRight: LogoutButton}}
+        options={{
+          headerTitle: "Submit observation",
+          headerRight: LogoutButton,
+        }}
       />
       <Stack.Screen
         name="newFeatureScreen"
         component={NewFeatureScreen}
-        options={{ headerTitle: "Add feature to observation" }}
+        options={{ headerTitle: "Add measurement to observation" }}
       />
       <Stack.Screen
         name="featureTypePickerScreen"
         component={LitterTypePickerScreen}
-        options={{ headerTitle: "Feature Type Picker" }}
+        options={{ headerTitle: "Litter Type Picker" }}
       />
       <Stack.Screen
         name="changeCampaignScreen"

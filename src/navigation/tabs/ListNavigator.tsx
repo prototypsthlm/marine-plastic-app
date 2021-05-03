@@ -18,7 +18,10 @@ export default function ListNavigator() {
       <Stack.Screen
         name="observationListScreen"
         component={ObservationListScreen}
-        options={{ headerTitle: "My observations list", headerRight: LogoutButton }}
+        options={{
+          headerTitle: "All campaign observations",
+          headerRight: LogoutButton,
+        }}
       />
       <Stack.Screen
         name="observationDetailScreen"
@@ -33,17 +36,17 @@ export default function ListNavigator() {
       <Stack.Screen
         name="featureDetailScreen"
         component={MeasurementDetailScreen}
-        options={{ headerTitle: "Feature details" }}
+        options={{ headerTitle: "Measurement details" }}
       />
       <Stack.Screen
         name="featureEditScreen"
         component={MeasurementEditScreen}
-        options={{ headerTitle: "Edit Feature" }}
+        options={{ headerTitle: "Edit Measurement" }}
       />
       <Stack.Screen
         name="featureTypePickerScreen"
         component={LitterTypePickerScreen}
-        options={{ headerTitle: "Feature Type Picker" }}
+        options={{ headerTitle: "Litter Type Picker" }}
       />
       <Stack.Screen
         name="campaignPickerScreen"

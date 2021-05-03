@@ -53,7 +53,7 @@ export interface Observation extends BaseEntity {
 
 export interface Measurement extends BaseEntity {
   observationId: string;
-  litterTypeId: string;
+  litterTypeId?: string;
 
   quantity?: number;
   quantityUnits?: string;
