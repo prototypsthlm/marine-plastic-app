@@ -1,25 +1,23 @@
-import React from "react";
-import { InputField } from "./InputField";
-import { Button, Switch } from "react-native";
-import { Formik } from "formik";
-import * as Yup from "yup";
-import styled from "../styled";
-import { RootState, useThunkDispatch } from "../store/store";
-import {
-  NewObservationPayload,
-  submitNewObservation,
-} from "../store/slices/observations";
-import { NewMeasurementPayload } from "../store/slices/measurements";
-import { Campaign } from "../models";
-import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
+import { Formik } from "formik";
+import React, { useState } from "react";
+import { Button, Switch } from "react-native";
+import { LatLng } from "react-native-maps";
+import { useSelector } from "react-redux";
+import * as Yup from "yup";
+import { Campaign } from "../models";
 import { NavigationProps } from "../navigation/types";
-import { ListItem, SectionHeader, Text } from "./elements";
+import { NewMeasurementPayload } from "../store/slices/measurements";
+import { NewObservationPayload, submitNewObservation, } from "../store/slices/observations";
+import { RootState, useThunkDispatch } from "../store/store";
+import styled from "../styled";
 import { theme } from "../theme";
 import { getGeometryFromLocation } from "../utils/geoUtils";
-import PictureSection from "./MeasurementForm/PictureSection";
+import VerticalSegmentedControl from "./controls/VerticalSegmentedControl";
+import { ListItem, SectionHeader, Text } from "./elements";
+import { InputField } from "./InputField";
 import MapItem from "./MeasurementForm/MapItem";
-import { LatLng } from "react-native-maps";
+import PictureSection from "./MeasurementForm/PictureSection";
 import TimestampPicker from "./MeasurementForm/TimestampPicker";
 
 interface InitialFormValuesShape {
@@ -74,6 +72,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     dispatch(submitNewObservation(newObservation));
     actions.resetForm(InitialFormValues);
   };
+
+  const [selectedItemIndex, setSelectedItemIndex] = useState<number>();
 
   return (
     <Formik
@@ -130,6 +130,12 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               />
             </>
           ) : null}
+
+          <VerticalSegmentedControl
+            items={["No litter present", "Single litter item", "Small group", "Patch", "Filament"]}
+            selectedItemIndex={selectedItemIndex}
+            onChange={setSelectedItemIndex}
+          />
 
           <FormSection>
             <InputField
