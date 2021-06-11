@@ -19,6 +19,7 @@ import { InputField } from "./InputField";
 import MapItem from "./MeasurementForm/MapItem";
 import PictureSection from "./MeasurementForm/PictureSection";
 import TimestampPicker from "./MeasurementForm/TimestampPicker";
+import { SingleItem } from "./MeasurementForm/inspection-types/SingleItem";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -53,10 +54,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.campaigns.selectedCampaignEntry
   );
 
-  const measurementsToAdd = useSelector<
-    RootState,
-    Array<NewMeasurementPayload>
-  >((state) => state.measurements.measurementsToAdd);
+  const measurementsToAdd = useSelector<RootState,
+    Array<NewMeasurementPayload>>((state) => state.measurements.measurementsToAdd);
 
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
@@ -73,7 +72,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     actions.resetForm(InitialFormValues);
   };
 
-  const [selectedItemIndex, setSelectedItemIndex] = useState<number>();
+  const visualInspectionTypes = ["No litter present", "Single litter item", "Small group", "Patch", "Filament"];
+  const [visualInspectionType, setVisualInspectionTypeIndex] = useState<number>();
 
   return (
     <Formik
@@ -131,13 +131,22 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             </>
           ) : null}
 
-          <VerticalSegmentedControl
-            items={["No litter present", "Single litter item", "Small group", "Patch", "Filament"]}
-            selectedItemIndex={selectedItemIndex}
-            onChange={setSelectedItemIndex}
-          />
+          <VisualInspectionView>
+            <SectionHeader style={{ marginTop: 0, marginRight: 0, marginLeft: 0, marginBottom: 0 }}>
+              VISUAL INSPECTION
+            </SectionHeader>
 
-          <FormSection>
+            <VerticalSegmentedControl
+              style={{ marginTop: theme.spacing.small }}
+              items={visualInspectionTypes}
+              selectedItemIndex={visualInspectionType}
+              onChange={setVisualInspectionTypeIndex}
+            />
+          </VisualInspectionView>
+
+          <SingleItem values={values} setFieldValue={setFieldValue} />
+
+          <FormSection style={{ marginTop: theme.spacing.xxlarge }}>
             <InputField
               invertColors={false}
               label="Observation Comment"
@@ -204,6 +213,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     </Formik>
   );
 };
+
+const VisualInspectionView = styled.View`
+  margin-top: ${(props) => props.theme.spacing.xlarge}px;
+  paddingHorizontal: ${(props) => props.theme.spacing.small}px;
+`;
 
 const FormSection = styled.View`
   justify-content: center;

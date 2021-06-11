@@ -2,27 +2,26 @@ import React from "react";
 import styled from "../../styled";
 
 interface VerticalSegmentedControlProps {
+  style?: any;
   items?: Array<string>;
   selectedItemIndex?: number;
   onChange?: (selectedItemIndex: number) => void;
 }
 
-const VerticalSegmentedControl = ({ items, onChange, selectedItemIndex }: VerticalSegmentedControlProps) => {
-  return (
-    <StyledControlContainer>
-      {items && items.map((item, i) =>
-        <VerticalSegmentedControlButton
-          key={i}
-          onPress={() => onChange && onChange(i)}
-          isSelected={i === selectedItemIndex}
-          isLast={i === items.length - 1}
-        >
-          {item}
-        </VerticalSegmentedControlButton>
-      )}
-    </StyledControlContainer>
-  );
-};
+const VerticalSegmentedControl = ({ style, items, selectedItemIndex, onChange }: VerticalSegmentedControlProps) => (
+  <StyledControlContainer style={style}>
+    {items && items.map((item, i) =>
+      <VerticalSegmentedControlButton
+        key={i}
+        onPress={() => onChange && onChange(i)}
+        isSelected={i === selectedItemIndex}
+        isLast={i === items.length - 1}
+      >
+        {item}
+      </VerticalSegmentedControlButton>
+    )}
+  </StyledControlContainer>
+);
 
 interface ButtonProps {
   children: any;
@@ -49,10 +48,7 @@ const StyledButton = ({ onPress, children, style }: any) => (
   </StyledButtonContainer>
 );
 
-const StyledControlContainer = styled.View`
-  padding: 5px;
-  borderRadius: 5px;
-`;
+const StyledControlContainer = styled.View``;
 
 const StyledButtonContainer = styled.TouchableOpacity`
   backgroundColor: #e3e3e4;

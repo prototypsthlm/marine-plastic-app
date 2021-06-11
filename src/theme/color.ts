@@ -7,6 +7,7 @@ export const palette = {
   gray: "#585F65",
   curiousBlue: "#2f95dc",
   red: "#ff5050",
+  softGrey: "#e3e3e4"
 };
 
 export const shadow = {
