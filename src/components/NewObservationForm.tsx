@@ -20,6 +20,7 @@ import MapItem from "./MeasurementForm/MapItem";
 import PictureSection from "./MeasurementForm/PictureSection";
 import TimestampPicker from "./MeasurementForm/TimestampPicker";
 import { SingleItem } from "./MeasurementForm/inspection-types/SingleItem";
+import { Patch } from "./MeasurementForm/inspection-types/Patch";
 
 interface InitialFormValuesShape {
   comments: string;
@@ -145,6 +146,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           </VisualInspectionView>
 
           <SingleItem values={values} setFieldValue={setFieldValue} />
+          <Patch values={values} setFieldValue={setFieldValue} />
 
           <FormSection style={{ marginTop: theme.spacing.xxlarge }}>
             <InputField

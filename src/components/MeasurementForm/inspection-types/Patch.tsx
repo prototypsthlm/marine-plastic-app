@@ -9,7 +9,7 @@ interface Props {
   setFieldValue: any
 }
 
-export const SingleItem = ({ style, values, setFieldValue }: Props) =>
+export const Patch = ({ style, values, setFieldValue }: Props) =>
   <View style={{
     marginTop: theme.spacing.large,
     padding: theme.spacing.medium,
@@ -22,34 +22,19 @@ export const SingleItem = ({ style, values, setFieldValue }: Props) =>
       justifyContent: "space-between",
       alignItems: "flex-end"
     }}>
-      <Text>Estimated area above surface</Text>
+      <Text>Estimated (patch) area</Text>
       <TextInput
         style={{
           backgroundColor: theme.color.palette.softGrey,
           padding: 5,
           textAlign: "right",
-          width: 50
+          width: 50,
+          marginLeft: "auto",
+          marginRight: 10
         }}
         onChangeText={(value) => setFieldValue("area", value)}
         defaultValue={values.area}
       />
       <Text>m2</Text>
-    </View>
-    <View style={{
-      marginTop: theme.spacing.medium,
-      flex: 1,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "flex-end"
-    }}>
-      <Text>Controller/experimental target</Text>
-      <Switch
-        trackColor={{
-          false: theme.color.palette.softGrey,
-          true: theme.color.palette.curiousBlue,
-        }}
-        onValueChange={(value) => setFieldValue("someValue", value)}
-        value={values.someValue}
-      />
     </View>
   </View>;
