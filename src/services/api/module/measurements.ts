@@ -18,9 +18,8 @@ export const measurementsModule = {
     };
     console.log(params);
 
-    const response: HttpResponse<
-      PagedResponse<Measurement>
-    > = await baseApi.get(measurementsPath, params);
+    const response: HttpResponse<PagedResponse<Measurement>> =
+      await baseApi.get(measurementsPath, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
@@ -31,18 +30,18 @@ export const measurementsModule = {
       creatorId: measurement.creatorId,
       observationId: measurement.observationId,
       litterTypeId: measurement.litterTypeId,
-      quantity: measurement.quantity,
-      quantityUnits: measurement.quantityUnits,
-      estimatedWeightKg: measurement.estimatedWeightKg,
-      estimatedSizeM2: measurement.estimatedSizeM2,
-      estimatedVolumeM3: measurement.estimatedVolumeM3,
-      depthM: measurement.depthM,
+      quantityKg: measurement.quantityKg,
+      quantityItemsPerM2: measurement.quantityItemsPerM2,
+      quantityItemsPerM3: measurement.quantityItemsPerM3,
+      quantityPercentOfSurface: measurement.quantityPercentOfSurface,
+      quantityPercentOfWeight: measurement.quantityPercentOfWeight,
+      quantityGramPerLiter: measurement.quantityGramPerLiter,
+      isApproximate: measurement.isApproximate,
       isCollected: measurement.isCollected,
       comments: measurement.comments,
     };
-    const response: HttpResponse<
-      SingleResponse<Measurement>
-    > = await baseApi.post(measurementPath, params);
+    const response: HttpResponse<SingleResponse<Measurement>> =
+      await baseApi.post(measurementPath, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
@@ -53,9 +52,8 @@ export const measurementsModule = {
     const params = {
       ...fieldsToUpdate,
     };
-    const response: HttpResponse<
-      SingleResponse<Measurement>
-    > = await baseApi.patch(measurementPath + "/" + measurement.id, params);
+    const response: HttpResponse<SingleResponse<Measurement>> =
+      await baseApi.patch(measurementPath + "/" + measurement.id, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
@@ -87,14 +85,13 @@ export const measurementsModule = {
       type: "image/" + fileExt === "jpg" ? "jpeg" : fileExt,
     });
 
-    const response: HttpResponse<
-      SingleResponse<ObservationImage>
-    > = await baseApi.post(observationImagePath, form, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const response: HttpResponse<SingleResponse<ObservationImage>> =
+      await baseApi.post(observationImagePath, form, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
     if (!response.ok) return createGenericProblem(response);
     return response;
   },

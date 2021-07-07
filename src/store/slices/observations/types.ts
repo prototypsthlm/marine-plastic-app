@@ -1,4 +1,4 @@
-import { Geometry } from "../../../models";
+import { Geometry, ClassVisualInspection } from "../../../models";
 import { NewMeasurementPayload } from "../measurements";
 
 export interface NewObservationPayload {
@@ -6,10 +6,15 @@ export interface NewObservationPayload {
   timestamp: Date;
   geometry: Geometry;
   measurements: Array<NewMeasurementPayload>;
-  isAbsence: boolean;
   imageUrl?: string;
   imageGPSLatitude?: number;
   imageGPSLongitude?: number;
+  class?: ClassVisualInspection;
+  estimatedAreaAboveSurfaceM2?: number;
+  estimatedPatchAreaM2?: number;
+  estimatedFilamentLengthM?: number;
+  isControlled: boolean;
+  isAbsence: boolean;
 }
 
 export interface EditObservationPayload {
