@@ -61,14 +61,14 @@ export const observationsSlice = createSlice({
 
     // Entries
     addNewObservation: (state, { payload }: PayloadAction<Observation>) => {
-      state.observationEntries = [...state.observationEntries, payload];
+      state.observationEntries = [payload, ...state.observationEntries];
     },
     addEditedObservation: (state, { payload }: PayloadAction<Observation>) => {
       state.observationEntries = [
+        payload,
         ...state.observationEntries.filter(
           (observation) => observation.id !== payload.id
         ),
-        payload,
       ];
     },
     addFetchedObservations: (
@@ -82,11 +82,8 @@ export const observationsSlice = createSlice({
         state.observationEntries = [...state.observationEntries, ...payload];
       }
     },
-    addFetchedObservationUser: (
-      state, 
-      { payload }: PayloadAction<User>
-    ) => {
-      state.observationUsers = [ ...state.observationUsers, payload];
+    addFetchedObservationUser: (state, { payload }: PayloadAction<User>) => {
+      state.observationUsers = [...state.observationUsers, payload];
     },
     addFetchedObservationImages: (
       state,
