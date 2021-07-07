@@ -125,6 +125,19 @@ export const VisualInspectionDropdownField = ({
     >
       <Text>{label}</Text>
       <RNPickerSelect
+        style={{
+          inputAndroid: {
+            fontSize: 16,
+            paddingHorizontal: 10,
+            paddingVertical: 8,
+            borderWidth: 0.5,
+            borderColor: "purple",
+            borderRadius: 8,
+            color: "black",
+            paddingRight: 30, // to ensure the text is never behind the icon
+          },
+        }}
+        useNativeAndroidPickerStyle={false}
         onValueChange={(value: { label: string; value: string }) =>
           setValue(value)
         }
