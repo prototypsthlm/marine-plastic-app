@@ -27,12 +27,14 @@ import {
   VisualInspectionSwitchField,
 } from "./MeasurementForm/VisualInspectionFields";
 import { getUnitsLabel } from "./MeasurementForm/utils";
+import { string } from "yup";
 
 interface InitialFormValuesShape {
   comments?: string;
   estimatedAreaAboveSurfaceM2?: string;
   estimatedPatchAreaM2?: string;
   estimatedFilamentLengthM?: string;
+  depthM?: string;
   isControlled: boolean;
   imageUri?: string;
   location?: LatLng;
@@ -57,6 +59,7 @@ const validation = Yup.object().shape({
   estimatedAreaAboveSurfaceM2: numberValidation(),
   estimatedPatchAreaM2: numberValidation(),
   estimatedFilamentLengthM: numberValidation(),
+  depthM: numberValidation(),
   isControlled: Yup.boolean().required(),
   imageUri: Yup.string().required(),
   location: Yup.object({
@@ -98,6 +101,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       estimatedFilamentLengthM:
         visualInspectionType == ClassVisualInspectionEnum.FILAMENT
           ? Number(values.estimatedFilamentLengthM?.replace(/,/, "."))
+          : undefined,
+      depthM:
+        visualInspectionType &&
+        visualInspectionType != ClassVisualInspectionEnum.NO_LITTER_PRESENT
+          ? Number(values.depthM?.replace(/,/, "."))
           : undefined,
       isControlled:
         visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM &&
@@ -208,6 +216,16 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           <FormSection
             style={{ marginTop: theme.spacing.small, paddingHorizontal: 0 }}
           >
+            {visualInspectionType &&
+              visualInspectionType !=
+                ClassVisualInspectionEnum.NO_LITTER_PRESENT && (
+                <VisualInspectionInputField
+                  label="Depth"
+                  unit="m"
+                  value={values.depthM as string}
+                  onChange={(value) => setFieldValue("depthM", value)}
+                />
+              )}
             {visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM && (
               <>
                 <VisualInspectionInputField
