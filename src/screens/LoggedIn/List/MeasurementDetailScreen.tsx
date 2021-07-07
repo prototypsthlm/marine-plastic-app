@@ -12,6 +12,11 @@ import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
 import { theme } from "../../../theme";
 import { deleteMeasurement } from "../../../store/slices/measurements";
+import {
+  getQuantityFromMeasurement,
+  getUnitsLabel,
+  getUnitValueFromMeasurement,
+} from "../../../components/MeasurementForm/utils";
 
 export default function MeasurementDetailScreen({
   navigation,
@@ -60,25 +65,23 @@ export default function MeasurementDetailScreen({
     );
 
   const fields = [
-    { label: "Comments: ", value: measurementEntry?.comments },
-    { label: "Quantity: ", value: measurementEntry?.quantity },
-    { label: "Quantity units: ", value: measurementEntry?.quantityUnits },
     {
-      label: "Estimated Weight (Kg): ",
-      value: measurementEntry?.estimatedWeightKg,
+      label: "Quantity: ",
+      value: measurementEntry && getQuantityFromMeasurement(measurementEntry),
     },
     {
-      label: "Estimated Size (m2): ",
-      value: measurementEntry?.estimatedSizeM2,
+      label: "Units: ",
+      value:
+        measurementEntry &&
+        getUnitsLabel(getUnitValueFromMeasurement(measurementEntry)),
     },
-    {
-      label: "Estimated Volume (m3): ",
-      value: measurementEntry?.estimatedVolumeM3,
-    },
-    { label: "Depth (m): ", value: measurementEntry?.depthM },
     {
       label: "Is Collected: ",
       value: measurementEntry?.isCollected ? "Yes" : "No",
+    },
+    {
+      label: "Is Approximate: ",
+      value: measurementEntry?.isApproximate ? "Yes" : "No",
     },
   ];
 

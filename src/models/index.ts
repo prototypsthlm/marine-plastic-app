@@ -38,32 +38,56 @@ export interface Geometry {
   coordinates: number[] | number[][] | number[][][];
 }
 
+export enum ClassVisualInspectionEnum {
+  NO_LITTER_PRESENT = "NO_LITTER_PRESENT",
+  SINGLE_ITEM = "SINGLE_ITEM",
+  SMALL_GROUP = "SMALL_GROUP",
+  PATCH = "PATCH",
+  FILAMENT = "FILAMENT",
+}
+
+export type ClassVisualInspection = string;
+
 export interface Observation extends BaseEntity {
   campaignId: string | null;
   geometry: Geometry;
   timestamp: string;
+  class?: ClassVisualInspection;
+  estimatedAreaAboveSurfaceM2?: number;
+  estimatedPatchAreaM2?: number;
+  estimatedFilamentLengthM?: number;
+  depthM?: number;
   comments?: string;
-  imageUrl?: string;
-  images?: ObservationImage[];
-  extra?: any;
-  isMatched: boolean;
-  isAbsence: boolean;
   measurements: Array<Measurement>;
+  isControlled: boolean;
+  isAbsence: boolean;
+  imageUrl?: string; // TODO: is this used?
+  images?: ObservationImage[];
+  extra?: any; // TODO: is this used?
 }
 
 export interface Measurement extends BaseEntity {
   observationId: string;
   litterTypeId?: string;
-
-  quantity?: number;
-  quantityUnits?: string;
-  estimatedWeightKg?: number;
-  estimatedSizeM2?: number;
-  estimatedVolumeM3?: number;
-  depthM?: number;
+  quantityKg?: number;
+  quantityItemsPerM2?: number;
+  quantityItemsPerM3?: number;
+  quantityPercentOfSurface?: number;
+  quantityPercentOfWeight?: number;
+  quantityGramPerLiter?: number;
+  isApproximate: boolean;
   isCollected: boolean;
-
   comments?: string;
+  extra?: any; // TODO: is this used?
+}
+
+export enum UnitEnum {
+  KG = "KG",
+  ITEMS_PER_M2 = "ITEMS_PER_M2",
+  ITEMS_PER_M3 = "ITEMS_PER_M3",
+  PERCENT_OF_SURFACE = "PERCENT_OF_SURFACE",
+  PERCENT_OF_WEIGHT = "PERCENT_OF_WEIGHT",
+  GRAM_PER_LITER = "GRAM_PER_LITER",
 }
 
 export interface ObservationImage extends BaseEntity {
