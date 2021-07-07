@@ -5,10 +5,13 @@ import { Button, Switch } from "react-native";
 import { LatLng } from "react-native-maps";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
-import { Campaign } from "../models";
+import { Campaign, ClassVisualInspectionEnum } from "../models";
 import { NavigationProps } from "../navigation/types";
 import { NewMeasurementPayload } from "../store/slices/measurements";
-import { NewObservationPayload, submitNewObservation, } from "../store/slices/observations";
+import {
+  NewObservationPayload,
+  submitNewObservation,
+} from "../store/slices/observations";
 import { RootState, useThunkDispatch } from "../store/store";
 import styled from "../styled";
 import { theme } from "../theme";
@@ -19,28 +22,42 @@ import { InputField } from "./InputField";
 import MapItem from "./MeasurementForm/MapItem";
 import PictureSection from "./MeasurementForm/PictureSection";
 import TimestampPicker from "./MeasurementForm/TimestampPicker";
-import { SingleItem } from "./MeasurementForm/inspection-types/SingleItem";
-import { Patch } from "./MeasurementForm/inspection-types/Patch";
+import {
+  VisualInspectionInputField,
+  VisualInspectionSwitchField,
+} from "./MeasurementForm/VisualInspectionFields";
+import { getUnitsLabel } from "./MeasurementForm/utils";
 
 interface InitialFormValuesShape {
-  comments: string;
-  isAbsence: boolean;
+  comments?: string;
+  estimatedAreaAboveSurfaceM2?: string;
+  estimatedPatchAreaM2?: string;
+  estimatedFilamentLengthM?: string;
+  isControlled: boolean;
   imageUri?: string;
   location?: LatLng;
   timestamp?: Date;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
-  isAbsence: false,
-  comments: "",
-  imageUri: undefined,
-  location: undefined,
+  isControlled: false,
   timestamp: new Date(Date.now()),
 };
 
+const numberValidation = () =>
+  Yup.number()
+    .transform((_, value) => {
+      return +value.replace(/,/, ".");
+    })
+    .typeError("Input a number")
+    .positive("Input a positive number");
+
 const validation = Yup.object().shape({
   comments: Yup.string(),
-  isAbsence: Yup.boolean().required(),
+  estimatedAreaAboveSurfaceM2: numberValidation(),
+  estimatedPatchAreaM2: numberValidation(),
+  estimatedFilamentLengthM: numberValidation(),
+  isControlled: Yup.boolean().required(),
   imageUri: Yup.string().required(),
   location: Yup.object({
     latitude: Yup.number().required(),
@@ -55,8 +72,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.campaigns.selectedCampaignEntry
   );
 
-  const measurementsToAdd = useSelector<RootState,
-    Array<NewMeasurementPayload>>((state) => state.measurements.measurementsToAdd);
+  const measurementsToAdd = useSelector<
+    RootState,
+    Array<NewMeasurementPayload>
+  >((state) => state.measurements.measurementsToAdd);
 
   const handleFormSubmit = (values: any, actions: any) => {
     const newObservation: NewObservationPayload = {
@@ -64,17 +83,55 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       timestamp: values.timestamp,
       geometry: getGeometryFromLocation(values.location),
       measurements: measurementsToAdd,
-      isAbsence: values.isAbsence,
+      class:
+        visualInspectionType == ClassVisualInspectionEnum.NO_LITTER_PRESENT
+          ? undefined
+          : visualInspectionType,
+      estimatedAreaAboveSurfaceM2:
+        visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM
+          ? Number(values.estimatedAreaAboveSurfaceM2?.replace(/,/, "."))
+          : undefined,
+      estimatedPatchAreaM2:
+        visualInspectionType == ClassVisualInspectionEnum.PATCH
+          ? Number(values.estimatedPatchAreaM2?.replace(/,/, "."))
+          : undefined,
+      estimatedFilamentLengthM:
+        visualInspectionType == ClassVisualInspectionEnum.FILAMENT
+          ? Number(values.estimatedFilamentLengthM?.replace(/,/, "."))
+          : undefined,
+      isControlled:
+        visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM &&
+        values.isControlled,
+      isAbsence:
+        visualInspectionType == ClassVisualInspectionEnum.NO_LITTER_PRESENT,
       imageUrl: values.imageUri,
       imageGPSLatitude: values.location.latitude,
       imageGPSLongitude: values.location.longitude,
     };
     dispatch(submitNewObservation(newObservation));
     actions.resetForm(InitialFormValues);
+    setVisualInspectionType(undefined);
   };
 
-  const visualInspectionTypes = ["No litter present", "Single litter item", "Small group", "Patch", "Filament"];
-  const [visualInspectionType, setVisualInspectionTypeIndex] = useState<number>();
+  const visualInspectionTypes: Array<{
+    label: string;
+    value: string | undefined;
+  }> = [
+    {
+      label: "No litter present",
+      value: ClassVisualInspectionEnum.NO_LITTER_PRESENT,
+    },
+    {
+      label: "Single litter item",
+      value: ClassVisualInspectionEnum.SINGLE_ITEM,
+    },
+    { label: "Small group", value: ClassVisualInspectionEnum.SMALL_GROUP },
+    { label: "Patch", value: ClassVisualInspectionEnum.PATCH },
+    { label: "Filament", value: ClassVisualInspectionEnum.FILAMENT },
+  ];
+  const [visualInspectionType, setVisualInspectionType] = useState<
+    string | undefined
+  >();
 
   return (
     <Formik
@@ -132,45 +189,63 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             </>
           ) : null}
 
-          <VisualInspectionView>
-            <SectionHeader style={{ marginTop: 0, marginRight: 0, marginLeft: 0, marginBottom: 0 }}>
-              VISUAL INSPECTION
-            </SectionHeader>
-
+          <SectionHeader style={{ marginTop: theme.spacing.large }}>
+            VISUAL INSPECTION
+          </SectionHeader>
+          <VisualInspectionView style={{ marginTop: 0 }}>
             <VerticalSegmentedControl
               style={{ marginTop: theme.spacing.small }}
               items={visualInspectionTypes}
-              selectedItemIndex={visualInspectionType}
-              onChange={setVisualInspectionTypeIndex}
+              selectedItem={visualInspectionType}
+              onChange={(value) =>
+                setVisualInspectionType(
+                  value == visualInspectionType ? undefined : value
+                )
+              }
             />
           </VisualInspectionView>
 
-          <SingleItem values={values} setFieldValue={setFieldValue} />
-          <Patch values={values} setFieldValue={setFieldValue} />
-
-          <FormSection style={{ marginTop: theme.spacing.xxlarge }}>
-            <InputField
-              invertColors={false}
-              label="Observation Comment"
-              preset="default"
-              stylePreset="rounded"
-              onChangeText={handleChange("comments")}
-              onBlur={handleBlur("comments")}
-              value={values.comments}
-            />
+          <FormSection
+            style={{ marginTop: theme.spacing.small, paddingHorizontal: 0 }}
+          >
+            {visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM && (
+              <>
+                <VisualInspectionInputField
+                  label="Estimated area above surface"
+                  unit="m2"
+                  value={values.estimatedAreaAboveSurfaceM2 as string}
+                  onChange={(value) =>
+                    setFieldValue("estimatedAreaAboveSurfaceM2", value)
+                  }
+                />
+                <VisualInspectionSwitchField
+                  label="Controller/experimental target"
+                  value={values.isControlled}
+                  onChange={(value) => setFieldValue("isControlled", value)}
+                />
+              </>
+            )}
+            {visualInspectionType == ClassVisualInspectionEnum.PATCH && (
+              <VisualInspectionInputField
+                label="Estimated (patch) area"
+                unit="m2"
+                value={values.estimatedPatchAreaM2 as string}
+                onChange={(value) =>
+                  setFieldValue("estimatedPatchAreaM2", value)
+                }
+              />
+            )}
+            {visualInspectionType == ClassVisualInspectionEnum.FILAMENT && (
+              <VisualInspectionInputField
+                label="Estimated (filament) length"
+                unit="m"
+                value={values.estimatedFilamentLengthM as string}
+                onChange={(value) =>
+                  setFieldValue("estimatedFilamentLengthM", value)
+                }
+              />
+            )}
           </FormSection>
-
-          <ListItemNonTouchable>
-            <Text>No litter present in observation?</Text>
-            <Switch
-              trackColor={{
-                false: "#767577",
-                true: theme.color.palette.curiousBlue,
-              }}
-              onValueChange={(value) => setFieldValue("isAbsence", value)}
-              value={values.isAbsence}
-            />
-          </ListItemNonTouchable>
 
           <Row>
             <Title>Measurements / Items</Title>
@@ -196,17 +271,33 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
               <Text>
-                Measurement #{index + 1} {measurement.comments}
+                {measurement.quantity} {getUnitsLabel(measurement.unit || "")}
               </Text>
             </ListItem>
           ))}
 
-          <FormSection>
+          <FormSection
+            style={{
+              marginTop: theme.spacing.xxlarge,
+              backgroundColor: theme.color.background,
+            }}
+          >
+            <InputField
+              invertColors={false}
+              label="Observation Comments"
+              preset="default"
+              onChangeText={handleChange("comments")}
+              onBlur={handleBlur("comments")}
+              value={values.comments}
+            />
+          </FormSection>
+
+          <FormSection style={{ marginBottom: theme.spacing.xxlarge }}>
             <Button
               disabled={
                 !values.imageUri || !values.location || !values.timestamp
               }
-              title="Submit"
+              title="Save"
               onPress={handleSubmit as any}
             />
           </FormSection>
@@ -218,7 +309,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
 const VisualInspectionView = styled.View`
   margin-top: ${(props) => props.theme.spacing.xlarge}px;
-  paddingHorizontal: ${(props) => props.theme.spacing.small}px;
+  padding-horizontal: ${(props) => props.theme.spacing.small}px;
 `;
 
 const FormSection = styled.View`

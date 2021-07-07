@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Screen } from "../../../components/Screen";
-import EditFeatureForm from "../../../components/EditMeasurementForm";
+import EditFeatureForm from "../../../components/MeasurementForm/EditMeasurementForm";
 import { NavigationProps } from "../../../navigation/types";
 
 export default function MeasurementEditScreen({ navigation }: NavigationProps) {

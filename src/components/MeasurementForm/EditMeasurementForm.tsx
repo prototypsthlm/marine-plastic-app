@@ -1,36 +1,45 @@
-import React, { useEffect, useLayoutEffect, useRef } from "react";
-import { InputField, KBType } from "./InputField";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { InputField, KBType } from "../InputField";
 import { Switch } from "react-native";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
-import styled from "../styled";
-import { RootState, useThunkDispatch } from "../store/store";
+import styled from "../../styled";
+import { RootState, useThunkDispatch } from "../../store/store";
 import {
   submitEditMeasurement,
   selectLitterType,
-  EditMeasurementPayload
-} from '../store/slices/measurements';
+  EditMeasurementPayload,
+} from "../../store/slices/measurements";
 
-import { ListItem, Text, FlexColumn, SectionHeader, FlexRow } from "./elements";
-import { theme } from "../theme";
-import { NavigationProps } from "../navigation/types";
+import {
+  ListItem,
+  Text,
+  FlexColumn,
+  SectionHeader,
+  FlexRow,
+} from "../elements";
+import { theme } from "../../theme";
+import { NavigationProps } from "../../navigation/types";
 import { useSelector } from "react-redux";
-import { Measurement, LitterType } from "../models";
-import BasicHeaderButtons from "./BasicHeaderButtons";
+import { Measurement, LitterType, UnitEnum } from "../../models";
+import BasicHeaderButtons from "../BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
+import {
+  units,
+  getUnitValueFromMeasurement,
+  getQuantityFromMeasurement,
+} from "./utils";
+import {
+  VisualInspectionInputField,
+  VisualInspectionDropdownField,
+} from "./VisualInspectionFields";
 
 interface InitialFormValuesShape {
   [key: string]: string | boolean | undefined;
   quantity?: string;
-  quantityUnits?: string;
-  estimatedWeightKg?: string;
-  estimatedSizeM2?: string;
-  estimatedVolumeM3?: string;
-  depthM?: string;
-
+  unit?: string;
+  isApproximate: boolean;
   isCollected: boolean;
-
-  comments?: string;
 }
 
 const numberValidation = () =>
@@ -43,15 +52,9 @@ const numberValidation = () =>
 
 const validation = Yup.object().shape({
   quantity: numberValidation(),
-  quantityUnits: Yup.string(),
-  estimatedWeightKg: numberValidation(),
-  estimatedSizeM2: numberValidation(),
-  estimatedVolumeM3: numberValidation(),
-  depthM: numberValidation(),
-
+  unit: Yup.string(),
+  isApproximate: Yup.boolean(),
   isCollected: Yup.boolean(),
-
-  comments: Yup.string(),
 });
 
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
@@ -62,14 +65,12 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   );
 
   const InitialFormValues: InitialFormValuesShape = {
-    quantity: String(measurementEntry?.quantity || ""),
-    quantityUnits: String(measurementEntry?.quantityUnits || ""),
-    estimatedWeightKg: String(measurementEntry?.estimatedWeightKg || ""),
-    estimatedSizeM2: String(measurementEntry?.estimatedSizeM2 || ""),
-    estimatedVolumeM3: String(measurementEntry?.estimatedVolumeM3 || ""),
-    depthM: String(measurementEntry?.depthM || ""),
+    quantity:
+      measurementEntry &&
+      String(getQuantityFromMeasurement(measurementEntry) || ""),
+    unit: measurementEntry && getUnitValueFromMeasurement(measurementEntry),
     isCollected: measurementEntry?.isCollected || false,
-    comments: measurementEntry?.comments || "",
+    isApproximate: measurementEntry?.isApproximate || false,
   };
 
   const selectedLitterTypes = useSelector<RootState, LitterType | undefined>(
@@ -111,43 +112,42 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   }, [navigation]);
 
   const handleFormSubmit = (values: any, actions: any) => {
-    if (selectedLitterTypes === undefined) return;
+    if (!selectedUnit) return;
     const editedFeature: EditMeasurementPayload = {
-      litterTypeId: selectedLitterTypes.id,
-
-      quantity: Number(values.quantity?.replace(/,/, ".")),
-      quantityUnits: values.quantityUnits,
-      estimatedWeightKg: Number(values.estimatedWeightKg?.replace(/,/, ".")),
-      estimatedSizeM2: Number(values.estimatedSizeM2?.replace(/,/, ".")),
-      estimatedVolumeM3: Number(values.estimatedVolumeM3?.replace(/,/, ".")),
-      depthM: Number(values.depthM?.replace(/,/, ".")),
+      quantityKg:
+        selectedUnit == UnitEnum.KG
+          ? Number(values.quantity?.replace(/,/, "."))
+          : undefined,
+      quantityItemsPerM2:
+        selectedUnit == UnitEnum.ITEMS_PER_M2
+          ? Number(values.quantity?.replace(/,/, "."))
+          : undefined,
+      quantityItemsPerM3:
+        selectedUnit == UnitEnum.ITEMS_PER_M3
+          ? Number(values.quantity?.replace(/,/, "."))
+          : undefined,
+      quantityPercentOfSurface:
+        selectedUnit == UnitEnum.PERCENT_OF_SURFACE
+          ? Number(values.quantity?.replace(/,/, "."))
+          : undefined,
+      quantityPercentOfWeight:
+        selectedUnit == UnitEnum.PERCENT_OF_WEIGHT
+          ? Number(values.quantity?.replace(/,/, "."))
+          : undefined,
+      quantityGramPerLiter:
+        selectedUnit == UnitEnum.GRAM_PER_LITER
+          ? Number(values.quantity?.replace(/,/, "."))
+          : undefined,
+      isApproximate: values.isApproximate,
       isCollected: values.isCollected,
-
-      comments: values.comments,
     };
     dispatch(submitEditMeasurement(editedFeature));
     actions.setSubmitting(false);
   };
 
-  const extraFields: Array<{ field: string; label: string; kbType: KBType }> = [
-    {
-      field: "estimatedWeightKg",
-      label: "Estimated Weight (Kg)",
-      kbType: "decimal-pad",
-    },
-    {
-      field: "estimatedSizeM2",
-      label: "Estimated Size (m2)",
-      kbType: "decimal-pad",
-    },
-    {
-      field: "estimatedVolumeM3",
-      label: "Estimated Volume (m3)",
-      kbType: "decimal-pad",
-    },
-    { field: "depthM", label: "Depth (m)", kbType: "decimal-pad" },
-    { field: "comments", label: "Comments", kbType: "default" },
-  ];
+  const [selectedUnit, setSelectedUnit] = useState<string | null>(
+    (measurementEntry && getUnitValueFromMeasurement(measurementEntry)) || null
+  );
 
   return (
     <Formik
@@ -168,7 +168,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             EXTRA INFO
           </SectionHeader>
-          <ListItem
+          {/* <ListItem
             onPress={() => navigation.navigate("featureTypePickerScreen")}
           >
             {selectedLitterTypes === undefined && (
@@ -211,7 +211,32 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                 <Text>{selectedLitterTypes.name}</Text>
               </FlexColumn>
             )}
-          </ListItem>
+          </ListItem> */}
+          <FormSection style={{ paddingHorizontal: 0 }}>
+            <VisualInspectionInputField
+              label="Value"
+              unit=""
+              value={values.quantity as string}
+              onChange={(value) => setFieldValue("quantity", value)}
+            />
+            <VisualInspectionDropdownField
+              label="Units"
+              value={selectedUnit || ""}
+              items={units}
+              setValue={setSelectedUnit}
+            />
+          </FormSection>
+          <ListItemNonTouchable>
+            <Text>Is Approximate</Text>
+            <Switch
+              trackColor={{
+                false: "#767577",
+                true: theme.color.palette.curiousBlue,
+              }}
+              onValueChange={(value) => setFieldValue("isApproximate", value)}
+              value={values.isApproximate}
+            />
+          </ListItemNonTouchable>
           <ListItemNonTouchable>
             <Text>Is collected</Text>
             <Switch
@@ -223,53 +248,6 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
               value={values.isCollected}
             />
           </ListItemNonTouchable>
-          <FormSection>
-            <FlexRow>
-              <InputField
-                halfWidth
-                keyboardType="numeric"
-                label="Quantity"
-                preset="default"
-                onChangeText={handleChange("quantity")}
-                onBlur={handleBlur("quantity")}
-                value={values.quantity}
-                error={
-                  touched.quantity && errors.quantity
-                    ? errors.quantity
-                    : undefined
-                }
-              />
-              <InputField
-                halfWidth
-                label="Quantity units"
-                preset="default"
-                onChangeText={handleChange("quantityUnits")}
-                onBlur={handleBlur("quantityUnits")}
-                value={values.quantityUnits}
-                error={
-                  touched.quantityUnits && errors.quantityUnits
-                    ? errors.quantityUnits
-                    : undefined
-                }
-              />
-            </FlexRow>
-            {extraFields.map((item, index) => (
-              <InputField
-                key={index}
-                label={item.label}
-                keyboardType={item.kbType}
-                preset="default"
-                onChangeText={handleChange(item.field)}
-                onBlur={handleBlur(item.field)}
-                value={values[item.field] as string}
-                error={
-                  touched[item.field] && errors[item.field]
-                    ? errors[item.field]
-                    : undefined
-                }
-              />
-            ))}
-          </FormSection>
         </>
       )}
     </Formik>

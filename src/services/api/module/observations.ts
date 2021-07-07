@@ -14,9 +14,8 @@ export const observationsModule = {
       campaignId: campaignId === null ? "null" : campaignId,
       cursor,
     };
-    const response: HttpResponse<
-      PagedResponse<Observation>
-    > = await baseApi.get(observationsPath, params);
+    const response: HttpResponse<PagedResponse<Observation>> =
+      await baseApi.get(observationsPath, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
@@ -28,11 +27,17 @@ export const observationsModule = {
       campaignId: observation.campaignId,
       geometry: observation.geometry,
       timestamp: observation.timestamp,
+      class: observation.class,
+      estimatedAreaAboveSurfaceM2: observation.estimatedAreaAboveSurfaceM2,
+      estimatedPatchAreaM2: observation.estimatedPatchAreaM2,
+      estimatedFilamentLengthM: observation.estimatedFilamentLengthM,
+      depthM: observation.depthM,
       comments: observation.comments,
+      isControlled: observation.isControlled,
+      isAbsence: observation.isAbsence,
     };
-    const response: HttpResponse<
-      SingleResponse<Observation>
-    > = await baseApi.post(observationPath, params);
+    const response: HttpResponse<SingleResponse<Observation>> =
+      await baseApi.post(observationPath, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },
@@ -43,9 +48,8 @@ export const observationsModule = {
     const params = {
       ...fieldsToUpdate,
     };
-    const response: HttpResponse<
-      SingleResponse<Observation>
-    > = await baseApi.patch(observationPath + "/" + observation.id, params);
+    const response: HttpResponse<SingleResponse<Observation>> =
+      await baseApi.patch(observationPath + "/" + observation.id, params);
     if (!response.ok) return createGenericProblem(response);
     return response;
   },

@@ -31,6 +31,11 @@ import {
   fetchMeasurements,
   selectMeasurement,
 } from "../../../store/slices/measurements";
+import {
+  getQuantityFromMeasurement,
+  getUnitsLabel,
+  getUnitValueFromMeasurement,
+} from "../../../components/MeasurementForm/utils";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -57,9 +62,8 @@ export default function ObservationDetailScreen({
     (x) => x.id === observationEntry?.creatorId
   );
 
-  const filteredMeasurementEntriesBySelectedObservation = measurementEntries.filter(
-    (m) => m.observationId === observationEntry?.id
-  );
+  const filteredMeasurementEntriesBySelectedObservation =
+    measurementEntries.filter((m) => m.observationId === observationEntry?.id);
 
   const observationImages = useSelector<RootState, Array<ObservationImage>>(
     (state) => state.observations.observationImages
@@ -154,7 +158,8 @@ export default function ObservationDetailScreen({
   }) => (
     <ListItem onPress={() => navigateToDetailScreen(item)}>
       <Text>
-        Measurement #{index + 1} {item.comments}
+        {getQuantityFromMeasurement(item)}{" "}
+        {getUnitsLabel(getUnitValueFromMeasurement(item))}
       </Text>
     </ListItem>
   );
