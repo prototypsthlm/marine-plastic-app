@@ -1,5 +1,5 @@
 import React, { FC } from "react";
-import { ScrollView, ScrollViewProps } from "react-native";
+import { ScrollView, ScrollViewProps, Platform } from "react-native";
 import styled from "../styled";
 import OfflineModeBanner from "./OfflineModeBanner";
 
@@ -17,7 +17,7 @@ export const Screen: FC<ScreenProps> = ({
   scrollViewProps,
   ...rest
 }) => (
-  <ScreenView {...rest}>
+  <ScreenView {...rest} behavior={Platform.OS == "ios" ? "padding" : "height"}>
     {offlineBanner && <OfflineModeBanner />}
     {scroll ? (
       <ScrollView {...scrollViewProps}>{children}</ScrollView>
@@ -27,6 +27,6 @@ export const Screen: FC<ScreenProps> = ({
   </ScreenView>
 );
 
-const ScreenView = styled.View`
+const ScreenView = styled.KeyboardAvoidingView`
   flex: 1;
 `;
