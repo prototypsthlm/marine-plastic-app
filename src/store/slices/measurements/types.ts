@@ -1,28 +1,17 @@
-import { LitterType } from "../../../models";
-
 export interface NewMeasurementPayload {
-  litterType?: LitterType;
   quantity?: number;
-  quantityUnits?: string;
-  estimatedWeightKg?: number;
-  estimatedSizeM2?: number;
-  estimatedVolumeM3?: number;
-  depthM?: number;
+  unit?: string;
+  isApproximate: boolean;
   isCollected: boolean;
-
-  comments?: string;
 }
 
 export interface EditMeasurementPayload {
-  litterTypeId?: string;
-
-  quantity?: number;
-  quantityUnits?: string;
-  estimatedWeightKg?: number;
-  estimatedSizeM2?: number;
-  estimatedVolumeM3?: number;
-  depthM?: number;
+  quantityKg?: number;
+  quantityItemsPerM2?: number;
+  quantityItemsPerM3?: number;
+  quantityPercentOfSurface?: number;
+  quantityPercentOfWeight?: number;
+  quantityGramPerLiter?: number;
+  isApproximate: boolean;
   isCollected: boolean;
-
-  comments?: string;
 }
