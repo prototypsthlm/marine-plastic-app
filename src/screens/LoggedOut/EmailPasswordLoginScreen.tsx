@@ -6,7 +6,7 @@ import { loginWithEmailAndPassword } from "../../store/slices/session";
 import styled from "../../styled";
 import { RootState, useThunkDispatch } from "../../store/store";
 import { useSelector } from "react-redux";
-import { Image, View } from "react-native";
+import { Image, View, KeyboardAvoidingView, Platform } from "react-native";
 
 interface InitialFormValues {
   email: string;
@@ -35,9 +35,16 @@ export const EmailPasswordLoginScreen = () => {
   }, []);
 
   return (
-    <View style={{ width: '100%', height: '100%'}}>
-      <View style={{ flex: 1, justifyContent: 'flex-start', width: '100%'}}>
-        <Image resizeMode={'contain'} source={require('../../assets/images/icon_w_background.png')} style={{ maxWidth:'90%' }} />
+    <KeyboardAvoidingView
+      style={{ width: "100%", height: "100%" }}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+    >
+      <View style={{ flex: 1, justifyContent: "flex-start", width: "100%" }}>
+        <Image
+          resizeMode={"contain"}
+          source={require("../../assets/images/icon_w_background.png")}
+          style={{ maxWidth: "90%" }}
+        />
       </View>
       <Formik
         initialValues={initialFormValues}
@@ -75,7 +82,9 @@ export const EmailPasswordLoginScreen = () => {
               onBlur={handleBlur("password")}
               value={values.password}
               error={
-                touched.password && errors.password ? errors.password : undefined
+                touched.password && errors.password
+                  ? errors.password
+                  : undefined
               }
             />
             <Button
@@ -87,7 +96,7 @@ export const EmailPasswordLoginScreen = () => {
           </InputWrapper>
         )}
       </Formik>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -95,7 +104,7 @@ const InputWrapper = styled.View`
   justify-content: flex-start;
   flex: 2;
   padding: 0 32px;
-  paddingTop: 94px;
+  padding-top: 184px;
   width: 100%;
 `;
 
