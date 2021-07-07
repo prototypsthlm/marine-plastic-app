@@ -13,6 +13,7 @@ export interface NewObservationPayload {
   estimatedAreaAboveSurfaceM2?: number;
   estimatedPatchAreaM2?: number;
   estimatedFilamentLengthM?: number;
+  depthM?: number;
   isControlled: boolean;
   isAbsence: boolean;
 }
