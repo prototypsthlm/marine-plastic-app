@@ -216,6 +216,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> =
         estimatedPatchAreaM2: newObservationPayload.estimatedPatchAreaM2,
         estimatedFilamentLengthM:
           newObservationPayload.estimatedFilamentLengthM,
+        depthM: newObservationPayload.depthM,
         comments: newObservationPayload.comments,
         isControlled: newObservationPayload.isControlled,
         isAbsence: newObservationPayload.isAbsence,
