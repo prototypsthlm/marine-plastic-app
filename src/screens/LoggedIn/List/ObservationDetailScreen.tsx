@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import {
@@ -9,7 +9,13 @@ import {
   User,
 } from "../../../models";
 
-import { Alert, FlatList, Image } from "react-native";
+import {
+  Alert,
+  FlatList,
+  Image,
+  Modal,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { NavigationProps } from "../../../navigation/types";
@@ -168,6 +174,8 @@ export default function ObservationDetailScreen({
     (state) => state.measurements.refreshing
   );
 
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <Screen>
       <FlatList
@@ -184,13 +192,37 @@ export default function ObservationDetailScreen({
                   <Text bold>Observer:</Text>{" "}
                   {getObserverName(observationEntry.creatorId)}
                 </Text>
+                <Modal animationType="fade" visible={modalVisible}>
+                  {getObservationImage(observationEntry) !== "" && (
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        setModalVisible(false);
+                      }}
+                    >
+                      <Image
+                        source={{ uri: getObservationImage(observationEntry) }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          resizeMode: "contain",
+                        }}
+                      />
+                    </TouchableWithoutFeedback>
+                  )}
+                </Modal>
                 {getObservationImage(observationEntry) !== "" && (
                   <>
                     <Text bold>Picture:</Text>
-                    <Image
-                      source={{ uri: getObservationImage(observationEntry) }}
-                      style={{ width: "100%", height: 200 }}
-                    />
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        setModalVisible(true);
+                      }}
+                    >
+                      <Image
+                        source={{ uri: getObservationImage(observationEntry) }}
+                        style={{ width: "100%", height: 200 }}
+                      />
+                    </TouchableWithoutFeedback>
                   </>
                 )}
                 <Text>
@@ -211,6 +243,35 @@ export default function ObservationDetailScreen({
                     <Text>{observationEntry.geometry.coordinates[1]}</Text>
                   </FlexColumn>
                 ) : null}
+                {observationEntry.depthM && (
+                  <Text>
+                    <Text bold>Depth (m):</Text> {observationEntry.depthM}
+                  </Text>
+                )}
+                {observationEntry.estimatedAreaAboveSurfaceM2 && (
+                  <Text>
+                    <Text bold>Estimated area above surface (m2):</Text>{" "}
+                    {observationEntry.estimatedAreaAboveSurfaceM2}
+                  </Text>
+                )}
+                {observationEntry.isControlled && (
+                  <Text>
+                    <Text bold>Controller/experimental target:</Text>{" "}
+                    {observationEntry.isControlled ? "Yes" : "No"}
+                  </Text>
+                )}
+                {observationEntry.estimatedPatchAreaM2 && (
+                  <Text>
+                    <Text bold>Estimated patch area (m2):</Text>{" "}
+                    {observationEntry.estimatedPatchAreaM2}
+                  </Text>
+                )}
+                {observationEntry.estimatedFilamentLengthM && (
+                  <Text>
+                    <Text bold>Estimated filament area (m):</Text>{" "}
+                    {observationEntry.estimatedFilamentLengthM}
+                  </Text>
+                )}
               </Section>
             )}
             {filteredMeasurementEntriesBySelectedObservation.length > 0 && (
