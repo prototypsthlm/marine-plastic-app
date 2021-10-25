@@ -47,7 +47,7 @@ export const VisualInspectionInputField = ({
         onChangeText={onChange}
         defaultValue={value}
       />
-      {Boolean(unit) && <Text>{unit}</Text>}
+      {Boolean(unit) && <Text style={{width: 22}}>{unit}</Text>}
     </View>
   </View>
 );
