@@ -1,11 +1,11 @@
 import { Measurement, UnitEnum } from "../../models";
 
 export const units: Array<{ value: string; label: string }> = [
+  { value: UnitEnum.PERCENT_OF_SURFACE, label: "% of surface" },
+  { value: UnitEnum.PERCENT_OF_WEIGHT, label: "% of weight" },
   { value: UnitEnum.KG, label: "Kg" },
   { value: UnitEnum.ITEMS_PER_M2, label: "items/m2" },
   { value: UnitEnum.ITEMS_PER_M3, label: "items/m3" },
-  { value: UnitEnum.PERCENT_OF_SURFACE, label: "% of surface" },
-  { value: UnitEnum.PERCENT_OF_WEIGHT, label: "% of weight" },
   { value: UnitEnum.GRAM_PER_LITER, label: "g/l" },
 ];
 

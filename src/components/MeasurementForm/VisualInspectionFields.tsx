@@ -109,42 +109,42 @@ export const VisualInspectionDropdownField = ({
   setValue,
 }: DropdownFieldProps) => (
   <View
-    style={{
-      padding: theme.spacing.medium,
-      backgroundColor: theme.color.palette.white,
-      ...style,
-    }}
-  >
-    <View
       style={{
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
+        padding: theme.spacing.medium,
+        backgroundColor: theme.color.palette.white,
+        ...style,
       }}
     >
-      <Text>{label}</Text>
-      <RNPickerSelect
+      <View
         style={{
-          inputAndroid: {
-            fontSize: 16,
-            paddingHorizontal: 10,
-            paddingVertical: 8,
-            borderWidth: 0.5,
-            borderColor: "purple",
-            borderRadius: 8,
-            color: "black",
-            paddingRight: 30, // to ensure the text is never behind the icon
-          },
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
         }}
-        useNativeAndroidPickerStyle={false}
-        onValueChange={(value: { label: string; value: string }) =>
-          setValue(value)
-        }
-        items={items}
-        value={value}
-        placeholder={{ label: "Select a unit...", value: null }}
-      />
+      >
+        <Text>{label}</Text>
+        <RNPickerSelect
+          style={{
+            inputAndroid: {
+              fontSize: 16,
+              paddingHorizontal: 10,
+              paddingVertical: 8,
+              borderWidth: 0.5,
+              borderColor: "purple",
+              borderRadius: 8,
+              color: "black",
+              paddingRight: 30, // to ensure the text is never behind the icon
+            },
+          }}
+          useNativeAndroidPickerStyle={false}
+          onValueChange={(value: { label: string; value: string }) =>
+            setValue(value)
+          }
+          items={items}
+          value={value}
+          placeholder={{}}
+          />
+      </View>
     </View>
-  </View>
 );
