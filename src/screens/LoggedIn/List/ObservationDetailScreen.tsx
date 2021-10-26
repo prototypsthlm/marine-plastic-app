@@ -233,9 +233,6 @@ export default function ObservationDetailScreen({
                         .slice(5, 17)
                     : ""}
                 </Text>
-                <Text>
-                  <Text bold>Comments:</Text> {observationEntry.comments}
-                </Text>
                 <Text bold>Geolocation coords:</Text>
                 {observationEntry.geometry?.coordinates.length > 0 ? (
                   <FlexColumn>
@@ -272,6 +269,9 @@ export default function ObservationDetailScreen({
                     {observationEntry.estimatedFilamentLengthM}
                   </Text>
                 )}
+                <Text>
+                  <Text bold>Comments:</Text> {observationEntry.comments}
+                </Text>
               </Section>
             )}
             {filteredMeasurementEntriesBySelectedObservation.length > 0 && (
