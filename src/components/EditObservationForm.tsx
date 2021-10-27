@@ -15,14 +15,7 @@ import {
   EditObservationPayload,
   submitEditObservation,
 } from "../store/slices/observations";
-
-
-// DUPLICATED FROM NewObservationForm
-import VerticalSegmentedControl from "./controls/VerticalSegmentedControl";
-import {
-  VisualInspectionInputField,
-  VisualInspectionSwitchField,
-} from "./MeasurementForm/VisualInspectionFields";
+import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
 
 
 interface InitialFormValuesShape {
@@ -75,6 +68,10 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.observations.selectedObservationEntry
   );
 
+  const [visualInspectionType, setVisualInspectionType] = useState<
+    string | undefined
+  >(observationEntry?.class);
+
   const InitialFormValues: InitialFormValuesShape = {
     comments: observationEntry?.comments || "",
     isAbsence: observationEntry?.isAbsence || false,
@@ -111,28 +108,6 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
     { field: "comments", label: "Comments", kbType: "default" },
   ];
 
-  // DUPLICATED FROM NewObservationForm
-  const visualInspectionTypes: Array<{
-    label: string;
-    value: string | undefined;
-  }> = [
-    {
-      label: "No litter present",
-      value: ClassVisualInspectionEnum.NO_LITTER_PRESENT,
-    },
-    {
-      label: "Single litter item",
-      value: ClassVisualInspectionEnum.SINGLE_ITEM,
-    },
-    { label: "Small group", value: ClassVisualInspectionEnum.SMALL_GROUP },
-    { label: "Patch", value: ClassVisualInspectionEnum.PATCH },
-    { label: "Filament", value: ClassVisualInspectionEnum.FILAMENT },
-  ];
-  const [visualInspectionType, setVisualInspectionType] = useState<
-    string | undefined
-  >(observationEntry?.class);
-
-// TODO maybe refactor duplicates into different file 
   return (
     <Formik
       innerRef={formRef}
@@ -146,71 +121,12 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
             <SectionHeader style={{ marginTop: theme.spacing.large }}>
               EDIT VISUAL INSPECTION
             </SectionHeader>
-
-            <VisualInspectionView style={{ marginTop: 0 }}>
-              <VerticalSegmentedControl
-                style={{ marginTop: theme.spacing.small }}
-                items={visualInspectionTypes}
-                selectedItem={visualInspectionType}
-                onChange={(value) => {
-                  setVisualInspectionType(
-                    value == visualInspectionType ? undefined : value
-                  )
-                }}
-              />
-            </VisualInspectionView>
-
-            <FormSection
-              style={{ marginTop: theme.spacing.small, paddingHorizontal: 0 }}
-            >
-              {visualInspectionType &&
-                visualInspectionType !=
-                  ClassVisualInspectionEnum.NO_LITTER_PRESENT ? (
-                  <VisualInspectionInputField
-                    label="Depth"
-                    unit="m"
-                    value={values.depthM as string}
-                    onChange={(value) => setFieldValue("depthM", value)}
-                  />
-                ) : null }
-              {visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM ? (
-                <>
-                  <VisualInspectionInputField
-                    label="Estimated area above surface"
-                    unit="m2"
-                    value={values.estimatedAreaAboveSurfaceM2 as string}
-                    onChange={(value) =>
-                      setFieldValue("estimatedAreaAboveSurfaceM2", value)
-                    }
-                  />
-                  <VisualInspectionSwitchField
-                    label="Controller/experimental target"
-                    value={values.isControlled}
-                    onChange={(value) => setFieldValue("isControlled", value)}
-                  />
-                </>
-              ) : null }
-              {visualInspectionType == ClassVisualInspectionEnum.PATCH ? (
-                <VisualInspectionInputField
-                  label="Estimated (patch) area"
-                  unit="m2"
-                  value={values.estimatedPatchAreaM2 as string}
-                  onChange={(value) =>
-                    setFieldValue("estimatedPatchAreaM2", value)
-                  }
-                />
-              ) : null }
-              {visualInspectionType == ClassVisualInspectionEnum.FILAMENT ? (
-                <VisualInspectionInputField
-                  label="Estimated (filament) length"
-                  unit="m"
-                  value={values.estimatedFilamentLengthM as string}
-                  onChange={(value) =>
-                    setFieldValue("estimatedFilamentLengthM", value)
-                  }
-                />
-              ) : null }
-            </FormSection>
+            <VisualInspectionForm
+              visualInspectionType={visualInspectionType}
+              setVisualInspectionType={setVisualInspectionType}
+              values={values}
+              setFieldValue={setFieldValue}
+            />
 
             <SectionHeader style={{ marginTop: theme.spacing.large }}>
               EDIT INFO
@@ -239,12 +155,6 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
     </Formik>
   );
 };
-
-// DUPLICATED FROM NewObservationForm
-const VisualInspectionView = styled.View`
-  margin-top: ${(props) => props.theme.spacing.xlarge}px;
-  padding-horizontal: ${(props) => props.theme.spacing.small}px;
-`;
 
 const FormSection = styled.View`
   justify-content: center;
