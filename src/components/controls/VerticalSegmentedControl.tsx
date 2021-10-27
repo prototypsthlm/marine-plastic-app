@@ -15,17 +15,17 @@ const VerticalSegmentedControl = ({
   onChange,
 }: VerticalSegmentedControlProps) => (
   <StyledControlContainer style={style}>
-    {items &&
+    {items ?
       items.map((item, i) => (
         <VerticalSegmentedControlButton
           key={i}
-          onPress={() => onChange && onChange(item.value)}
+          onPress={() => onChange ? onChange(item.value) : null}
           isSelected={item.value === selectedItem}
           isLast={i === items.length - 1}
         >
           {item.label}
         </VerticalSegmentedControlButton>
-      ))}
+      )) : null }
   </StyledControlContainer>
 );
 
