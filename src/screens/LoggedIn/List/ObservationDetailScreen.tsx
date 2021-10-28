@@ -243,7 +243,7 @@ export default function ObservationDetailScreen({
                 ) : null}
                 {observationEntry.class ? (
                   <Text>
-                    <Text bold>Litter Type</Text>{" "}
+                    <Text bold>Visual Inspection Type:</Text>{" "}
                     {
                       // get label for value from visualInspectionTypes
                       visualInspectionTypes.find(item => item.value === observationEntry.class)?.label
