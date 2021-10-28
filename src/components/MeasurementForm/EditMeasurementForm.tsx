@@ -92,7 +92,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
   const formRef = useRef<FormikProps<InitialFormValuesShape>>(null);
 
   const handleSubmit = () => {
-    if (formRef.current && selectedLitterTypes !== undefined) {
+    if (formRef.current) {
       !formRef.current.isSubmitting && formRef.current.handleSubmit();
     }
   };
