@@ -94,11 +94,19 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
     const editedObservationPayload: EditObservationPayload = {
       comments: values.comments,
       class: visualInspectionType,
-      estimatedAreaAboveSurfaceM2: values.estimatedAreaAboveSurfaceM2,
-      estimatedPatchAreaM2: values.estimatedPatchAreaM2,
-      estimatedFilamentLengthM: values.estimatedFilamentLengthM,
-      depthM: values.depthM,
-      isAbsence: values.isAbesense,
+      estimatedAreaAboveSurfaceM2: visualInspectionType === ClassVisualInspectionEnum.SINGLE_ITEM
+        ? values.estimatedAreaAboveSurfaceM2
+        : null,
+      estimatedPatchAreaM2: visualInspectionType === ClassVisualInspectionEnum.PATCH
+        ? values.estimatedPatchAreaM2
+        : null,
+      estimatedFilamentLengthM: visualInspectionType === ClassVisualInspectionEnum.FILAMENT
+      ? values.estimatedFilamentLengthM
+      : null,
+      depthM: visualInspectionType !== ClassVisualInspectionEnum.NO_LITTER_PRESENT
+      ? values.depthM
+      : null,
+      isAbsence: values.isAbsense,
     };
     dispatch(submitEditObservation(editedObservationPayload));
     actions.setSubmitting(false);
