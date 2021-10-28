@@ -47,7 +47,7 @@ const VisualInspectionForm = ({
         items={visualInspectionTypes}
         selectedItem={visualInspectionType}
         onChange={(value) => setVisualInspectionType(
-            value == visualInspectionType ? undefined : value
+            value === visualInspectionType ? undefined : value
           )}
       />
     </VisualInspectionView>
@@ -65,7 +65,7 @@ const VisualInspectionForm = ({
             onChange={(value) => setFieldValue("depthM", value)}
           />
         ) : null }
-      {visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM ? (
+      {visualInspectionType === ClassVisualInspectionEnum.SINGLE_ITEM ? (
         <>
           <VisualInspectionInputField
             label="Estimated area above surface"
@@ -82,7 +82,7 @@ const VisualInspectionForm = ({
           />
         </>
       ) : null }
-      {visualInspectionType == ClassVisualInspectionEnum.PATCH ? (
+      {visualInspectionType === ClassVisualInspectionEnum.PATCH ? (
         <VisualInspectionInputField
           label="Estimated (patch) area"
           unit="m2"
@@ -92,7 +92,7 @@ const VisualInspectionForm = ({
           }
         />
       ) : null }
-      {visualInspectionType == ClassVisualInspectionEnum.FILAMENT ? (
+      {visualInspectionType === ClassVisualInspectionEnum.FILAMENT ? (
         <VisualInspectionInputField
           label="Estimated (filament) length"
           unit="m"
