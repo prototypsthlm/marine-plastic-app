@@ -8,7 +8,7 @@ import { ClassVisualInspectionEnum } from "../../models";
 import styled from "../../styled";
 import { theme } from "../../theme";
 
-const visualInspectionTypes: Array<{
+export const visualInspectionTypes: Array<{
   label: string;
   value: string | undefined;
 }> = [
