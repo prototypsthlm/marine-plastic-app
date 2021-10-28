@@ -8,6 +8,7 @@ import {
   ObservationImage,
   User,
 } from "../../../models";
+import { visualInspectionTypes } from "../../../components/VisualInspectionForm/VisualInspectionForm"
 
 import {
   Alert,
@@ -240,6 +241,15 @@ export default function ObservationDetailScreen({
                     <Text>{observationEntry.geometry.coordinates[1]}</Text>
                   </FlexColumn>
                 ) : null}
+                {observationEntry.class ? (
+                  <Text>
+                    <Text bold>Litter Type</Text>{" "}
+                    {
+                      // get label for value from visualInspectionTypes
+                      visualInspectionTypes.find(item => item.value === observationEntry.class)?.label
+                    }
+                  </Text>
+                ) : null }
                 {observationEntry.depthM && (
                   <Text>
                     <Text bold>Depth (m):</Text> {observationEntry.depthM}
