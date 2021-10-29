@@ -189,7 +189,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           />
 
           <Row>
-            <Title>Measurements / Items</Title>
+            <Title>Measurements</Title>
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
             >
