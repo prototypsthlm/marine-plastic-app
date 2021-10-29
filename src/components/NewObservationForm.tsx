@@ -129,12 +129,47 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   const [inspectionHelperVisible, setInspectionHelperVisible] = useState(false);
   const [measurementHelperVisible, setMeasurementHelperVisible] = useState(false);
 
+  interface modalProps {
+    visibilityState: boolean;
+    setVisibilityFunction: any;
+    popupTitle: string;
+    popupText: string;
+  }
+
+  const ModalComponent = (props: modalProps) => {
+    return (
+      <View style={styles.centeredView}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={props.visibilityState}
+          onRequestClose={() => props.setVisibilityFunction(!props.visibilityState)}
+          >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <HelperPopup 
+                title={props.popupTitle}
+                text={props.popupText}
+                ></HelperPopup> 
+              <Pressable
+                style={[styles.button, styles.buttonClose]}
+                onPress={() => props.setVisibilityFunction(!props.visibilityState)}
+                >
+                <Text style={styles.textStyle}>Thanks!</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    )
+  }
+
   interface helperProps {
     title: string;
     text: string;
   }
 
-  const HelperOverlay = (props: helperProps) => {
+  const HelperPopup = (props: helperProps) => {
     return(
       <View>
         <Text style={styles.modalTitle}>{props.title}</Text>
@@ -151,15 +186,6 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     >
       {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
-
-       
-          
-          {/**
-            * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-            * * * * * * * * * * * * SCREEN  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-            * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-            */}
-
           <SectionHeader>SELECTED CAMPAIGN
             <Button 
               title="?"
@@ -296,145 +322,36 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             />
           </FormSection>
 
-           {/**
-          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-          * * * * * * * * * * * * MODALS FOR HELPER POPUPS  * * * * * * * * * * * * * * * * * * * * * * *
-          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-          */}
-          {/* Campaign helper */}
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={campaignHelperVisible}
-              onRequestClose={() => setCampaignHelperVisible(!campaignHelperVisible)}
-              >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <HelperOverlay 
-                    title={"What is a Campaign"}
-                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
-                    ></HelperOverlay> 
-                  <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setCampaignHelperVisible(!campaignHelperVisible)}
-                    >
-                    <Text style={styles.textStyle}>Thanks!</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
-          </View>
-          
-          {/* Picture Helper */}
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={pictureHelperVisible}
-              onRequestClose={() => {
-                setPictureHelperVisible(!pictureHelperVisible);
-              }}
-              >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <HelperOverlay 
-                    title={"Why a picture??"}
-                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
-                    ></HelperOverlay> 
-                  <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setPictureHelperVisible(!pictureHelperVisible)}
-                    >
-                    <Text style={styles.textStyle}>Thanks!</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
-          </View>
-
-          {/* Location Helper */}
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={locationHelperVisible}
-              onRequestClose={() => {
-                setLocationHelperVisible(!locationHelperVisible);
-              }}
-              >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <HelperOverlay 
-                    title={"Why a Location??"}
-                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
-                    ></HelperOverlay> 
-                  <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setLocationHelperVisible(!locationHelperVisible)}
-                    >
-                    <Text style={styles.textStyle}>Thanks!</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
-          </View>
-
-          {/* Visual Inspection Helper */}
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={inspectionHelperVisible}
-              onRequestClose={() => {
-                setInspectionHelperVisible(!inspectionHelperVisible);
-              }}
-              >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <HelperOverlay 
-                    title={"Why a Visual Inspection??"}
-                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
-                    ></HelperOverlay> 
-                  <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setInspectionHelperVisible(!inspectionHelperVisible)}
-                    >
-                    <Text style={styles.textStyle}>Thanks!</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
-          </View>
-
-          {/* Measurement Helper */}
-          <View style={styles.centeredView}>
-            <Modal
-              animationType="slide"
-              transparent={true}
-              visible={measurementHelperVisible}
-              onRequestClose={() => {
-                setMeasurementHelperVisible(!measurementHelperVisible);
-              }}
-              >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <HelperOverlay 
-                    title={"Why a MEASUREMENT??"}
-                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
-                    ></HelperOverlay> 
-                  <Pressable
-                    style={[styles.button, styles.buttonClose]}
-                    onPress={() => setMeasurementHelperVisible(!measurementHelperVisible)}
-                    >
-                    <Text style={styles.textStyle}>Thanks!</Text>
-                  </Pressable>
-                </View>
-              </View>
-            </Modal>
-          </View>
-
-
+          <ModalComponent
+            visibilityState={campaignHelperVisible}
+            setVisibilityFunction={setCampaignHelperVisible}
+            popupTitle={"What is a Campaign?"}
+            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+          />
+          <ModalComponent
+            visibilityState={pictureHelperVisible}
+            setVisibilityFunction={setPictureHelperVisible}
+            popupTitle={"Why is a photo needed?"}
+            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+          />
+          <ModalComponent
+            visibilityState={locationHelperVisible}
+            setVisibilityFunction={setCampaignHelperVisible}
+            popupTitle={"Why should I add a location?"}
+            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+          />
+          <ModalComponent
+            visibilityState={inspectionHelperVisible}
+            setVisibilityFunction={setInspectionHelperVisible}
+            popupTitle={"What is a Visual Inspection?"}
+            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+          />
+          <ModalComponent
+            visibilityState={measurementHelperVisible}
+            setVisibilityFunction={setMeasurementHelperVisible}
+            popupTitle={"What is a Measurement?"}
+            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+          />
         </>
       )}
     </Formik>
