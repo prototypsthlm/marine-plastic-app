@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Formik } from "formik";
+import { Formik, setIn } from "formik";
 import React, { useState } from "react";
-import { Button, Switch } from "react-native";
+import { Button, Pressable, Modal, StyleSheet, TouchableWithoutFeedback, View, } from "react-native";
 import { LatLng } from "react-native-maps";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -122,6 +122,27 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     string | undefined
   >();
 
+
+  const [campaignHelperVisible, setCampaignHelperVisible] = useState(false);
+  const [pictureHelperVisible, setPictureHelperVisible] = useState(false);
+  const [locationHelperVisible, setLocationHelperVisible] = useState(false);
+  const [inspectionHelperVisible, setInspectionHelperVisible] = useState(false);
+  const [measurementHelperVisible, setMeasurementHelperVisible] = useState(false);
+
+  interface helperProps {
+    title: string;
+    text: string;
+  }
+
+  const HelperOverlay = (props: helperProps) => {
+    return(
+      <View>
+        <Text style={styles.modalTitle}>{props.title}</Text>
+        <Text style={styles.modalText}>{props.text}</Text>
+      </View>
+    )
+  }
+
   return (
     <Formik
       initialValues={InitialFormValues}
@@ -130,7 +151,22 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     >
       {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
-          <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
+
+       
+          
+          {/**
+            * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+            * * * * * * * * * * * * SCREEN  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+            * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+            */}
+
+          <SectionHeader>SELECTED CAMPAIGN
+            <Button 
+              title="?"
+              onPress={() => setCampaignHelperVisible(true)}
+            />
+          </SectionHeader>
+
           <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
             <Text
               style={{
@@ -144,8 +180,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             </Text>
           </ListItem>
 
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            PICTURE
+          <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
+            <Button 
+              title="?"
+              onPress={() => setPictureHelperVisible(true)}
+            />
           </SectionHeader>
           <PictureSection
             imageUri={values.imageUri}
@@ -156,8 +195,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {Boolean(values.imageUri) && values.location !== undefined ? (
             <>
-              <SectionHeader style={{ marginTop: theme.spacing.large }}>
-                GEOLOCATION
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>GEOLOCATION
+                <Button 
+                  title="?"
+                  onPress={() => setLocationHelperVisible(true)}
+                />
               </SectionHeader>
               <MapItem
                 location={values.location}
@@ -180,6 +222,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             VISUAL INSPECTION
+            <Button 
+              title="?"
+              onPress={() => setInspectionHelperVisible(true)}
+            />
           </SectionHeader>
           <VisualInspectionForm
               visualInspectionType={visualInspectionType}
@@ -189,7 +235,13 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           />
 
           <Row>
-            <Title>Measurements</Title>
+            <Title>Measurements
+                <Button 
+                  title="?"
+                  onPress={() => setMeasurementHelperVisible(true)}
+                />
+
+            </Title>
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
             >
@@ -230,6 +282,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onChangeText={handleChange("comments")}
               onBlur={handleBlur("comments")}
               value={values.comments}
+              placeholder={"Have some more thoughts? Add them here!"}
             />
           </FormSection>
 
@@ -242,11 +295,199 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onPress={handleSubmit as any}
             />
           </FormSection>
+
+           {/**
+          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+          * * * * * * * * * * * * MODALS FOR HELPER POPUPS  * * * * * * * * * * * * * * * * * * * * * * *
+          * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+          */}
+          {/* Campaign helper */}
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={campaignHelperVisible}
+              onRequestClose={() => setCampaignHelperVisible(!campaignHelperVisible)}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <HelperOverlay 
+                    title={"What is a Campaign"}
+                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+                    ></HelperOverlay> 
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setCampaignHelperVisible(!campaignHelperVisible)}
+                    >
+                    <Text style={styles.textStyle}>Thanks!</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+          </View>
+          
+          {/* Picture Helper */}
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={pictureHelperVisible}
+              onRequestClose={() => {
+                setPictureHelperVisible(!pictureHelperVisible);
+              }}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <HelperOverlay 
+                    title={"Why a picture??"}
+                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+                    ></HelperOverlay> 
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setPictureHelperVisible(!pictureHelperVisible)}
+                    >
+                    <Text style={styles.textStyle}>Thanks!</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+          </View>
+
+          {/* Location Helper */}
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={locationHelperVisible}
+              onRequestClose={() => {
+                setLocationHelperVisible(!locationHelperVisible);
+              }}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <HelperOverlay 
+                    title={"Why a Location??"}
+                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+                    ></HelperOverlay> 
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setLocationHelperVisible(!locationHelperVisible)}
+                    >
+                    <Text style={styles.textStyle}>Thanks!</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+          </View>
+
+          {/* Visual Inspection Helper */}
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={inspectionHelperVisible}
+              onRequestClose={() => {
+                setInspectionHelperVisible(!inspectionHelperVisible);
+              }}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <HelperOverlay 
+                    title={"Why a Visual Inspection??"}
+                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+                    ></HelperOverlay> 
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setInspectionHelperVisible(!inspectionHelperVisible)}
+                    >
+                    <Text style={styles.textStyle}>Thanks!</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+          </View>
+
+          {/* Measurement Helper */}
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={measurementHelperVisible}
+              onRequestClose={() => {
+                setMeasurementHelperVisible(!measurementHelperVisible);
+              }}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <HelperOverlay 
+                    title={"Why a MEASUREMENT??"}
+                    text={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+                    ></HelperOverlay> 
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => setMeasurementHelperVisible(!measurementHelperVisible)}
+                    >
+                    <Text style={styles.textStyle}>Thanks!</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </Modal>
+          </View>
+
+
         </>
       )}
     </Formik>
   );
 };
+
+
+const styles = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  buttonClose: {
+    backgroundColor: "#2196F3",
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 20,
+    textAlign: "left"
+  },
+  modalTitle: {
+    marginBottom: 15,
+    textAlign: "left",
+    fontSize: 22
+  }
+});
+
 
 const FormSection = styled.View`
   justify-content: center;
