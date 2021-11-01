@@ -24,6 +24,7 @@ import TimestampPicker from "./MeasurementForm/TimestampPicker";
 import { getUnitsLabel } from "./MeasurementForm/utils";
 import { string } from "yup";
 import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
+import { NONE } from "apisauce";
 
 
 interface InitialFormValuesShape {
@@ -164,12 +165,12 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     )
   }
 
-  interface helperProps {
+  interface helperPopupProps {
     title: string;
     text: string;
   }
 
-  const HelperPopup = (props: helperProps) => {
+  const HelperPopup = (props: helperPopupProps) => {
     return(
       <View>
         <Text style={styles.modalTitle}>{props.title}</Text>
@@ -177,6 +178,24 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       </View>
     )
   }
+
+  interface helperButtonProps {
+    onPress: any;
+  }
+
+  function HelperButton(props: helperButtonProps) {
+    const { onPress } = props;
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <Ionicons
+          size={20}
+          style={{ color: theme.color.palette.curiousBlue }}
+          name="help-circle-outline"
+        />
+      </TouchableWithoutFeedback>
+    );
+  }
+  
 
   return (
     <Formik
@@ -187,10 +206,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
       {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
           <SectionHeader>SELECTED CAMPAIGN
-            <Button 
-              title="?"
-              onPress={() => setCampaignHelperVisible(true)}
-            />
+            <HelperButton onPress={() => setCampaignHelperVisible(true)} />
           </SectionHeader>
 
           <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
@@ -207,10 +223,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           </ListItem>
 
           <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
-            <Button 
-              title="?"
-              onPress={() => setPictureHelperVisible(true)}
-            />
+            <HelperButton onPress={() => setPictureHelperVisible(true)} />
           </SectionHeader>
           <PictureSection
             imageUri={values.imageUri}
@@ -222,10 +235,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           {Boolean(values.imageUri) && values.location !== undefined ? (
             <>
               <SectionHeader style={{ marginTop: theme.spacing.large }}>GEOLOCATION
-                <Button 
-                  title="?"
-                  onPress={() => setLocationHelperVisible(true)}
-                />
+                <HelperButton onPress={() => setLocationHelperVisible(true)}/>
               </SectionHeader>
               <MapItem
                 location={values.location}
@@ -248,10 +258,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             VISUAL INSPECTION
-            <Button 
-              title="?"
-              onPress={() => setInspectionHelperVisible(true)}
-            />
+            <HelperButton onPress={() => setInspectionHelperVisible(true)}/>
           </SectionHeader>
           <VisualInspectionForm
               visualInspectionType={visualInspectionType}
@@ -262,11 +269,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <Row>
             <Title>Measurements
-                <Button 
-                  title="?"
-                  onPress={() => setMeasurementHelperVisible(true)}
-                />
-
+                <HelperButton onPress={() => setMeasurementHelperVisible(true)}/>
             </Title>
             <ButtonWithIcon
               onPress={() => navigation.navigate("newFeatureScreen")}
@@ -326,31 +329,31 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             visibilityState={campaignHelperVisible}
             setVisibilityFunction={setCampaignHelperVisible}
             popupTitle={"What is a Campaign?"}
-            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+            popupText={"Campaigns are our different initiatives, so please choose the right one if you know the name. otherwise choose Campaign-less observations."}
           />
           <ModalComponent
             visibilityState={pictureHelperVisible}
             setVisibilityFunction={setPictureHelperVisible}
-            popupTitle={"Why is a photo needed?"}
-            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+            popupTitle={"Why is a picture needed?"}
+            popupText={"We need a photo of the trash and litter you found, so that we can compare it with the images from our satellites and see where they match."}
           />
           <ModalComponent
             visibilityState={locationHelperVisible}
             setVisibilityFunction={setCampaignHelperVisible}
-            popupTitle={"Why should I add a location?"}
-            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+            popupTitle={"Why should I add a location and time?"}
+            popupText={"Trash in the oceans is moving, so in order to match your picture with our satellite images we need to know when and where you took the photo."}
           />
           <ModalComponent
             visibilityState={inspectionHelperVisible}
             setVisibilityFunction={setInspectionHelperVisible}
             popupTitle={"What is a Visual Inspection?"}
-            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+            popupText={"In Visual Inspection you can choose different categories, if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe thesize of trash."}
           />
           <ModalComponent
             visibilityState={measurementHelperVisible}
             setVisibilityFunction={setMeasurementHelperVisible}
             popupTitle={"What is a Measurement?"}
-            popupText={"Here is a longer helper text where we can explain a bunch of cool stuff about how to use this tool. Maybe it helps you, maybe it doesn't. Time will tell."}
+            popupText={"Measurements are a great help for us, as you can describe the trash in even greater detail. Press the + sign and add some measurements, you can choose from different metrics. "}
           />
         </>
       )}
@@ -370,14 +373,17 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
+    borderColor: theme.color.palette.curiousBlue,
+    borderStyle: "solid",
+    borderWidth: 3,
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 4
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.45,
     shadowRadius: 4,
     elevation: 5
   },
@@ -402,6 +408,23 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "left",
     fontSize: 22
+  },
+  helperButton: {
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    color: theme.color.palette.curiousBlue,
+    // backgroundColor: "transparent",
+    // backgroundColor: "red",
+  },
+  helperButtonText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: theme.color.palette.curiousBlue,
+
   }
 });
 
