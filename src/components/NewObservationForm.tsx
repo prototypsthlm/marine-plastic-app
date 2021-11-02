@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Formik, setIn } from "formik";
+import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button, Pressable, Modal, StyleSheet, TouchableWithoutFeedback, View, } from "react-native";
+import { Button } from "react-native";
 import { LatLng } from "react-native-maps";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -25,7 +25,7 @@ import { getUnitsLabel } from "./MeasurementForm/utils";
 import { string } from "yup";
 import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
 
-
+import { ModalComponent, HelperButton } from "./HelperPopup";
 
 interface InitialFormValuesShape {
   comments?: string;
@@ -130,71 +130,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   const [inspectionHelperVisible, setInspectionHelperVisible] = useState(false);
   const [measurementHelperVisible, setMeasurementHelperVisible] = useState(false);
 
-  interface modalProps {
-    visibilityState: boolean;
-    setVisibilityFunction: any;
-    popupTitle: string;
-    popupText: string;
-  }
 
-  const ModalComponent = (props: modalProps) => {
-    return (
-      <View style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={props.visibilityState}
-          onRequestClose={() => props.setVisibilityFunction(!props.visibilityState)}
-          >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <HelperPopup 
-                title={props.popupTitle}
-                text={props.popupText}
-                ></HelperPopup> 
-              <Pressable
-                style={[styles.button, styles.buttonClose]}
-                onPress={() => props.setVisibilityFunction(!props.visibilityState)}
-                >
-                <Text style={styles.textStyle}>Thanks!</Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    )
-  }
 
-  interface helperPopupProps {
-    title: string;
-    text: string;
-  }
-
-  const HelperPopup = (props: helperPopupProps) => {
-    return(
-      <View>
-        <Text style={styles.modalTitle}>{props.title}</Text>
-        <Text style={styles.modalText}>{props.text}</Text>
-      </View>
-    )
-  }
-
-  interface helperButtonProps {
-    onPress: any;
-  }
-
-  function HelperButton(props: helperButtonProps) {
-    const { onPress } = props;
-    return (
-      <TouchableWithoutFeedback onPress={onPress}>
-        <Ionicons
-          size={20}
-          style={{ color: theme.color.palette.curiousBlue }}
-          name="help-circle-outline"
-        />
-      </TouchableWithoutFeedback>
-    );
-  }
   
 
   return (
@@ -334,7 +271,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             visibilityState={campaignHelperVisible}
             setVisibilityFunction={setCampaignHelperVisible}
             popupTitle={"What is a Campaign?"}
-            popupText={"Campaigns are our different initiatives, so please choose the right one if you know the name. otherwise choose Campaign-less observations."}
+            popupText={"Campaigns are our different initiatives, so please choose the right one if you know the name. Otherwise choose Campaign-less observations."}
           />
           <ModalComponent
             visibilityState={pictureHelperVisible}
@@ -366,68 +303,6 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
   );
 };
 
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    borderColor: theme.color.palette.curiousBlue,
-    borderStyle: "solid",
-    borderWidth: 3,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4
-    },
-    shadowOpacity: 0.45,
-    shadowRadius: 4,
-    elevation: 5
-  },
-  button: {
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
-  },
-  buttonClose: {
-    backgroundColor: "#2196F3",
-  },
-  textStyle: {
-    color: "white",
-    fontWeight: "bold",
-    textAlign: "center"
-  },
-  modalText: {
-    marginBottom: 20,
-    textAlign: "left"
-  },
-  modalTitle: {
-    marginBottom: 15,
-    textAlign: "left",
-    fontSize: 22
-  },
-  helperButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 5,
-    color: theme.color.palette.curiousBlue,
-  },
-  helperButtonText: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: 'bold',
-    letterSpacing: 0.25,
-    color: theme.color.palette.curiousBlue,
-
-  }
-});
 
 
 const FormSection = styled.View`
