@@ -220,6 +220,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 ? selectedCampaignEntry.name
                 : "Campaign-less observations"}
             </Text>
+            <Text>Z</Text>
           </ListItem>
 
           <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
@@ -267,20 +268,9 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               setFieldValue={setFieldValue}
           />
 
-          <Row>
-            <Title>Measurements
-                <HelperButton onPress={() => setMeasurementHelperVisible(true)}/>
-            </Title>
-            <ButtonWithIcon
-              onPress={() => navigation.navigate("newFeatureScreen")}
-            >
-              <Ionicons
-                size={30}
-                style={{ color: theme.color.palette.curiousBlue }}
-                name="ios-add-circle"
-              />
-            </ButtonWithIcon>
-          </Row>
+          <Title>Measurements
+              <HelperButton onPress={() => setMeasurementHelperVisible(true)}/>
+          </Title>
 
           {!(measurementsToAdd.length > 0) && (
             <ListItem>
@@ -289,7 +279,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </CenteredGrayText>
             </ListItem>
           )}
-
+          
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
               <Text>
@@ -297,6 +287,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </Text>
             </ListItem>
           ))}
+
+          <ButtonWithIcon
+              style={{marginLeft:"auto", marginRight:"auto", marginTop:5}}
+              onPress={() => navigation.navigate("newFeatureScreen")}
+          >
+            <Ionicons
+              size={30}
+              style={{ color: theme.color.palette.curiousBlue }}
+              name="ios-add-circle"
+            />
+          </ButtonWithIcon>
 
           <FormSection
             style={{
@@ -347,7 +348,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             visibilityState={inspectionHelperVisible}
             setVisibilityFunction={setInspectionHelperVisible}
             popupTitle={"What is a Visual Inspection?"}
-            popupText={"In Visual Inspection you can choose different categories, if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe thesize of trash."}
+            popupText={"In Visual Inspection you can choose different categories, for example if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe the size of trash."}
           />
           <ModalComponent
             visibilityState={measurementHelperVisible}
@@ -410,13 +411,9 @@ const styles = StyleSheet.create({
     fontSize: 22
   },
   helperButton: {
-    // alignItems: 'center',
-    // justifyContent: 'center',
     paddingVertical: 5,
     paddingHorizontal: 5,
     color: theme.color.palette.curiousBlue,
-    // backgroundColor: "transparent",
-    // backgroundColor: "red",
   },
   helperButtonText: {
     fontSize: 16,
