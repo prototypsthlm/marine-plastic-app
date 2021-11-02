@@ -3,6 +3,7 @@ import { Switch, TextInput, View } from "react-native";
 import { theme } from "../../theme";
 import { Text } from "../elements";
 import RNPickerSelect from "react-native-picker-select";
+import { Ionicons } from '@expo/vector-icons';
 
 interface InputFieldProps {
   style?: object;
@@ -43,11 +44,12 @@ export const VisualInspectionInputField = ({
           width: 50,
           marginLeft: "auto",
           marginRight: unit ? 10 : 0,
+          borderRadius: 3
         }}
         onChangeText={onChange}
         defaultValue={value}
       />
-      {Boolean(unit) && <Text>{unit}</Text>}
+      {Boolean(unit) && <Text style={{width: 22}}>{unit}</Text>}
     </View>
   </View>
 );
@@ -109,42 +111,60 @@ export const VisualInspectionDropdownField = ({
   setValue,
 }: DropdownFieldProps) => (
   <View
-    style={{
-      padding: theme.spacing.medium,
-      backgroundColor: theme.color.palette.white,
-      ...style,
-    }}
-  >
-    <View
       style={{
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
+        padding: theme.spacing.medium,
+        backgroundColor: theme.color.palette.white,
+        ...style,
       }}
     >
-      <Text>{label}</Text>
-      <RNPickerSelect
+      <View
         style={{
-          inputAndroid: {
-            fontSize: 16,
-            paddingHorizontal: 10,
-            paddingVertical: 8,
-            borderWidth: 0.5,
-            borderColor: "purple",
-            borderRadius: 8,
-            color: "black",
-            paddingRight: 30, // to ensure the text is never behind the icon
-          },
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "flex-end",
         }}
-        useNativeAndroidPickerStyle={false}
-        onValueChange={(value: { label: string; value: string }) =>
-          setValue(value)
-        }
-        items={items}
-        value={value}
-        placeholder={{ label: "Select a unit...", value: null }}
-      />
+      >
+        <Text>{label}</Text>
+        <RNPickerSelect
+          style={{
+            inputAndroid: {
+              color: "black",
+              backgroundColor: theme.color.palette.softGrey,
+              fontSize: 16,
+              paddingHorizontal: 15,
+              paddingVertical: 8,
+              paddingRight: 30, // to ensure the text is never behind the icon
+              borderRadius: 3
+            },
+            inputIOS: {
+              color: "black",
+              backgroundColor: theme.color.palette.softGrey,
+              paddingHorizontal: 10,
+              paddingVertical: 8,
+              paddingRight: 30, // to ensure the text is never behind the icon
+              borderRadius: 3
+            },
+            iconContainer: {
+              top: 5,
+              right: 5,
+            },
+          }}
+          useNativeAndroidPickerStyle={false}
+          onValueChange={(value: { label: string; value: string }) =>
+            setValue(value)
+          }
+          items={items}
+          value={value}
+          placeholder={{}}
+          Icon={() => {
+            return <Ionicons
+            size={20}
+            style={{ color: theme.color.palette.curiousBlue }}
+            name="chevron-down"
+          />;
+          }}
+          />
+      </View>
     </View>
-  </View>
 );

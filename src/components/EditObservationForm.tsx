@@ -1,5 +1,5 @@
 import { Formik, FormikProps } from "formik";
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { RootState, useThunkDispatch } from "../store/store";
 import styled from "../styled";
 import { theme } from "../theme";
@@ -8,23 +8,35 @@ import * as Yup from "yup";
 import InputField, { KBType } from "./InputField";
 import { NavigationProps } from "../navigation/types";
 import { useSelector } from "react-redux";
-import { Observation } from "../models";
+import { Observation, ClassVisualInspectionEnum } from "../models";
 import BasicHeaderButtons from "./BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
 import {
   EditObservationPayload,
   submitEditObservation,
 } from "../store/slices/observations";
+import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
+
 
 interface InitialFormValuesShape {
   [key: string]: string | boolean | undefined;
   comments: string;
   isAbsence: boolean;
+  class?: string;
+  estimatedAreaAboveSurfaceM2?: string;
+  estimatedPatchAreaM2?: string;
+  estimatedFilamentLengthM?: string;
+  depthM?: string;
 }
 
 const validation = Yup.object().shape({
   isAbsence: Yup.boolean(),
   comments: Yup.string(),
+  class: Yup.string(),
+  estimatedAreaAboveSurfaceM2: Yup.string(),
+  estimatedPatchAreaM2: Yup.string(),
+  estimatedFilamentLengthM: Yup.string(),
+  depthM: Yup.string(),
 });
 
 const EditObservationForm = ({ navigation }: NavigationProps) => {
@@ -56,14 +68,45 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
     (state) => state.observations.selectedObservationEntry
   );
 
+  const [visualInspectionType, setVisualInspectionType] = useState<
+    string | undefined
+  >(observationEntry?.class);
+
   const InitialFormValues: InitialFormValuesShape = {
     comments: observationEntry?.comments || "",
     isAbsence: observationEntry?.isAbsence || false,
+    class: observationEntry?.class || undefined,
+    estimatedAreaAboveSurfaceM2: observationEntry?.estimatedAreaAboveSurfaceM2 
+      ? `${observationEntry?.estimatedAreaAboveSurfaceM2}`
+      : undefined,
+    estimatedPatchAreaM2: observationEntry?.estimatedPatchAreaM2 
+      ? `${observationEntry?.estimatedPatchAreaM2}`
+      : undefined,
+    estimatedFilamentLengthM: observationEntry?.estimatedFilamentLengthM 
+      ? `${observationEntry?.estimatedFilamentLengthM}`
+      : undefined,
+    depthM: observationEntry?.depthM 
+      ? `${observationEntry?.depthM}`
+      : undefined,
   };
 
   const handleFormSubmit = (values: any, actions: any) => {
     const editedObservationPayload: EditObservationPayload = {
-      ...values,
+      comments: values.comments,
+      class: visualInspectionType,
+      estimatedAreaAboveSurfaceM2: visualInspectionType === ClassVisualInspectionEnum.SINGLE_ITEM
+        ? values.estimatedAreaAboveSurfaceM2
+        : null,
+      estimatedPatchAreaM2: visualInspectionType === ClassVisualInspectionEnum.PATCH
+        ? values.estimatedPatchAreaM2
+        : null,
+      estimatedFilamentLengthM: visualInspectionType === ClassVisualInspectionEnum.FILAMENT
+      ? values.estimatedFilamentLengthM
+      : null,
+      depthM: visualInspectionType !== ClassVisualInspectionEnum.NO_LITTER_PRESENT
+      ? values.depthM
+      : null,
+      isAbsence: values.isAbsense,
     };
     dispatch(submitEditObservation(editedObservationPayload));
     actions.setSubmitting(false);
@@ -79,10 +122,20 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
       initialValues={InitialFormValues}
       onSubmit={handleFormSubmit}
       validationSchema={validation}
-    >
-      {({ handleBlur, handleChange, values, errors, touched }) => {
+      >
+      {({ handleBlur, handleChange, values, errors, setFieldValue, touched }) => {
         return (
           <>
+            <SectionHeader style={{ marginTop: theme.spacing.large }}>
+              EDIT VISUAL INSPECTION
+            </SectionHeader>
+            <VisualInspectionForm
+              visualInspectionType={visualInspectionType}
+              setVisualInspectionType={setVisualInspectionType}
+              values={values}
+              setFieldValue={setFieldValue}
+            />
+
             <SectionHeader style={{ marginTop: theme.spacing.large }}>
               EDIT INFO
             </SectionHeader>

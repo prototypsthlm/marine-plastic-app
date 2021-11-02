@@ -8,6 +8,7 @@ import {
   ObservationImage,
   User,
 } from "../../../models";
+import { visualInspectionTypes } from "../../../components/VisualInspectionForm/VisualInspectionForm"
 
 import {
   Alert,
@@ -15,6 +16,7 @@ import {
   Image,
   Modal,
   TouchableWithoutFeedback,
+  StyleSheet
 } from "react-native";
 
 import { Screen } from "../../../components/Screen";
@@ -186,12 +188,8 @@ export default function ObservationDetailScreen({
         keyExtractor={(item) => item.id}
         ListHeaderComponent={() => (
           <>
-            {observationEntry && (
+            {observationEntry ? (
               <Section>
-                <Text>
-                  <Text bold>Observer:</Text>{" "}
-                  {getObserverName(observationEntry.creatorId)}
-                </Text>
                 <Modal animationType="fade" visible={modalVisible}>
                   {getObservationImage(observationEntry) !== "" && (
                     <TouchableWithoutFeedback
@@ -212,7 +210,6 @@ export default function ObservationDetailScreen({
                 </Modal>
                 {getObservationImage(observationEntry) !== "" && (
                   <>
-                    <Text bold>Picture:</Text>
                     <TouchableWithoutFeedback
                       onPress={() => {
                         setModalVisible(true);
@@ -225,58 +222,97 @@ export default function ObservationDetailScreen({
                     </TouchableWithoutFeedback>
                   </>
                 )}
-                <Text>
-                  <Text bold>{"Date: "}</Text>
-                  {observationEntry.timestamp
-                    ? new Date(observationEntry.timestamp)
-                        .toUTCString()
-                        .slice(5, 17)
-                    : ""}
-                </Text>
-                <Text>
-                  <Text bold>Comments:</Text> {observationEntry.comments}
-                </Text>
-                <Text bold>Geolocation coords:</Text>
-                {observationEntry.geometry?.coordinates.length > 0 ? (
-                  <FlexColumn>
-                    <Text>{observationEntry.geometry.coordinates[0]}</Text>
-                    <Text>{observationEntry.geometry.coordinates[1]}</Text>
-                  </FlexColumn>
-                ) : null}
-                {observationEntry.depthM && (
-                  <Text>
-                    <Text bold>Depth (m):</Text> {observationEntry.depthM}
-                  </Text>
-                )}
-                {observationEntry.estimatedAreaAboveSurfaceM2 && (
-                  <Text>
-                    <Text bold>Estimated area above surface (m2):</Text>{" "}
-                    {observationEntry.estimatedAreaAboveSurfaceM2}
-                  </Text>
-                )}
-                {observationEntry.isControlled && (
-                  <Text>
-                    <Text bold>Controller/experimental target:</Text>{" "}
-                    {observationEntry.isControlled ? "Yes" : "No"}
-                  </Text>
-                )}
-                {observationEntry.estimatedPatchAreaM2 && (
-                  <Text>
-                    <Text bold>Estimated patch area (m2):</Text>{" "}
-                    {observationEntry.estimatedPatchAreaM2}
-                  </Text>
-                )}
-                {observationEntry.estimatedFilamentLengthM && (
-                  <Text>
-                    <Text bold>Estimated filament area (m):</Text>{" "}
-                    {observationEntry.estimatedFilamentLengthM}
-                  </Text>
-                )}
+
               </Section>
-            )}
+            ) : null }
+              
+            {observationEntry ? (
+              <>
+                <SectionHeader style={{ marginTop: theme.spacing.medium }}>
+                  OBSERVER
+                </SectionHeader>
+
+                <Section>
+                  <Text style={styles.detailsView}>Observed by {" "}
+                    <Text bold>{getObserverName(observationEntry.creatorId)}</Text>
+                  </Text>
+
+                  <Text style={styles.detailsView}>Date {" "}
+                    <Text bold>{observationEntry.timestamp
+                      ? new Date(observationEntry.timestamp)
+                          .toUTCString()
+                          .slice(5, 17)
+                      : ""}</Text>
+                  </Text>
+
+                  {observationEntry.geometry?.coordinates.length > 0 ? (
+                    <Text style={styles.detailsView}>Location{" "}
+                      <Text bold>Long {Number(observationEntry.geometry.coordinates[0]).toFixed(2)} | Lat {Number(observationEntry.geometry.coordinates[1]).toFixed(2)}</Text>
+                    </Text>
+                  ) : null}
+                </Section>
+              </>
+            ) : null }
+     
+            {observationEntry ? (
+              <>
+                <SectionHeader style={{ marginTop: theme.spacing.medium }}>
+                  DETAILS
+                </SectionHeader>
+                <Section>
+                  {observationEntry.class ? (
+                    <Text style={styles.detailsView}>
+                      Visual Inspection Type {" "}
+                      <Text bold>{visualInspectionTypes.find(item => item.value === observationEntry.class)?.label}</Text>
+                    </Text>
+                  ) : null }
+                  {observationEntry.depthM ? (
+                    <Text style={styles.detailsView}>Depth{" "}
+                      <Text bold> {observationEntry.depthM} m</Text>
+                    </Text>
+                  ) : null }
+                  {observationEntry.estimatedAreaAboveSurfaceM2 ? (
+                    <Text style={styles.detailsView}>Estimated area above surface {" "}
+                      <Text bold>{observationEntry.estimatedAreaAboveSurfaceM2} m2</Text>
+                    </Text>
+                  ) : null }
+                  {observationEntry.isControlled ? (
+                    <Text style={styles.detailsView}>Controller/experimental target {" "}
+                      <Text bold>{observationEntry.isControlled ? "Yes" : "No"}</Text>
+                    </Text>
+                  ) : null }
+                  {observationEntry.estimatedPatchAreaM2 ? (
+                    <Text style={styles.detailsView}>Estimated patch area {" "}
+                      <Text bold>{observationEntry.estimatedPatchAreaM2} m2</Text>
+                    </Text>
+                  ) : null }
+                  {observationEntry.estimatedFilamentLengthM ? (
+                    <Text style={styles.detailsView}>Estimated filament area{" "}
+                      <Text bold>
+                      {observationEntry.estimatedFilamentLengthM} m
+                      </Text>
+                    </Text>
+                  ) : null }
+                </Section>
+              </>
+            ) : null }
+
+            {observationEntry?.comments ? (
+              <>
+                <SectionHeader style={{ marginTop: theme.spacing.medium }}>
+                  COMMENTS
+                </SectionHeader>
+                
+                <Section>
+                  <Text style={styles.detailsView}>{observationEntry.comments}</Text>
+                </Section>
+              </>
+            )
+            : null }
+
             {filteredMeasurementEntriesBySelectedObservation.length > 0 && (
-              <SectionHeader style={{ marginTop: theme.spacing.large }}>
-                ADDED MEASUREMENTS / ITEMS
+              <SectionHeader style={{ marginTop: theme.spacing.medium }}>
+                ADDED MEASUREMENTS
               </SectionHeader>
             )}
           </>
@@ -287,3 +323,10 @@ export default function ObservationDetailScreen({
     </Screen>
   );
 }
+
+
+const styles = StyleSheet.create({
+  detailsView: {
+    lineHeight: 24
+  }
+})

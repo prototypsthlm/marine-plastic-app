@@ -20,4 +20,10 @@ export interface NewObservationPayload {
 
 export interface EditObservationPayload {
   comments?: string;
+  class?: ClassVisualInspection;
+  estimatedAreaAboveSurfaceM2?: number;
+  estimatedPatchAreaM2?: number;
+  estimatedFilamentLengthM?: number;
+  depthM?: number;
+  isAbsence: boolean;
 }
