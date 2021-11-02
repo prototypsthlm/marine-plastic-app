@@ -3,6 +3,7 @@ import { Switch, TextInput, View } from "react-native";
 import { theme } from "../../theme";
 import { Text } from "../elements";
 import RNPickerSelect from "react-native-picker-select";
+import { Ionicons } from '@expo/vector-icons';
 
 interface InputFieldProps {
   style?: object;
@@ -43,6 +44,7 @@ export const VisualInspectionInputField = ({
           width: 50,
           marginLeft: "auto",
           marginRight: unit ? 10 : 0,
+          borderRadius: 3
         }}
         onChangeText={onChange}
         defaultValue={value}
@@ -127,14 +129,25 @@ export const VisualInspectionDropdownField = ({
         <RNPickerSelect
           style={{
             inputAndroid: {
+              color: "black",
+              backgroundColor: theme.color.palette.softGrey,
               fontSize: 16,
+              paddingHorizontal: 15,
+              paddingVertical: 8,
+              paddingRight: 30, // to ensure the text is never behind the icon
+              borderRadius: 3
+            },
+            inputIOS: {
+              color: "black",
+              backgroundColor: theme.color.palette.softGrey,
               paddingHorizontal: 10,
               paddingVertical: 8,
-              borderWidth: 0.5,
-              borderColor: "purple",
-              borderRadius: 8,
-              color: "black",
               paddingRight: 30, // to ensure the text is never behind the icon
+              borderRadius: 3
+            },
+            iconContainer: {
+              top: 5,
+              right: 5,
             },
           }}
           useNativeAndroidPickerStyle={false}
@@ -144,6 +157,13 @@ export const VisualInspectionDropdownField = ({
           items={items}
           value={value}
           placeholder={{}}
+          Icon={() => {
+            return <Ionicons
+            size={20}
+            style={{ color: theme.color.palette.curiousBlue }}
+            name="chevron-down"
+          />;
+          }}
           />
       </View>
     </View>
