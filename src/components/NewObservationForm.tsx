@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button, Switch } from "react-native";
+import { Button } from "react-native";
 import { LatLng } from "react-native-maps";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -25,6 +25,7 @@ import { getUnitsLabel } from "./MeasurementForm/utils";
 import { string } from "yup";
 import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
 
+import { ModalComponent, HelperButton } from "./HelperPopup";
 
 interface InitialFormValuesShape {
   comments?: string;
@@ -122,6 +123,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     string | undefined
   >();
 
+
+  const [campaignHelperVisible, setCampaignHelperVisible] = useState(false);
+  const [pictureHelperVisible, setPictureHelperVisible] = useState(false);
+  const [locationHelperVisible, setLocationHelperVisible] = useState(false);
+  const [inspectionHelperVisible, setInspectionHelperVisible] = useState(false);
+  const [measurementHelperVisible, setMeasurementHelperVisible] = useState(false);
+
+
+
+  
+
   return (
     <Formik
       initialValues={InitialFormValues}
@@ -130,7 +142,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     >
       {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
-          <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
+          <SectionHeader>SELECTED CAMPAIGN
+            <HelperButton onPress={() => setCampaignHelperVisible(true)} />
+          </SectionHeader>
+
           <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
             <Text
               style={{
@@ -142,10 +157,15 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 ? selectedCampaignEntry.name
                 : "Campaign-less observations"}
             </Text>
+            <Ionicons
+              size={20}
+              style={{ color: theme.color.palette.curiousBlue, marginLeft: "auto", marginRight: 5}}
+              name="chevron-down"
+            />
           </ListItem>
 
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            PICTURE
+          <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
+            <HelperButton onPress={() => setPictureHelperVisible(true)} />
           </SectionHeader>
           <PictureSection
             imageUri={values.imageUri}
@@ -156,8 +176,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {Boolean(values.imageUri) && values.location !== undefined ? (
             <>
-              <SectionHeader style={{ marginTop: theme.spacing.large }}>
-                GEOLOCATION
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>GEOLOCATION
+                <HelperButton onPress={() => setLocationHelperVisible(true)}/>
               </SectionHeader>
               <MapItem
                 location={values.location}
@@ -180,6 +200,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             VISUAL INSPECTION
+            <HelperButton onPress={() => setInspectionHelperVisible(true)}/>
           </SectionHeader>
           <VisualInspectionForm
               visualInspectionType={visualInspectionType}
@@ -188,18 +209,9 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               setFieldValue={setFieldValue}
           />
 
-          <Row>
-            <Title>Measurements / Items</Title>
-            <ButtonWithIcon
-              onPress={() => navigation.navigate("newFeatureScreen")}
-            >
-              <Ionicons
-                size={30}
-                style={{ color: theme.color.palette.curiousBlue }}
-                name="ios-add-circle"
-              />
-            </ButtonWithIcon>
-          </Row>
+          <Title>Measurements
+              <HelperButton onPress={() => setMeasurementHelperVisible(true)}/>
+          </Title>
 
           {!(measurementsToAdd.length > 0) && (
             <ListItem>
@@ -208,7 +220,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </CenteredGrayText>
             </ListItem>
           )}
-
+          
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
               <Text>
@@ -216,6 +228,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </Text>
             </ListItem>
           ))}
+
+          <ButtonWithIcon
+              style={{marginLeft:"auto", marginRight:"auto", marginTop:5}}
+              onPress={() => navigation.navigate("newFeatureScreen")}
+          >
+            <Ionicons
+              size={30}
+              style={{ color: theme.color.palette.curiousBlue }}
+              name="ios-add-circle"
+            />
+          </ButtonWithIcon>
 
           <FormSection
             style={{
@@ -230,6 +253,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onChangeText={handleChange("comments")}
               onBlur={handleBlur("comments")}
               value={values.comments}
+              placeholder={"Have some more thoughts? Add them here!"}
             />
           </FormSection>
 
@@ -242,11 +266,44 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onPress={handleSubmit as any}
             />
           </FormSection>
+
+          <ModalComponent
+            visibilityState={campaignHelperVisible}
+            setVisibilityFunction={setCampaignHelperVisible}
+            popupTitle={"What is a Campaign?"}
+            popupText={"Campaigns are our different initiatives, so please choose the right one if you know the name. Otherwise choose Campaign-less observations."}
+          />
+          <ModalComponent
+            visibilityState={pictureHelperVisible}
+            setVisibilityFunction={setPictureHelperVisible}
+            popupTitle={"Why is a picture needed?"}
+            popupText={"We need a photo of the trash and litter you found, so that we can compare it with the images from our satellites and see where they match."}
+          />
+          <ModalComponent
+            visibilityState={locationHelperVisible}
+            setVisibilityFunction={setCampaignHelperVisible}
+            popupTitle={"Why should I add a location and time?"}
+            popupText={"Trash in the oceans is moving, so in order to match your picture with our satellite images we need to know when and where you took the photo."}
+          />
+          <ModalComponent
+            visibilityState={inspectionHelperVisible}
+            setVisibilityFunction={setInspectionHelperVisible}
+            popupTitle={"What is a Visual Inspection?"}
+            popupText={"In Visual Inspection you can choose different categories, for example if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe the size of trash."}
+          />
+          <ModalComponent
+            visibilityState={measurementHelperVisible}
+            setVisibilityFunction={setMeasurementHelperVisible}
+            popupTitle={"What is a Measurement?"}
+            popupText={"Measurements are a great help for us, as you can describe the trash in even greater detail. Press the + sign and add some measurements, you can choose from different metrics. "}
+          />
         </>
       )}
     </Formik>
   );
 };
+
+
 
 const FormSection = styled.View`
   justify-content: center;
