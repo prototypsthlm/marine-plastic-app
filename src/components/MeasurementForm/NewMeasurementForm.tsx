@@ -29,7 +29,7 @@ interface InitialFormValuesShape {
 }
 
 const InitialFormValues: InitialFormValuesShape = {
-  isApproximate: false,
+  isApproximate: true,
   isCollected: false,
 };
 
@@ -87,6 +87,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
               items={units}
               setValue={setSelectedUnit}
             />
+
             <VisualInspectionInputField
               label="Value"
               unit=""
@@ -94,6 +95,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
               onChange={(value) => setFieldValue("quantity", value)}
             />
           </FormSection>
+
           <ListItemNonTouchable>
             <Text>Is Approximate</Text>
             <Switch
@@ -105,6 +107,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
               value={values.isApproximate}
             />
           </ListItemNonTouchable>
+
           <ListItemNonTouchable>
             <Text>Is collected</Text>
             <Switch
@@ -118,7 +121,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
           </ListItemNonTouchable>
 
           <SaveButton
-            disabled={!selectedUnit}
+            disabled={!(values.quantity)}
             title="Save"
             onPress={handleSubmit as any}
           />
@@ -138,6 +141,7 @@ const FormSection = styled.View`
   width: 100%;
   padding-top: ${(props) => props.theme.spacing.small}px;
   background-color: ${(props) => props.theme.color.background};
+  margin-bottom: 1px;
 `;
 
 const ListItemNonTouchable = styled.View`

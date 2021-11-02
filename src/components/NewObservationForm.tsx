@@ -24,7 +24,7 @@ import TimestampPicker from "./MeasurementForm/TimestampPicker";
 import { getUnitsLabel } from "./MeasurementForm/utils";
 import { string } from "yup";
 import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
-import { NONE } from "apisauce";
+
 
 
 interface InitialFormValuesShape {
@@ -220,7 +220,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 ? selectedCampaignEntry.name
                 : "Campaign-less observations"}
             </Text>
-            <Text>Z</Text>
+            <Ionicons
+              size={20}
+              style={{ color: theme.color.palette.curiousBlue, marginLeft: "auto", marginRight: 5}}
+              name="chevron-down"
+            />
           </ListItem>
 
           <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
