@@ -14,6 +14,7 @@ import {
 import { theme } from "../../theme";
 import { Text } from "../elements";
 import { units } from "./utils";
+import { UnitEnum } from "../../models";
 import {
   VisualInspectionInputField,
   VisualInspectionDropdownField,
@@ -28,7 +29,7 @@ interface InitialFormValuesShape {
 }
 
 const InitialFormValues: InitialFormValuesShape = {
-  isApproximate: false,
+  isApproximate: true,
   isCollected: false,
 };
 
@@ -62,7 +63,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
     actions.resetForm(InitialFormValues);
   };
 
-  const [selectedUnit, setSelectedUnit] = useState<string | null>(null);
+  const [selectedUnit, setSelectedUnit] = useState<string | null>(UnitEnum.PERCENT_OF_SURFACE);
 
   return (
     <Formik
@@ -81,18 +82,20 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
       }) => (
         <>
           <FormSection style={{ paddingHorizontal: 0 }}>
+            <VisualInspectionDropdownField
+              label="Units"
+              items={units}
+              setValue={setSelectedUnit}
+            />
+
             <VisualInspectionInputField
               label="Value"
               unit=""
               value={values.quantity as string}
               onChange={(value) => setFieldValue("quantity", value)}
             />
-            <VisualInspectionDropdownField
-              label="Units"
-              items={units}
-              setValue={setSelectedUnit}
-            />
           </FormSection>
+
           <ListItemNonTouchable>
             <Text>Is Approximate</Text>
             <Switch
@@ -104,6 +107,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
               value={values.isApproximate}
             />
           </ListItemNonTouchable>
+
           <ListItemNonTouchable>
             <Text>Is collected</Text>
             <Switch
@@ -117,7 +121,7 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
           </ListItemNonTouchable>
 
           <SaveButton
-            disabled={!selectedUnit}
+            disabled={!(values.quantity)}
             title="Save"
             onPress={handleSubmit as any}
           />
@@ -137,6 +141,7 @@ const FormSection = styled.View`
   width: 100%;
   padding-top: ${(props) => props.theme.spacing.small}px;
   background-color: ${(props) => props.theme.color.background};
+  margin-bottom: 1px;
 `;
 
 const ListItemNonTouchable = styled.View`

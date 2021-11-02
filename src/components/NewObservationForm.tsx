@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button, Switch } from "react-native";
+import { Button } from "react-native";
 import { LatLng } from "react-native-maps";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -16,18 +16,16 @@ import { RootState, useThunkDispatch } from "../store/store";
 import styled from "../styled";
 import { theme } from "../theme";
 import { getGeometryFromLocation } from "../utils/geoUtils";
-import VerticalSegmentedControl from "./controls/VerticalSegmentedControl";
 import { ListItem, SectionHeader, Text } from "./elements";
 import { InputField } from "./InputField";
 import MapItem from "./MeasurementForm/MapItem";
 import PictureSection from "./MeasurementForm/PictureSection";
 import TimestampPicker from "./MeasurementForm/TimestampPicker";
-import {
-  VisualInspectionInputField,
-  VisualInspectionSwitchField,
-} from "./MeasurementForm/VisualInspectionFields";
 import { getUnitsLabel } from "./MeasurementForm/utils";
 import { string } from "yup";
+import VisualInspectionForm from "./VisualInspectionForm/VisualInspectionForm";
+
+import { ModalComponent, HelperButton } from "./HelperPopup";
 
 interface InitialFormValuesShape {
   comments?: string;
@@ -121,25 +119,20 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     setVisualInspectionType(undefined);
   };
 
-  const visualInspectionTypes: Array<{
-    label: string;
-    value: string | undefined;
-  }> = [
-    {
-      label: "No litter present",
-      value: ClassVisualInspectionEnum.NO_LITTER_PRESENT,
-    },
-    {
-      label: "Single litter item",
-      value: ClassVisualInspectionEnum.SINGLE_ITEM,
-    },
-    { label: "Small group", value: ClassVisualInspectionEnum.SMALL_GROUP },
-    { label: "Patch", value: ClassVisualInspectionEnum.PATCH },
-    { label: "Filament", value: ClassVisualInspectionEnum.FILAMENT },
-  ];
   const [visualInspectionType, setVisualInspectionType] = useState<
     string | undefined
   >();
+
+
+  const [campaignHelperVisible, setCampaignHelperVisible] = useState(false);
+  const [pictureHelperVisible, setPictureHelperVisible] = useState(false);
+  const [locationHelperVisible, setLocationHelperVisible] = useState(false);
+  const [inspectionHelperVisible, setInspectionHelperVisible] = useState(false);
+  const [measurementHelperVisible, setMeasurementHelperVisible] = useState(false);
+
+
+
+  
 
   return (
     <Formik
@@ -149,7 +142,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     >
       {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
-          <SectionHeader>SELECTED CAMPAIGN</SectionHeader>
+          <SectionHeader>SELECTED CAMPAIGN
+            <HelperButton onPress={() => setCampaignHelperVisible(true)} />
+          </SectionHeader>
+
           <ListItem onPress={() => navigation.navigate("changeCampaignScreen")}>
             <Text
               style={{
@@ -161,10 +157,15 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 ? selectedCampaignEntry.name
                 : "Campaign-less observations"}
             </Text>
+            <Ionicons
+              size={20}
+              style={{ color: theme.color.palette.curiousBlue, marginLeft: "auto", marginRight: 5}}
+              name="chevron-down"
+            />
           </ListItem>
 
-          <SectionHeader style={{ marginTop: theme.spacing.large }}>
-            PICTURE
+          <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
+            <HelperButton onPress={() => setPictureHelperVisible(true)} />
           </SectionHeader>
           <PictureSection
             imageUri={values.imageUri}
@@ -175,8 +176,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {Boolean(values.imageUri) && values.location !== undefined ? (
             <>
-              <SectionHeader style={{ marginTop: theme.spacing.large }}>
-                GEOLOCATION
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>GEOLOCATION
+                <HelperButton onPress={() => setLocationHelperVisible(true)}/>
               </SectionHeader>
               <MapItem
                 location={values.location}
@@ -199,84 +200,18 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             VISUAL INSPECTION
+            <HelperButton onPress={() => setInspectionHelperVisible(true)}/>
           </SectionHeader>
-          <VisualInspectionView style={{ marginTop: 0 }}>
-            <VerticalSegmentedControl
-              style={{ marginTop: theme.spacing.small }}
-              items={visualInspectionTypes}
-              selectedItem={visualInspectionType}
-              onChange={(value) =>
-                setVisualInspectionType(
-                  value == visualInspectionType ? undefined : value
-                )
-              }
-            />
-          </VisualInspectionView>
+          <VisualInspectionForm
+              visualInspectionType={visualInspectionType}
+              setVisualInspectionType={setVisualInspectionType}
+              values={values}
+              setFieldValue={setFieldValue}
+          />
 
-          <FormSection
-            style={{ marginTop: theme.spacing.small, paddingHorizontal: 0 }}
-          >
-            {visualInspectionType &&
-              visualInspectionType !=
-                ClassVisualInspectionEnum.NO_LITTER_PRESENT && (
-                <VisualInspectionInputField
-                  label="Depth"
-                  unit="m"
-                  value={values.depthM as string}
-                  onChange={(value) => setFieldValue("depthM", value)}
-                />
-              )}
-            {visualInspectionType == ClassVisualInspectionEnum.SINGLE_ITEM && (
-              <>
-                <VisualInspectionInputField
-                  label="Estimated area above surface"
-                  unit="m2"
-                  value={values.estimatedAreaAboveSurfaceM2 as string}
-                  onChange={(value) =>
-                    setFieldValue("estimatedAreaAboveSurfaceM2", value)
-                  }
-                />
-                <VisualInspectionSwitchField
-                  label="Controller/experimental target"
-                  value={values.isControlled}
-                  onChange={(value) => setFieldValue("isControlled", value)}
-                />
-              </>
-            )}
-            {visualInspectionType == ClassVisualInspectionEnum.PATCH && (
-              <VisualInspectionInputField
-                label="Estimated (patch) area"
-                unit="m2"
-                value={values.estimatedPatchAreaM2 as string}
-                onChange={(value) =>
-                  setFieldValue("estimatedPatchAreaM2", value)
-                }
-              />
-            )}
-            {visualInspectionType == ClassVisualInspectionEnum.FILAMENT && (
-              <VisualInspectionInputField
-                label="Estimated (filament) length"
-                unit="m"
-                value={values.estimatedFilamentLengthM as string}
-                onChange={(value) =>
-                  setFieldValue("estimatedFilamentLengthM", value)
-                }
-              />
-            )}
-          </FormSection>
-
-          <Row>
-            <Title>Measurements / Items</Title>
-            <ButtonWithIcon
-              onPress={() => navigation.navigate("newFeatureScreen")}
-            >
-              <Ionicons
-                size={30}
-                style={{ color: theme.color.palette.curiousBlue }}
-                name="ios-add-circle"
-              />
-            </ButtonWithIcon>
-          </Row>
+          <Title>Measurements
+              <HelperButton onPress={() => setMeasurementHelperVisible(true)}/>
+          </Title>
 
           {!(measurementsToAdd.length > 0) && (
             <ListItem>
@@ -285,7 +220,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </CenteredGrayText>
             </ListItem>
           )}
-
+          
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
               <Text>
@@ -293,6 +228,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </Text>
             </ListItem>
           ))}
+
+          <ButtonWithIcon
+              style={{marginLeft:"auto", marginRight:"auto", marginTop:5}}
+              onPress={() => navigation.navigate("newFeatureScreen")}
+          >
+            <Ionicons
+              size={30}
+              style={{ color: theme.color.palette.curiousBlue }}
+              name="ios-add-circle"
+            />
+          </ButtonWithIcon>
 
           <FormSection
             style={{
@@ -307,6 +253,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onChangeText={handleChange("comments")}
               onBlur={handleBlur("comments")}
               value={values.comments}
+              placeholder={"Have some more thoughts? Add them here!"}
             />
           </FormSection>
 
@@ -319,16 +266,44 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onPress={handleSubmit as any}
             />
           </FormSection>
+
+          <ModalComponent
+            visibilityState={campaignHelperVisible}
+            setVisibilityFunction={setCampaignHelperVisible}
+            popupTitle={"What is a Campaign?"}
+            popupText={"Campaigns are our different initiatives, so please choose the right one if you know the name. Otherwise choose Campaign-less observations."}
+          />
+          <ModalComponent
+            visibilityState={pictureHelperVisible}
+            setVisibilityFunction={setPictureHelperVisible}
+            popupTitle={"Why is a picture needed?"}
+            popupText={"We need a photo of the trash and litter you found, so that we can compare it with the images from our satellites and see where they match."}
+          />
+          <ModalComponent
+            visibilityState={locationHelperVisible}
+            setVisibilityFunction={setCampaignHelperVisible}
+            popupTitle={"Why should I add a location and time?"}
+            popupText={"Trash in the oceans is moving, so in order to match your picture with our satellite images we need to know when and where you took the photo."}
+          />
+          <ModalComponent
+            visibilityState={inspectionHelperVisible}
+            setVisibilityFunction={setInspectionHelperVisible}
+            popupTitle={"What is a Visual Inspection?"}
+            popupText={"In Visual Inspection you can choose different categories, for example if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe the size of trash."}
+          />
+          <ModalComponent
+            visibilityState={measurementHelperVisible}
+            setVisibilityFunction={setMeasurementHelperVisible}
+            popupTitle={"What is a Measurement?"}
+            popupText={"Measurements are a great help for us, as you can describe the trash in even greater detail. Press the + sign and add some measurements, you can choose from different metrics. "}
+          />
         </>
       )}
     </Formik>
   );
 };
 
-const VisualInspectionView = styled.View`
-  margin-top: ${(props) => props.theme.spacing.xlarge}px;
-  padding-horizontal: ${(props) => props.theme.spacing.small}px;
-`;
+
 
 const FormSection = styled.View`
   justify-content: center;
