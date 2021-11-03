@@ -281,7 +281,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           />
           <ModalComponent
             visibilityState={locationHelperVisible}
-            setVisibilityFunction={setCampaignHelperVisible}
+            setVisibilityFunction={setLocationHelperVisible}
             popupTitle={"Why should I add a location and time?"}
             popupText={"Trash in the oceans is moving, so in order to match your picture with our satellite images we need to know when and where you took the photo."}
           />
