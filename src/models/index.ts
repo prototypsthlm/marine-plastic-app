@@ -79,6 +79,7 @@ export interface Measurement extends BaseEntity {
   isCollected: boolean;
   comments?: string;
   extra?: any; // TODO: is this used?
+  material?: string;
 }
 
 export enum UnitEnum {
@@ -116,6 +117,8 @@ export interface LitterType {
   isCore: boolean;
   environmentalCompartments: EnvCompartments;
 }
+
+export type Material = string;
 
 export interface Campaign extends BaseEntity {
   name: string;

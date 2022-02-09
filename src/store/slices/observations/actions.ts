@@ -185,6 +185,7 @@ export const submitNewObservation: Thunk<NewObservationPayload> =
                 : undefined,
             isApproximate: measurementPayload.isApproximate,
             isCollected: measurementPayload.isCollected,
+            material: measurementPayload.material,
           };
         });
       const newObservation: Observation = {

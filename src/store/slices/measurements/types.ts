@@ -3,6 +3,7 @@ export interface NewMeasurementPayload {
   unit?: string;
   isApproximate: boolean;
   isCollected: boolean;
+  material?: string;
 }
 
 export interface EditMeasurementPayload {
@@ -14,4 +15,5 @@ export interface EditMeasurementPayload {
   quantityGramPerLiter?: number;
   isApproximate: boolean;
   isCollected: boolean;
+  material?: string;
 }
