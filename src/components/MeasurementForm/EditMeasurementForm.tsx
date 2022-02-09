@@ -21,7 +21,7 @@ import {
 import { theme } from "../../theme";
 import { NavigationProps } from "../../navigation/types";
 import { useSelector } from "react-redux";
-import { Measurement, LitterType, UnitEnum } from "../../models";
+import { Measurement, LitterType, UnitEnum, Material } from "../../models";
 import BasicHeaderButtons from "../BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
 import {
@@ -40,6 +40,7 @@ interface InitialFormValuesShape {
   unit?: string;
   isApproximate: boolean;
   isCollected: boolean;
+  material?: string;
 }
 
 const numberValidation = () =>
@@ -55,6 +56,7 @@ const validation = Yup.object().shape({
   unit: Yup.string(),
   isApproximate: Yup.boolean(),
   isCollected: Yup.boolean(),
+  material: Yup.string().nullable(),
 });
 
 const NewFeatureForm = ({ navigation }: NavigationProps) => {
@@ -71,6 +73,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     unit: measurementEntry && getUnitValueFromMeasurement(measurementEntry),
     isCollected: measurementEntry?.isCollected || false,
     isApproximate: measurementEntry?.isApproximate || false,
+    material: measurementEntry?.material,
   };
 
   const selectedLitterTypes = useSelector<RootState, LitterType | undefined>(
@@ -115,31 +118,32 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
     if (!selectedUnit) return;
     const editedFeature: EditMeasurementPayload = {
       quantityKg:
-        selectedUnit == UnitEnum.KG
+        selectedUnit === UnitEnum.KG
           ? Number(values.quantity?.replace(/,/, "."))
           : undefined,
       quantityItemsPerM2:
-        selectedUnit == UnitEnum.ITEMS_PER_M2
+        selectedUnit === UnitEnum.ITEMS_PER_M2
           ? Number(values.quantity?.replace(/,/, "."))
           : undefined,
       quantityItemsPerM3:
-        selectedUnit == UnitEnum.ITEMS_PER_M3
+        selectedUnit === UnitEnum.ITEMS_PER_M3
           ? Number(values.quantity?.replace(/,/, "."))
           : undefined,
       quantityPercentOfSurface:
-        selectedUnit == UnitEnum.PERCENT_OF_SURFACE
+        selectedUnit === UnitEnum.PERCENT_OF_SURFACE
           ? Number(values.quantity?.replace(/,/, "."))
           : undefined,
       quantityPercentOfWeight:
-        selectedUnit == UnitEnum.PERCENT_OF_WEIGHT
+        selectedUnit === UnitEnum.PERCENT_OF_WEIGHT
           ? Number(values.quantity?.replace(/,/, "."))
           : undefined,
       quantityGramPerLiter:
-        selectedUnit == UnitEnum.GRAM_PER_LITER
+        selectedUnit === UnitEnum.GRAM_PER_LITER
           ? Number(values.quantity?.replace(/,/, "."))
           : undefined,
       isApproximate: values.isApproximate,
       isCollected: values.isCollected,
+      material: selectedMaterial !== "undefined" ? selectedMaterial : undefined,
     };
     dispatch(submitEditMeasurement(editedFeature));
     actions.setSubmitting(false);
@@ -147,6 +151,13 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
 
   const [selectedUnit, setSelectedUnit] = useState<string | null>(
     (measurementEntry && getUnitValueFromMeasurement(measurementEntry)) || null
+  );
+  const [selectedMaterial, setSelectedMaterial] = useState<string | undefined>(
+    measurementEntry?.material || undefined
+  );
+
+  const materials = useSelector<RootState, Array<Material>>(
+    (state) => state.measurements.materials
   );
 
   return (
@@ -182,7 +193,7 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
                 Select feature type...
               </Text>
             )}
-            {selectedLitterTypes !== undefined && (
+            {selectedLitterTypes !=== undefined && (
               <FlexColumn style={{ 
                   width: "100%", 
                   paddingTop: theme.spacing.small,
@@ -248,6 +259,20 @@ const NewFeatureForm = ({ navigation }: NavigationProps) => {
               value={values.isCollected}
             />
           </ListItemNonTouchable>
+          <FormSection style={{ paddingHorizontal: 0 }}>
+            <VisualInspectionDropdownField
+              label="Litter Material"
+              value={selectedMaterial || ""}
+              items={[
+                { label: "Unspecified", value: "undefined" },
+                ...materials.map((material) => ({
+                  label: material,
+                  value: material,
+                })),
+              ]}
+              setValue={setSelectedMaterial}
+            />
+          </FormSection>
         </>
       )}
     </Formik>

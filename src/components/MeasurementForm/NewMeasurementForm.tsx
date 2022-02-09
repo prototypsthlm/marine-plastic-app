@@ -4,7 +4,7 @@ import { Switch } from "react-native";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import styled from "../../styled";
-import { useThunkDispatch } from "../../store/store";
+import { RootState, useThunkDispatch } from "../../store/store";
 
 import { NavigationProps } from "../../navigation/types";
 import {
@@ -14,11 +14,12 @@ import {
 import { theme } from "../../theme";
 import { Text } from "../elements";
 import { units } from "./utils";
-import { UnitEnum } from "../../models";
+import { Material, UnitEnum } from "../../models";
 import {
   VisualInspectionInputField,
   VisualInspectionDropdownField,
 } from "./VisualInspectionFields";
+import { useSelector } from "react-redux";
 
 interface InitialFormValuesShape {
   [key: string]: string | boolean | undefined;
@@ -26,6 +27,7 @@ interface InitialFormValuesShape {
   unit?: string;
   isApproximate: boolean;
   isCollected: boolean;
+  material?: string;
 }
 
 const InitialFormValues: InitialFormValuesShape = {
@@ -46,6 +48,7 @@ const validation = Yup.object().shape({
   unit: Yup.string(),
   isApproximate: Yup.boolean(),
   isCollected: Yup.boolean(),
+  material: Yup.string().nullable(),
 });
 
 const NewMeasurementForm = ({ navigation }: NavigationProps) => {
@@ -58,12 +61,22 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
       unit: selectedUnit,
       isApproximate: values.isApproximate,
       isCollected: values.isCollected,
+      material: selectedMaterial !== "undefined" ? selectedMaterial : undefined,
     };
     dispatch(addNewMeasurement(newMeasurement));
     actions.resetForm(InitialFormValues);
   };
 
-  const [selectedUnit, setSelectedUnit] = useState<string | null>(UnitEnum.PERCENT_OF_SURFACE);
+  const [selectedUnit, setSelectedUnit] = useState<string | null>(
+    UnitEnum.PERCENT_OF_SURFACE
+  );
+  const [selectedMaterial, setSelectedMaterial] = useState<string | undefined>(
+    undefined
+  );
+
+  const materials = useSelector<RootState, Array<Material>>(
+    (state) => state.measurements.materials
+  );
 
   return (
     <Formik
@@ -120,8 +133,22 @@ const NewMeasurementForm = ({ navigation }: NavigationProps) => {
             />
           </ListItemNonTouchable>
 
+          <FormSection style={{ paddingHorizontal: 0 }}>
+            <VisualInspectionDropdownField
+              label="Litter Material"
+              items={[
+                { label: "Unspecified", value: "undefined" },
+                ...materials.map((material) => ({
+                  label: material,
+                  value: material,
+                })),
+              ]}
+              setValue={setSelectedMaterial}
+            />
+          </FormSection>
+
           <SaveButton
-            disabled={!(values.quantity)}
+            disabled={!values.quantity}
             title="Save"
             onPress={handleSubmit as any}
           />
