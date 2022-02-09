@@ -39,6 +39,7 @@ export const measurementsModule = {
       isApproximate: measurement.isApproximate,
       isCollected: measurement.isCollected,
       comments: measurement.comments,
+      material: measurement.material,
     };
     const response: HttpResponse<SingleResponse<Measurement>> =
       await baseApi.post(measurementPath, params);
