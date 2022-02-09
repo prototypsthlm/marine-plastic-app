@@ -123,16 +123,12 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     string | undefined
   >();
 
-
   const [campaignHelperVisible, setCampaignHelperVisible] = useState(false);
   const [pictureHelperVisible, setPictureHelperVisible] = useState(false);
   const [locationHelperVisible, setLocationHelperVisible] = useState(false);
   const [inspectionHelperVisible, setInspectionHelperVisible] = useState(false);
-  const [measurementHelperVisible, setMeasurementHelperVisible] = useState(false);
-
-
-
-  
+  const [measurementHelperVisible, setMeasurementHelperVisible] =
+    useState(false);
 
   return (
     <Formik
@@ -142,7 +138,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     >
       {({ handleBlur, handleChange, handleSubmit, setFieldValue, values }) => (
         <>
-          <SectionHeader>SELECTED CAMPAIGN
+          <SectionHeader>
+            SELECTED CAMPAIGN
             <HelperButton onPress={() => setCampaignHelperVisible(true)} />
           </SectionHeader>
 
@@ -159,12 +156,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             </Text>
             <Ionicons
               size={20}
-              style={{ color: theme.color.palette.curiousBlue, marginLeft: "auto", marginRight: 5}}
+              style={{
+                color: theme.color.palette.curiousBlue,
+                marginLeft: "auto",
+                marginRight: 5,
+              }}
               name="chevron-down"
             />
           </ListItem>
 
-          <SectionHeader style={{ marginTop: theme.spacing.medium }}>PICTURE
+          <SectionHeader style={{ marginTop: theme.spacing.medium }}>
+            PICTURE
             <HelperButton onPress={() => setPictureHelperVisible(true)} />
           </SectionHeader>
           <PictureSection
@@ -176,8 +178,9 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {Boolean(values.imageUri) && values.location !== undefined ? (
             <>
-              <SectionHeader style={{ marginTop: theme.spacing.large }}>GEOLOCATION
-                <HelperButton onPress={() => setLocationHelperVisible(true)}/>
+              <SectionHeader style={{ marginTop: theme.spacing.large }}>
+                GEOLOCATION
+                <HelperButton onPress={() => setLocationHelperVisible(true)} />
               </SectionHeader>
               <MapItem
                 location={values.location}
@@ -200,17 +203,18 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           <SectionHeader style={{ marginTop: theme.spacing.large }}>
             VISUAL INSPECTION
-            <HelperButton onPress={() => setInspectionHelperVisible(true)}/>
+            <HelperButton onPress={() => setInspectionHelperVisible(true)} />
           </SectionHeader>
           <VisualInspectionForm
-              visualInspectionType={visualInspectionType}
-              setVisualInspectionType={setVisualInspectionType}
-              values={values}
-              setFieldValue={setFieldValue}
+            visualInspectionType={visualInspectionType}
+            setVisualInspectionType={setVisualInspectionType}
+            values={values}
+            setFieldValue={setFieldValue}
           />
 
-          <Title>Measurements
-              <HelperButton onPress={() => setMeasurementHelperVisible(true)}/>
+          <Title>
+            Measurements
+            <HelperButton onPress={() => setMeasurementHelperVisible(true)} />
           </Title>
 
           {!(measurementsToAdd.length > 0) && (
@@ -220,7 +224,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </CenteredGrayText>
             </ListItem>
           )}
-          
+
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
               <Text>
@@ -230,8 +234,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           ))}
 
           <ButtonWithIcon
-              style={{marginLeft:"auto", marginRight:"auto", marginTop:5}}
-              onPress={() => navigation.navigate("newFeatureScreen")}
+            style={{ marginLeft: "auto", marginRight: "auto", marginTop: 5 }}
+            onPress={() => navigation.navigate("newFeatureScreen")}
           >
             <Ionicons
               size={30}
@@ -247,13 +251,13 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             }}
           >
             <InputField
-              invertColors={false}
               label="Observation Comments"
               preset="default"
               onChangeText={handleChange("comments")}
               onBlur={handleBlur("comments")}
               value={values.comments}
               placeholder={"Have some more thoughts? Add them here!"}
+              placeholderTextColor={theme.color.palette.gray}
             />
           </FormSection>
 
@@ -271,39 +275,47 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             visibilityState={campaignHelperVisible}
             setVisibilityFunction={setCampaignHelperVisible}
             popupTitle={"What is a Campaign?"}
-            popupText={"Campaigns are our different initiatives, so please choose the right one if you know the name. Otherwise choose Campaign-less observations."}
+            popupText={
+              "Campaigns are our different initiatives, so please choose the right one if you know the name. Otherwise choose Campaign-less observations."
+            }
           />
           <ModalComponent
             visibilityState={pictureHelperVisible}
             setVisibilityFunction={setPictureHelperVisible}
             popupTitle={"Why is a picture needed?"}
-            popupText={"We need a photo of the trash and litter you found, so that we can compare it with the images from our satellites and see where they match."}
+            popupText={
+              "We need a photo of the trash and litter you found, so that we can compare it with the images from our satellites and see where they match."
+            }
           />
           <ModalComponent
             visibilityState={locationHelperVisible}
             setVisibilityFunction={setLocationHelperVisible}
             popupTitle={"Why should I add a location and time?"}
-            popupText={"Trash in the oceans is moving, so in order to match your picture with our satellite images we need to know when and where you took the photo."}
+            popupText={
+              "Trash in the oceans is moving, so in order to match your picture with our satellite images we need to know when and where you took the photo."
+            }
           />
           <ModalComponent
             visibilityState={inspectionHelperVisible}
             setVisibilityFunction={setInspectionHelperVisible}
             popupTitle={"What is a Visual Inspection?"}
-            popupText={"In Visual Inspection you can choose different categories, for example if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe the size of trash."}
+            popupText={
+              "In Visual Inspection you can choose different categories, for example if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe the size of trash."
+            }
           />
           <ModalComponent
             visibilityState={measurementHelperVisible}
             setVisibilityFunction={setMeasurementHelperVisible}
             popupTitle={"What is a Measurement?"}
-            popupText={"Measurements are a great help for us, as you can describe the trash in even greater detail. Press the + sign and add some measurements, you can choose from different metrics. "}
+            popupText={
+              "Measurements are a great help for us, as you can describe the trash in even greater detail. Press the + sign and add some measurements, you can choose from different metrics. "
+            }
           />
         </>
       )}
     </Formik>
   );
 };
-
-
 
 const FormSection = styled.View`
   justify-content: center;

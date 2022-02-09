@@ -13,7 +13,8 @@ import {
   selectObservationDetails,
 } from "../../../store/slices/observations";
 import {
-  fetchAllLitterTypes
+  fetchAllLitterTypes,
+  fetchAllMaterials,
 } from "../../../store/slices/measurements";
 import { NavigationProps } from "../../../navigation/types";
 import {
@@ -49,6 +50,7 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
 
   useEffect(() => {
     dispatch(fetchAllLitterTypes());
+    dispatch(fetchAllMaterials());
     dispatch(fetchCachedObservationImages());
     dispatch(fetchObservations({}));
   }, []);
@@ -57,46 +59,55 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
     dispatch(selectObservationDetails(observationEntry));
     navigation.navigate("observationDetailScreen");
   };
-  
-  const getObservationImage = (observation: Observation) => {
 
+  const getObservationImage = (observation: Observation) => {
     let image;
 
-    if(isOnline && observation.images && observation.images?.length>0) {
+    if (isOnline && observation.images && observation.images?.length > 0) {
       image = observation.images[0];
     } else {
-      image = observationImages.find((f) => f.observationId === observation.id)
-    } 
-  
+      image = observationImages.find((f) => f.observationId === observation.id);
+    }
+
     return image?.url || "";
-  }
+  };
 
   const renderItem = ({ item }: { item: Observation }) => (
-    <ListItem style={{}}onPress={() => navigateToDetailScreen(item)}>
-      { getObservationImage(item) ? (
-         <Image style={{
+    <ListItem style={{}} onPress={() => navigateToDetailScreen(item)}>
+      {getObservationImage(item) ? (
+        <Image
+          style={{
             width: 50,
             height: 50,
             borderRadius: 6,
-            marginRight: 12
-          }} source={{ uri: getObservationImage(item) }} />
-      ) :
-      (
-        <View style={{
-          width: 50,
-          height: 50,
-          borderRadius: 6,
-          marginRight: 12,
-          backgroundColor: "#efefef",
-        }} />
+            marginRight: 12,
+          }}
+          source={{ uri: getObservationImage(item) }}
+        />
+      ) : (
+        <View
+          style={{
+            width: 50,
+            height: 50,
+            borderRadius: 6,
+            marginRight: 12,
+            backgroundColor: "#efefef",
+          }}
+        />
       )}
-     
+
       <FlexColumn>
-        { user?.id === item.creatorId ? (
-          <Text style={{ fontFamily: theme.typography.primaryBold, color: theme.color.palette.curiousBlue }}>{username}</Text>
-          
-        ): (
-          <Text style={{ color: theme.color.palette.gray}}>Observer</Text>
+        {user?.id === item.creatorId ? (
+          <Text
+            style={{
+              fontFamily: theme.typography.primaryBold,
+              color: theme.color.palette.curiousBlue,
+            }}
+          >
+            {username}
+          </Text>
+        ) : (
+          <Text style={{ color: theme.color.palette.gray }}>Observer</Text>
         )}
         <Text>
           {item.timestamp

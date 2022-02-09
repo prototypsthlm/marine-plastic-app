@@ -1,4 +1,4 @@
-import { LitterType, User } from "../../models";
+import { LitterType, Material, User } from "../../models";
 
 export interface BaseResult<T> {
   ok: boolean;
@@ -21,6 +21,10 @@ export interface PagedResponse<T> {
 
 export interface LitterTypesResponse {
   results: Array<LitterType>;
+}
+
+export interface MaterialsResponse {
+  results: Array<Material>;
 }
 
 export type GetUserInfoResult = BaseResult<UserResponse>;

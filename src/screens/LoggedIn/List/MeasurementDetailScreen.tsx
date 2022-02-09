@@ -83,6 +83,10 @@ export default function MeasurementDetailScreen({
       label: "Is Approximate: ",
       value: measurementEntry?.isApproximate ? "Yes" : "No",
     },
+    {
+      label: "Litter Material: ",
+      value: measurementEntry?.material || "Unspecified",
+    },
   ];
 
   return (

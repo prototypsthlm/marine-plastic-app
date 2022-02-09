@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { LitterType, Measurement } from "../../../models";
+import { LitterType, Material, Measurement } from "../../../models";
 import { NewMeasurementPayload } from "./types";
 
 interface MeasurementsState {
@@ -12,8 +12,8 @@ interface MeasurementsState {
 
   // Entries
   measurementEntries: Array<Measurement>;
-  //featureImages: Array<FeatureImage>;
   litterTypes: Array<LitterType>;
+  materials: Array<Material>;
 
   // Selection
   selectedMeasurementEntry?: Measurement;
@@ -32,8 +32,8 @@ const initialState: MeasurementsState = {
 
   // Entries
   measurementEntries: [],
-  //featureImages: [],
   litterTypes: [],
+  materials: [],
 
   // Selection
   selectedMeasurementEntry: undefined,
@@ -48,7 +48,10 @@ export const measurementsSlice = createSlice({
   initialState,
   reducers: {
     // Pagination
-    setMeasurementCursor: (state, { payload }: PayloadAction<string | null>) => {
+    setMeasurementCursor: (
+      state,
+      { payload }: PayloadAction<string | null>
+    ) => {
       state.reachedPageEnd = payload === null;
       state.nextPageCursor = payload;
     },
@@ -68,11 +71,16 @@ export const measurementsSlice = createSlice({
     // Entries
     addEditedMeasurement: (state, { payload }: PayloadAction<Measurement>) => {
       state.measurementEntries = [
-        ...state.measurementEntries.filter((measurement) => measurement.id !== payload.id),
+        ...state.measurementEntries.filter(
+          (measurement) => measurement.id !== payload.id
+        ),
         payload,
       ];
     },
-    addFetchedMeasurements: (state, { payload }: PayloadAction<Array<Measurement>>) => {
+    addFetchedMeasurements: (
+      state,
+      { payload }: PayloadAction<Array<Measurement>>
+    ) => {
       if (state.isFirstPage) {
         state.isFirstPage = false;
         state.measurementEntries = payload;
@@ -80,7 +88,10 @@ export const measurementsSlice = createSlice({
         state.measurementEntries = [...state.measurementEntries, ...payload];
       }
     },
-    setFetchedMeasurements: (state, { payload }: PayloadAction<Array<Measurement>>) => {
+    setFetchedMeasurements: (
+      state,
+      { payload }: PayloadAction<Array<Measurement>>
+    ) => {
       state.measurementEntries = payload;
     },
     addFetchedLitterTypes: (
@@ -88,6 +99,12 @@ export const measurementsSlice = createSlice({
       { payload }: PayloadAction<Array<LitterType>>
     ) => {
       state.litterTypes = payload;
+    },
+    addFetchedMaterials: (
+      state,
+      { payload }: PayloadAction<Array<Material>>
+    ) => {
+      state.materials = payload;
     },
 
     // Selection
@@ -125,8 +142,8 @@ export const {
   addEditedMeasurement,
   addFetchedMeasurements,
   setFetchedMeasurements,
-  //addFetchedFeatureImages,
   addFetchedLitterTypes,
+  addFetchedMaterials,
 
   // Selection
   selectMeasurement,
