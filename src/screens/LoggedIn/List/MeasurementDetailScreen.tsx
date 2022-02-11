@@ -1,7 +1,7 @@
 import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
-import { Measurement } from "../../../models";
+import { Measurement, User } from "../../../models";
 
 import { Alert } from "react-native";
 
@@ -17,39 +17,45 @@ import {
   getUnitsLabel,
   getUnitValueFromMeasurement,
 } from "../../../components/MeasurementForm/utils";
+import DeleteButton from "../../../components/elements/DeleteButton";
 
 export default function MeasurementDetailScreen({
   navigation,
 }: NavigationProps) {
   const dispatch = useThunkDispatch();
 
+  const user = useSelector<RootState, User | undefined>(
+    (state) => state.account.user
+  );
+
   const measurementEntry = useSelector<RootState, Measurement | undefined>(
     (state) => state.measurements.selectedMeasurementEntry
   );
 
+  const belongsToCurrentUser =
+    user && measurementEntry && user.id === measurementEntry.creatorId;
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <BasicHeaderButtons>
-          <Item
-            title="Edit"
-            onPress={() => navigation.navigate("featureEditScreen")}
-          />
-          <Item
-            title="Delete"
-            iconName="ios-trash"
-            color={theme.color.palette.red}
-            onPress={() => deleteAlert()}
-          />
-        </BasicHeaderButtons>
-      ),
+      headerRight: () => {
+        if (!belongsToCurrentUser) return null;
+
+        return (
+          <BasicHeaderButtons>
+            <Item
+              title="Edit"
+              onPress={() => navigation.navigate("featureEditScreen")}
+            />
+          </BasicHeaderButtons>
+        );
+      },
     });
   }, [navigation]);
 
   const deleteAlert = () =>
     Alert.alert(
-      "Delete feature?",
-      "This feature will be permanently deleted.",
+      "Delete measurement?",
+      "This measurement will be permanently deleted.",
       [
         {
           text: "Cancel",
@@ -108,6 +114,9 @@ export default function MeasurementDetailScreen({
               ))}
             </FlexColumn>
           </Section>
+          {belongsToCurrentUser && (
+            <DeleteButton onPress={() => deleteAlert()} />
+          )}
         </>
       )}
     </Screen>
