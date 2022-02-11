@@ -227,8 +227,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
           {measurementsToAdd.map((measurement, index) => (
             <ListItem key={index}>
-              <Text>
+              <Text style={{ flexGrow: 1 }}>
                 {measurement.quantity} {getUnitsLabel(measurement.unit || "")}
+              </Text>
+              <Text bold style={{ flexGrow: 0 }}>
+                {measurement.material ? measurement.material : "Unspecified"}
               </Text>
             </ListItem>
           ))}
