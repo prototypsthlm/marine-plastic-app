@@ -44,6 +44,7 @@ import {
   getUnitsLabel,
   getUnitValueFromMeasurement,
 } from "../../../components/MeasurementForm/utils";
+import DeleteButton from "../../../components/elements/DeleteButton";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -81,6 +82,9 @@ export default function ObservationDetailScreen({
     (state) => state.ui.isOnline
   );
 
+  const belongsToCurrentUser =
+    user && observationEntry && user.id === observationEntry.creatorId;
+
   const getObserverName = (creatorId: string): string | undefined => {
     if (creatorId !== user?.id) {
       if (observationCreator)
@@ -102,20 +106,13 @@ export default function ObservationDetailScreen({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => {
-        if (user && observationEntry && user.id !== observationEntry.creatorId)
-          return null;
+        if (!belongsToCurrentUser) return null;
 
         return (
           <BasicHeaderButtons>
             <Item
               title="Edit"
               onPress={() => navigation.navigate("observationEditScreen")}
-            />
-            <Item
-              title="Delete"
-              iconName="ios-trash"
-              color={theme.color.palette.red}
-              onPress={() => deleteAlert()}
             />
           </BasicHeaderButtons>
         );
@@ -189,6 +186,19 @@ export default function ObservationDetailScreen({
         data={filteredMeasurementEntriesBySelectedObservation}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        ListFooterComponent={() => (
+          <>
+            {belongsToCurrentUser && (
+              <DeleteButton
+                style={{
+                  marginTop: theme.spacing.xxlarge,
+                  marginBottom: theme.spacing.xxlarge,
+                }}
+                onPress={() => deleteAlert()}
+              />
+            )}
+          </>
+        )}
         ListHeaderComponent={() => (
           <>
             {observationEntry ? (
