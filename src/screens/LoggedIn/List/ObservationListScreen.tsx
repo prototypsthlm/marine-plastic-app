@@ -24,6 +24,7 @@ import {
   Text,
 } from "../../../components/elements";
 import { theme } from "../../../theme";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
@@ -146,6 +147,15 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
                   ? selectedCampaignEntry.name
                   : "Campaign-less observations"}
               </Text>
+              <Ionicons
+                size={20}
+                style={{
+                  color: theme.color.palette.curiousBlue,
+                  marginLeft: "auto",
+                  marginRight: 5,
+                }}
+                name="chevron-down"
+              />
             </ListItem>
 
             <SectionHeader style={{ marginTop: theme.spacing.large }}>
