@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Formik } from "formik";
 import React, { useState } from "react";
-import { Button } from "react-native";
+import { Button, KeyboardAvoidingView, Platform } from "react-native";
 import { LatLng } from "react-native-maps";
 import { useSelector } from "react-redux";
 import * as Yup from "yup";
@@ -253,17 +253,21 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               backgroundColor: theme.color.background,
             }}
           >
-            <InputField
-              label="Observation Comments"
-              preset="default"
-              onChangeText={handleChange("comments")}
-              onBlur={handleBlur("comments")}
-              value={values.comments}
-              placeholder={
-                "Please here any additional information to your observation here."
-              }
-              placeholderTextColor={theme.color.palette.gray}
-            />
+            <KeyboardAvoidingView
+              behavior={Platform.OS === "ios" ? "padding" : "height"}
+            >
+              <InputField
+                label="Observation Comments"
+                preset="default"
+                onChangeText={handleChange("comments")}
+                onBlur={handleBlur("comments")}
+                value={values.comments}
+                placeholder={
+                  "Please here any additional information to your observation here."
+                }
+                placeholderTextColor={theme.color.palette.gray}
+              />
+            </KeyboardAvoidingView>
           </FormSection>
 
           <FormSection style={{ marginBottom: theme.spacing.xxlarge }}>
