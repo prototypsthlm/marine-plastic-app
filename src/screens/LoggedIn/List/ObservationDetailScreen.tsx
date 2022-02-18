@@ -357,7 +357,7 @@ export default function ObservationDetailScreen({
 
             {filteredMeasurementEntriesBySelectedObservation.length > 0 && (
               <SectionHeader style={{ marginTop: theme.spacing.medium }}>
-                ADDED MEASUREMENTS
+                QUANTITY AND TYPE
               </SectionHeader>
             )}
           </>
