@@ -212,10 +212,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             setFieldValue={setFieldValue}
           />
 
-          <Title>
-            Measurements
+          <SectionHeader style={{ marginTop: theme.spacing.large }}>
+            QUANTITY AND TYPE
             <HelperButton onPress={() => setMeasurementHelperVisible(true)} />
-          </Title>
+          </SectionHeader>
 
           {!(measurementsToAdd.length > 0) && (
             <ListItem>
@@ -259,7 +259,9 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               onChangeText={handleChange("comments")}
               onBlur={handleBlur("comments")}
               value={values.comments}
-              placeholder={"Have some more thoughts? Add them here!"}
+              placeholder={
+                "Please here any additional information to your observation here."
+              }
               placeholderTextColor={theme.color.palette.gray}
             />
           </FormSection>
@@ -279,7 +281,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             setVisibilityFunction={setCampaignHelperVisible}
             popupTitle={"What is a Campaign?"}
             popupText={
-              "Campaigns are our different initiatives, so please choose the right one if you know the name. Otherwise choose Campaign-less observations."
+              "Group of observations that will be associated with the same group ID. Each campaign, will be associated with a DOI."
             }
           />
           <ModalComponent
@@ -287,7 +289,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
             setVisibilityFunction={setPictureHelperVisible}
             popupTitle={"Why is a picture needed?"}
             popupText={
-              "We need a photo of the trash and litter you found, so that we can compare it with the images from our satellites and see where they match."
+              "We use pictures to understand if what we observe from satellites is matching what is actually visible on the ground."
             }
           />
           <ModalComponent
@@ -301,17 +303,17 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           <ModalComponent
             visibilityState={inspectionHelperVisible}
             setVisibilityFunction={setInspectionHelperVisible}
-            popupTitle={"What is a Visual Inspection?"}
+            popupTitle={"Visual inspection"}
             popupText={
-              "In Visual Inspection you can choose different categories, for example if there was only one piece of litter (like a can of beer), if it was a small group or a patch (different items mixed together) or filament. Below, you are asked to enter different metrics that describe the size of trash."
+              "Please add information about shape and size of what you observe (e.g. is it a single item, a large patch or a filament? How big is it?)"
             }
           />
           <ModalComponent
             visibilityState={measurementHelperVisible}
             setVisibilityFunction={setMeasurementHelperVisible}
-            popupTitle={"What is a Measurement?"}
+            popupTitle={"Quantity and type"}
             popupText={
-              "Measurements are a great help for us, as you can describe the trash in even greater detail. Press the + sign and add some measurements, you can choose from different metrics. "
+              "Please add information about the quantity and litter type that you observe (is it mostly plastic or is it mixed material? What is the % of plastic?). You can add several measurements."
             }
           />
         </>
