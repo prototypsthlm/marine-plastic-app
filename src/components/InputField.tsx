@@ -106,20 +106,29 @@ const Container = styled.View<StyledProps>`
   height: 80px;
   width: ${(p) => (p.halfWidth ? "48%" : "auto")};
   margin-vertical: ${(p) => p.theme.spacing.small}px;
+  margin-horizontal: ${(p) => (p.preset === "coord" ? 4 : 0)}px;
 `;
 
 const InputWrapper = styled.View<StyledProps>`
   align-items: center;
   flex-direction: row;
-  padding-left: ${(p) => (p.preset === "rounded" ? 16 : 0)}px;
-  padding-right: ${(p) => (p.preset === "rounded" ? 13 : 0)}px;
+  padding-left: ${(p) => (p.preset === "rounded" ? 16
+                          : p.preset === "coord" ? 10
+                          : 0)}px;
+  padding-right: ${(p) => (p.preset === "rounded" ? 13
+                          : p.preset === "coord" ? 10
+                          : 0)}px;
   background-color: ${(p) =>
-    p.preset === "rounded"
+    p.preset === "rounded" 
       ? !p.error
         ? "rgba(255,255,255,0.5)"
         : "white"
-      : "transparent"};
-  border-radius: ${(p) => (p.preset === "rounded" ? 999 : 0)}px;
+    : p.preset === "coord" ? p.theme.color.palette.softGrey
+    : "transparent"};
+  border-radius: ${(p) => (p.preset === "rounded" ? 999 
+                          : p.preset === "coord" ? 10 
+                          : 0)}px;
+
 `;
 
 const StyledTextInput = styled.TextInput<StyledProps>`
@@ -130,8 +139,11 @@ const StyledTextInput = styled.TextInput<StyledProps>`
   line-height: 19px;
   color: ${(p) => p.theme.color.palette.black};
   border-bottom-color: ${(p) => p.theme.color.palette.black};
-  border-bottom-width: ${(p) => (p.preset === "rounded" ? 0 : 1)}px;
-`;
+  border-bottom-width: ${(p) => (p.preset === "rounded" ? 0
+                                : p.preset === "coord" ? 0
+                                : 1)}px;
+  `;
+  // border-width: ${(p) => (p.preset === "coord" ? 1 : 0)}px;
 
 const Error = styled.Text<StyledProps>`
   color: ${(p) =>
@@ -150,12 +162,12 @@ const Label = styled.Text<StyledProps>`
     p.preset === "codeInput" ? 0 : p.theme.spacing.small}px;
   margin-left: ${(p) => (p.preset === "rounded" ? 22 : 0)}px;
   font-size: ${(p) =>
-    p.preset === "rounded" || p.preset === "codeInput" ? 14 : 10}px;
+    p.preset === "rounded" || p.preset === "codeInput" || p.preset === "coord" ? 14 : 10}px;
   line-height: ${(p) =>
-    p.preset === "rounded" || p.preset === "codeInput" ? 17 : 12}px;
+    p.preset === "rounded" || p.preset === "codeInput" || p.preset === "coord" ? 17 : 12}px;
 `;
 
-export type StylePresetName = "default" | "rounded" | "codeInput";
+export type StylePresetName = "default" | "rounded" | "codeInput" | "coord";
 export type InputPresetName = keyof typeof presets;
 
 export default InputField;
