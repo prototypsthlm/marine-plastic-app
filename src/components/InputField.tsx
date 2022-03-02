@@ -93,6 +93,11 @@ const presets = {
     secureTextEntry: true,
     textContentType: "password",
   } as TextInputProps,
+  coordinates: {
+    autoCapitalize: "none",
+    autoCorrect: false,
+    keyboardType: "decimal-pad"
+  } as TextInputProps
 };
 
 const Container = styled.View<StyledProps>`
