@@ -125,6 +125,8 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
 
   const [prelLatitude, setPrelLatitude] = useState("0")
   const [prelLongitude, setPrelLongitude] = useState("0")
+  const [errorLat, setErrorLat] = useState<string | undefined>()
+  const [errorLong, setErrorLong] = useState<string | undefined>()
 
   const [campaignHelperVisible, setCampaignHelperVisible] = useState(false);
   const [pictureHelperVisible, setPictureHelperVisible] = useState(false);
@@ -197,10 +199,10 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                   setFieldValue("location", value)
               }}
               />
-              <Row >
+              <Row style={{backgroundColor: "white", marginTop: -1}}>
                 <InputField
-                  stylePreset="rounded"
-                  label="Coordinates Lat"
+                  stylePreset="coord"
+                  label="Latitude"
                   preset="coordinates"
                   halfWidth={true}
                   onChangeText={(value) => {
@@ -209,16 +211,21 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                   onEndEditing={(value) => {
                     const text = value.nativeEvent.text
                     const coord = parseFloat(text)
-                    if (isNaN(coord)) return
+                    if (isNaN(coord)) {
+                      setErrorLat("Invalid Latitude")
+                      return
+                    }
                     setFieldValue("location", {...values.location, latitude: coord})
+                    setErrorLat(undefined)
                   }}
+                  error={errorLat}
                   value={`${prelLatitude}`}
                   placeholder={"Latitude"}
                   placeholderTextColor={theme.color.palette.gray}
                 />
                 <InputField
-                  stylePreset="rounded"
-                  label="Coordinates Long"
+                  stylePreset="coord"
+                  label="Longitude"
                   preset="coordinates"
                   halfWidth={true}
                   onChangeText={(value) => {
@@ -227,9 +234,14 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                   onEndEditing={(value) => {
                     const text = value.nativeEvent.text
                     const coord = parseFloat(text)
-                    if (isNaN(coord)) return
+                    if (isNaN(coord)) {
+                      setErrorLong("Invalid Longitude")
+                      return
+                    }
                     setFieldValue("location", {...values.location, longitude: coord})
+                    setErrorLong(undefined)
                   }}
+                  error={errorLong}
                   value={`${prelLongitude}`}
                   placeholder={"Longitude"}
                   placeholderTextColor={theme.color.palette.gray}
