@@ -143,7 +143,6 @@ const StyledTextInput = styled.TextInput<StyledProps>`
                                 : p.preset === "coord" ? 0
                                 : 1)}px;
   `;
-  // border-width: ${(p) => (p.preset === "coord" ? 1 : 0)}px;
 
 const Error = styled.Text<StyledProps>`
   color: ${(p) =>
