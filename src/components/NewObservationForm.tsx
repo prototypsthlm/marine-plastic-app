@@ -123,6 +123,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
     string | undefined
   >();
 
+  const [prelLatitude, setPrelLatitude] = useState("0")
+  const [prelLongitude, setPrelLongitude] = useState("0")
+  const [errorLat, setErrorLat] = useState<string | undefined>()
+  const [errorLong, setErrorLong] = useState<string | undefined>()
+
   const [campaignHelperVisible, setCampaignHelperVisible] = useState(false);
   const [pictureHelperVisible, setPictureHelperVisible] = useState(false);
   const [locationHelperVisible, setLocationHelperVisible] = useState(false);
@@ -172,7 +177,11 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
           <PictureSection
             imageUri={values.imageUri}
             onImageUriChange={handleChange("imageUri")}
-            onLocationChange={(value) => setFieldValue("location", value)}
+            onLocationChange={(value) => {
+              setPrelLatitude(value.latitude.toString())
+              setPrelLongitude(value.longitude.toString())
+              setFieldValue("location", value)
+          }}
             onTimestampChange={(value) => setFieldValue("timestamp", value)}
           />
 
@@ -184,8 +193,60 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
               </SectionHeader>
               <MapItem
                 location={values.location}
-                onLocationChange={(value) => setFieldValue("location", value)}
+                onLocationChange={(value) => {
+                  setPrelLatitude(value.latitude.toString())
+                  setPrelLongitude(value.longitude.toString())
+                  setFieldValue("location", value)
+              }}
               />
+              <Row style={{backgroundColor: "white", marginTop: -1}}>
+                <InputField
+                  stylePreset="coord"
+                  label="Latitude"
+                  preset="coordinates"
+                  halfWidth={true}
+                  onChangeText={(value) => {
+                    setPrelLatitude(value)
+                  }}
+                  onEndEditing={(value) => {
+                    const text = value.nativeEvent.text
+                    const coord = parseFloat(text)
+                    if (isNaN(coord)) {
+                      setErrorLat("Invalid Latitude")
+                      return
+                    }
+                    setFieldValue("location", {...values.location, latitude: coord})
+                    setErrorLat(undefined)
+                  }}
+                  error={errorLat}
+                  value={`${prelLatitude}`}
+                  placeholder={"Latitude"}
+                  placeholderTextColor={theme.color.palette.gray}
+                />
+                <InputField
+                  stylePreset="coord"
+                  label="Longitude"
+                  preset="coordinates"
+                  halfWidth={true}
+                  onChangeText={(value) => {
+                    setPrelLongitude(value)
+                  }}
+                  onEndEditing={(value) => {
+                    const text = value.nativeEvent.text
+                    const coord = parseFloat(text)
+                    if (isNaN(coord)) {
+                      setErrorLong("Invalid Longitude")
+                      return
+                    }
+                    setFieldValue("location", {...values.location, longitude: coord})
+                    setErrorLong(undefined)
+                  }}
+                  error={errorLong}
+                  value={`${prelLongitude}`}
+                  placeholder={"Longitude"}
+                  placeholderTextColor={theme.color.palette.gray}
+                />
+              </Row>
             </>
           ) : null}
 
