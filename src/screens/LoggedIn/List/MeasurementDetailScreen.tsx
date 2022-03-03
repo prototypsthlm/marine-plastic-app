@@ -1,28 +1,22 @@
 import React, { useLayoutEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState, useThunkDispatch } from "../../../store/store";
+import { RootState } from "../../../store/store";
 import { Measurement, User } from "../../../models";
-
-import { Alert } from "react-native";
 
 import { Screen } from "../../../components/Screen";
 import { FlexColumn, Section, Text } from "../../../components/elements";
 import { NavigationProps } from "../../../navigation/types";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 import { Item } from "react-navigation-header-buttons";
-import { theme } from "../../../theme";
-import { deleteMeasurement } from "../../../store/slices/measurements";
 import {
   getQuantityFromMeasurement,
   getUnitsLabel,
   getUnitValueFromMeasurement,
 } from "../../../components/MeasurementForm/utils";
-import DeleteButton from "../../../components/elements/DeleteButton";
 
 export default function MeasurementDetailScreen({
   navigation,
 }: NavigationProps) {
-  const dispatch = useThunkDispatch();
 
   const user = useSelector<RootState, User | undefined>(
     (state) => state.account.user
@@ -51,24 +45,6 @@ export default function MeasurementDetailScreen({
       },
     });
   }, [navigation]);
-
-  const deleteAlert = () =>
-    Alert.alert(
-      "Delete measurement?",
-      "This measurement will be permanently deleted.",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => dispatch(deleteMeasurement()),
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
 
   const fields = [
     {
@@ -114,9 +90,6 @@ export default function MeasurementDetailScreen({
               ))}
             </FlexColumn>
           </Section>
-          {belongsToCurrentUser && (
-            <DeleteButton onPress={() => deleteAlert()} />
-          )}
         </>
       )}
     </Screen>
