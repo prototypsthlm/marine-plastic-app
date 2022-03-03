@@ -296,7 +296,8 @@ export const deleteMeasurement: Thunk =
       const ids: Array<string> = [measurementId];
       if (ids.length > 0) await localDB.deleteEntities(ids);
 
-      dispatch(fetchMeasurements({}));
       navigation.goBack();
+      navigation.goBack(); // go back twice, to the observation details
+      dispatch(fetchMeasurements({forceRefresh: true})); // and refresh so that the deleted measurement is gone
     }
   };

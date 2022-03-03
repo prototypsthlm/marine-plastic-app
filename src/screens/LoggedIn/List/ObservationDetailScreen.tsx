@@ -2,7 +2,6 @@ import React, { useEffect, useLayoutEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
 import {
-  LitterType,
   Measurement,
   Observation,
   ObservationImage,
@@ -11,7 +10,6 @@ import {
 import { visualInspectionTypes } from "../../../components/VisualInspectionForm/VisualInspectionForm";
 
 import {
-  Alert,
   FlatList,
   Image,
   Modal,
@@ -22,7 +20,6 @@ import {
 import { Screen } from "../../../components/Screen";
 import { NavigationProps } from "../../../navigation/types";
 import {
-  FlexColumn,
   ListItem,
   Section,
   SectionHeader,
@@ -32,7 +29,6 @@ import { theme } from "../../../theme";
 import { Item } from "react-navigation-header-buttons";
 import BasicHeaderButtons from "../../../components/BasicHeaderButtons";
 import {
-  deleteObservation,
   fetchObservationCreator,
 } from "../../../store/slices/observations";
 import {
@@ -44,7 +40,6 @@ import {
   getUnitsLabel,
   getUnitValueFromMeasurement,
 } from "../../../components/MeasurementForm/utils";
-import DeleteButton from "../../../components/elements/DeleteButton";
 
 export default function ObservationDetailScreen({
   navigation,
@@ -120,24 +115,6 @@ export default function ObservationDetailScreen({
     });
   }, [navigation]);
 
-  const deleteAlert = () =>
-    Alert.alert(
-      "Delete observation?",
-      "This observation will be permanently deleted.",
-      [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
-        {
-          text: "Delete",
-          onPress: () => dispatch(deleteObservation()),
-          style: "destructive",
-        },
-      ],
-      { cancelable: false }
-    );
-
   const getObservationImage = (observation: Observation) => {
     const onlineImage: ObservationImage | undefined =
       isOnline && observation?.images && observation.images.length > 0
@@ -186,19 +163,6 @@ export default function ObservationDetailScreen({
         data={filteredMeasurementEntriesBySelectedObservation}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        ListFooterComponent={() => (
-          <>
-            {belongsToCurrentUser && (
-              <DeleteButton
-                style={{
-                  marginTop: theme.spacing.xxlarge,
-                  marginBottom: theme.spacing.xxlarge,
-                }}
-                onPress={() => deleteAlert()}
-              />
-            )}
-          </>
-        )}
         ListHeaderComponent={() => (
           <>
             {observationEntry ? (
