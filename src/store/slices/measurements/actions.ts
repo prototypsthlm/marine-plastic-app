@@ -298,5 +298,7 @@ export const deleteMeasurement: Thunk =
 
       dispatch(fetchMeasurements({}));
       navigation.goBack();
+      navigation.goBack(); // go back twice, to the observation details
+      dispatch(fetchMeasurements({forceRefresh: true})); // and refresh so that the deleted measurement is gone
     }
   };
