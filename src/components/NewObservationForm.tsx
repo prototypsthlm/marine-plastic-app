@@ -324,7 +324,7 @@ const NewObservationForm = ({ navigation }: NavigationProps) => {
                 onBlur={handleBlur("comments")}
                 value={values.comments}
                 placeholder={
-                  "Please here any additional information to your observation here."
+                  "Please add any additional information to your observation here."
                 }
                 placeholderTextColor={theme.color.palette.gray}
               />
