@@ -427,6 +427,7 @@ export const deleteObservation: Thunk =
       if (ids.length > 0) await localDB.deleteEntities(ids);
 
       dispatch(fetchCachedObservations());
-      navigation.goBack();
+      navigation.goBack(); 
+      navigation.goBack(); // go back twice, otherwise the deletet Observation will be shown again
     }
   };
