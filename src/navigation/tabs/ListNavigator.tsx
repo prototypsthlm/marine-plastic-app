@@ -9,6 +9,7 @@ import MeasurementEditScreen from "../../screens/LoggedIn/List/MeasurementEditSc
 
 import LitterTypePickerScreen from "../../screens/LoggedIn/Add/LitterTypePickerScreen";
 import LogoutButton from "../../components/LogoutButton";
+import SettingsHelperButton from "../../components/SettingsHelperButton";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,7 @@ export default function ListNavigator() {
         options={{
           headerTitle: "All campaign observations",
           headerRight: LogoutButton,
+          headerLeft: SettingsHelperButton
         }}
       />
       <Stack.Screen
