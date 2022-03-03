@@ -37,5 +37,8 @@ export default function DeleteButton({
 const RedButton = styled(ListItem)`
   background-color: ${theme.color.palette.red};
   margin-bottom: ${theme.spacing.medium}px;
+  border-radius: ${theme.spacing.small}px;
+  max-width: 50%;
+  align-self: center;
   justify-content: center;
-`;
+  `;
