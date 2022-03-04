@@ -21,12 +21,10 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   const [canUseLocation, setCanUseLocation] = useState<boolean>(false);
   const [location, setLocation] = useState<LocationObject | null>();
 
-
   const requestMediaLibrary = async () => {
     if (Platform.OS !== "web") {
-      const {
-        status: statusMediaLibrary,
-      } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status: statusMediaLibrary } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (statusMediaLibrary !== "granted") {
         alert("Sorry, we need camera roll permissions to make this work!");
       } else setCanUseMediaLibrary(true);
@@ -35,18 +33,19 @@ export default function UploadImage({ onChange }: UploadImageProps) {
 
   const requestCamera = async () => {
     if (Platform.OS !== "web") {
-      const {
-        status: statusCamera,
-      } = await ImagePicker.requestCameraPermissionsAsync();
+      const { status: statusCamera } =
+        await ImagePicker.requestCameraPermissionsAsync();
       if (statusCamera !== "granted") {
-        alert("Sorry, we need permissions to access your camera in order for this to work!");
+        alert(
+          "Sorry, we need permissions to access your camera in order for this to work!"
+        );
       } else setCanUseCamera(true);
     }
   };
 
   const requestLocation = async () => {
     if (Platform.OS !== "web") {
-      const { status } = await Location.requestPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         alert("Permission to access location was denied");
         return;
@@ -72,7 +71,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     }
     setIsLoading(true);
 
-    if(canUseLocation) {
+    if (canUseLocation) {
       const loc = await Location.getLastKnownPositionAsync();
       setLocation(loc);
     }
@@ -117,7 +116,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     }
     setIsLoading(true);
 
-    if(canUseLocation) {
+    if (canUseLocation) {
       const loc = await Location.getLastKnownPositionAsync();
       setLocation(loc);
     }
