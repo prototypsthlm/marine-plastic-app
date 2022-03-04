@@ -5,6 +5,7 @@ import NewFeatureScreen from "../../screens/LoggedIn/Add/NewMeasurementScreen";
 import LitterTypePickerScreen from "../../screens/LoggedIn/Add/LitterTypePickerScreen";
 import CampaignPickerScreen from "../../screens/LoggedIn/List/CampaignPickerScreen";
 import LogoutButton from "../../components/LogoutButton";
+import SettingsHelperButton from "../../components/SettingsHelperButton";
 
 const Stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function AddNavigator() {
         options={{
           headerTitle: "Submit observation",
           headerRight: LogoutButton,
+          headerLeft: SettingsHelperButton
         }}
       />
       <Stack.Screen
