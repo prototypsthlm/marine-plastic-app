@@ -2,9 +2,7 @@ import React, { useCallback } from "react"
 import { Item } from "react-navigation-header-buttons"
 import { theme } from "../theme"
 import BasicHeaderButtons from "./BasicHeaderButtons"
-import { logOut } from '../store/slices/session'
-import { useThunkDispatch } from "../store/store"
-import { Linking } from "expo"
+import * as Linking from "expo-linking"
 
 export default function SettingsHelperButton() {
   
