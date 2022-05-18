@@ -5,7 +5,7 @@
 
 ## Getting started
 
-Make sure you have [Node.js v14.x](https://nodejs.org/en/download/) and [Yarn v1](https://classic.yarnpkg.com/en/docs/install) installed on your system.
+Make sure you have [Node.js v16.x](https://nodejs.org/en/download/) and [Yarn v1](https://classic.yarnpkg.com/en/docs/install) installed on your system.
 
 ### Set up environment variables (.env)
 
