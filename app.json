@@ -19,9 +19,12 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "se.prototyp.oceanscanapp"
+      "bundleIdentifier": "se.prototyp.oceanscanapp",
+      "buildNumber": "1.0.10"
     },
     "android": {
+      "package": "se.prototyp.oceanscanapp",
+      "versionCode": 10,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#2C3339"
