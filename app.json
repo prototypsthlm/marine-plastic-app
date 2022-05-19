@@ -16,7 +16,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "se.prototyp.oceanscanapp",
@@ -28,7 +30,13 @@
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#2C3339"
-      }
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAWPPObPl6LVS_wzRHps4Jo6pFwkm07ILg"
+        }
+      },
+      "package": "se.prototyp.oceanscanapp"
     },
     "web": {
       "favicon": "./src/assets/images/favicon.png"
