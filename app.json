@@ -35,8 +35,7 @@
         "googleMaps": {
           "apiKey": "AIzaSyAWPPObPl6LVS_wzRHps4Jo6pFwkm07ILg"
         }
-      },
-      "package": "se.prototyp.oceanscanapp"
+      }
     },
     "web": {
       "favicon": "./src/assets/images/favicon.png"
