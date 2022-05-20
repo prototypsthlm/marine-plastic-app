@@ -1,0 +1,49 @@
+{
+  "cli": {
+    "version": ">= 0.52.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://api-test.oceanscan.org/api/dca-v0",
+        "API_KEY": "AIzaSyDyUaGKsDF4ehNynckdKUXs5nzI6HZnF94",
+        "AUTH_DOMAIN": "global-plastic-db.firebaseapp.com",
+        "DATABASE_URL": "https://global-plastic-db.firebaseio.com",
+        "PROJECT_ID": "global-plastic-db",
+        "STORAGE_BUCKET": "global-plastic-db.appspot.com",
+        "MESSAGE_SENDER_ID": "1051434574176",
+        "APP_ID": "1:1051434574176:web:e6885bee2539073c093e05"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://api-test.oceanscan.org/api/dca-v0",
+        "API_KEY": "AIzaSyDyUaGKsDF4ehNynckdKUXs5nzI6HZnF94",
+        "AUTH_DOMAIN": "global-plastic-db.firebaseapp.com",
+        "DATABASE_URL": "https://global-plastic-db.firebaseio.com",
+        "PROJECT_ID": "global-plastic-db",
+        "STORAGE_BUCKET": "global-plastic-db.appspot.com",
+        "MESSAGE_SENDER_ID": "1051434574176",
+        "APP_ID": "1:1051434574176:web:e6885bee2539073c093e05"
+      }
+    },
+    "production": {
+      "env": {
+        "API_URL": "https://api.oceanscan.org/api/dca-v0",
+        "API_KEY": "AIzaSyDyUaGKsDF4ehNynckdKUXs5nzI6HZnF94",
+        "AUTH_DOMAIN": "global-plastic-db.firebaseapp.com",
+        "DATABASE_URL": "https://global-plastic-db.firebaseio.com",
+        "PROJECT_ID": "global-plastic-db",
+        "STORAGE_BUCKET": "global-plastic-db.appspot.com",
+        "MESSAGE_SENDER_ID": "1051434574176",
+        "APP_ID": "1:1051434574176:web:e6885bee2539073c093e05"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

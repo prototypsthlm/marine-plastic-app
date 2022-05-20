@@ -1,6 +1,6 @@
+import { API_URL } from "@env";
 import { create } from "apisauce";
 
-const API_URL = "https://api-test.oceanscan.org/api/dca-v0";
 
 const createBaseApi = () => {
   console.log("Creating baseApi with: ", API_URL);
