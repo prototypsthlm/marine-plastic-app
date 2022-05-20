@@ -8,4 +8,5 @@ declare module "@env" {
   const STORAGE_BUCKET: string;
   const MESSAGE_SENDER_ID: string;
   const APP_ID: string;
+  const API_URL: string;
 }

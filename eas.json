@@ -1,0 +1,49 @@
+{
+  "cli": {
+    "version": ">= 0.52.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://api-test.oceanscan.org/api/dca-v0",
+        "API_KEY": "***REMOVED***",
+        "AUTH_DOMAIN": "***REMOVED***",
+        "DATABASE_URL": "***REMOVED***",
+        "PROJECT_ID": "***REMOVED***",
+        "STORAGE_BUCKET": "***REMOVED***.appspot.com",
+        "MESSAGE_SENDER_ID": "***REMOVED***",
+        "APP_ID": "1:***REMOVED***:web:***REMOVED***"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "env": {
+        "API_URL": "https://api-test.oceanscan.org/api/dca-v0",
+        "API_KEY": "***REMOVED***",
+        "AUTH_DOMAIN": "***REMOVED***",
+        "DATABASE_URL": "***REMOVED***",
+        "PROJECT_ID": "***REMOVED***",
+        "STORAGE_BUCKET": "***REMOVED***.appspot.com",
+        "MESSAGE_SENDER_ID": "***REMOVED***",
+        "APP_ID": "1:***REMOVED***:web:***REMOVED***"
+      }
+    },
+    "production": {
+      "env": {
+        "API_URL": "https://api.oceanscan.org/api/dca-v0",
+        "API_KEY": "***REMOVED***",
+        "AUTH_DOMAIN": "***REMOVED***",
+        "DATABASE_URL": "***REMOVED***",
+        "PROJECT_ID": "***REMOVED***",
+        "STORAGE_BUCKET": "***REMOVED***.appspot.com",
+        "MESSAGE_SENDER_ID": "***REMOVED***",
+        "APP_ID": "1:***REMOVED***:web:***REMOVED***"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
