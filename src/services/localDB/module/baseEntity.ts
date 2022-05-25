@@ -7,11 +7,11 @@ type Entity = Observation | Measurement | Campaign | ObservationImage
 type EntityPayload = Array<Entity>;
 
 function getOsSpecificUpsertQuery(isSynced: boolean,
-                   entityType: EntityType,
-                   campaignId: string | null,
-                   observationId: string | null,
-                   measurementId: string | null,
-                   payloadArray: Array<Entity>) {
+                                  entityType: EntityType,
+                                  campaignId: string | null,
+                                  observationId: string | null,
+                                  measurementId: string | null,
+                                  payloadArray: Array<Entity>) {
   const toInsertValue = (payload: Entity): string =>
       Platform.select(
           {
@@ -40,15 +40,15 @@ function getOsSpecificUpsertQuery(isSynced: boolean,
         // upsert is only supported from SQL 3.24 which is not available on Android 10 or earlier.
         android:
             `insert
-              or replace into baseEntity 
+            or replace into baseEntity 
                 (id, isSynced, type, campaignId, observationId, measurementId, jsonObject) 
               values
-              ${insertValues.join(", ")};`,
+            ${insertValues.join(", ")};`,
         default:
             `insert into baseEntity (id, isSynced, type, campaignId, observationId, measurementId, jsonObject)
-               values ${insertValues.join(", ")} on conflict(id) do
-              update
-                  set isSynced=excluded.isSynced, jsonObject=excluded.jsonObject;`,
+             values ${insertValues.join(", ")} on conflict(id) do
+            update
+                set isSynced=excluded.isSynced, jsonObject=excluded.jsonObject;`,
       })
 }
 
@@ -91,12 +91,13 @@ export const baseEntityModule = {
             measurementId !== null ? `and measurementId = '${measurementId}'` : "";
         const filerByIsSynced =
             isSynced !== null
-                ? `and isSynced = ${observationId ? "true" : "false"}`
+                ? `and isSynced = ${observationId ? 1 : 0}`
                 : "";
+        const query = `select *
+                       from baseEntity
+                       where type = ? ${filerByCampaign} ${filerByObservation} ${filerByFeature} ${filerByIsSynced}`
         tx.executeSql(
-            `select *
-             from baseEntity
-             where type = ? ${filerByCampaign} ${filerByObservation} ${filerByFeature} ${filerByIsSynced}`,
+            query,
             [entityType],
             (_, {rows}) => {
               let entities: Array<T> = [];
@@ -106,7 +107,10 @@ export const baseEntityModule = {
               resolve(entities);
             },
         );
-      }, reject);
+      }, (e) => {
+        console.error("baseEntity.ts", "getEntities", "error:", e)
+        reject(e)
+      });
     });
   },
   deleteEntities(payloadArray: Array<string>) {
@@ -121,7 +125,10 @@ export const baseEntityModule = {
                  )}")`,
             );
           },
-          reject,
+          (e) => {
+            console.error("baseEntity.ts", "deleteEntities", "error:", e)
+            reject(e)
+          },
           resolve,
       );
     });
