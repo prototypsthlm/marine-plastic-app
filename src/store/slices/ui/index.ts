@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface UiState {
   isOnline: boolean;
   isSyncing: boolean;
+  isActive: boolean;
 }
 
 const initialState: UiState = {
   isOnline: false,
-  isSyncing: false
+  isSyncing: false,
+  isActive: true
 };
 
 export const uiSlice = createSlice({
@@ -20,9 +22,12 @@ export const uiSlice = createSlice({
     setIsSyncing: (state, { payload}) => {
       state.isSyncing = payload;
     },
+    setIsActive: (state, {payload}) => {
+      state.isActive = payload
+    }
   },
 });
 
-export const { setIsOnline, setIsSyncing } = uiSlice.actions;
+export const { setIsOnline, setIsSyncing, setIsActive } = uiSlice.actions;
 
 export default uiSlice.reducer;
