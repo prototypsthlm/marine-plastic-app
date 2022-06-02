@@ -14,6 +14,7 @@ on:
         description: "Test scenario tags"
 env:
   DEBUG_LOGGING: "ON"
+  API_URL: "https://api-test.oceanscan.org/api/dca-v0"
   RELEASE_CHANNEL: "default"
   API_KEY: "${{ secrets.FIREBASE_API_KEY}}"
   AUTH_DOMAIN: "${{ secrets.FIREBASE_AUTH_DOMAIN}}"
