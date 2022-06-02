@@ -25,7 +25,7 @@ export const loginWithEmailAndPassword: Thunk<
     await firebaseAuth.signInWithEmailAndPassword(email, password);
     dispatch(setUserWithNewToken());
     return true;
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     dispatch(sessionError(error.message));
 
@@ -40,7 +40,7 @@ export const loginWithEmailAndPassword: Thunk<
   }
 };
 
-export const setUserWithNewToken: Thunk = () => async (
+export const setUserWithNewToken: Thunk<undefined, Promise<string>> = () => async (
   dispatch,
   _,
   { firebaseAuth }
@@ -52,6 +52,7 @@ export const setUserWithNewToken: Thunk = () => async (
   addTokenToRequestPayloads(token);
   dispatch(userLoggedIn(token));
   dispatch(setUserInfo());
+  return token;
 };
 
 export const logOut: Thunk = () => (
