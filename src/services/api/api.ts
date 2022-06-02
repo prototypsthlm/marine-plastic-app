@@ -1,5 +1,7 @@
 import { API_URL } from "@env";
 import { create } from "apisauce";
+import { setUserWithNewToken } from "../../store/slices/session";
+import store from "../../store/store";
 
 
 const createBaseApi = () => {
@@ -15,6 +17,19 @@ const createBaseApi = () => {
 
   apisauceInstance.addMonitor((response) => {
     console.trace("MONITORING_RESPONSE: ", response);
+  });
+
+  apisauceInstance.axiosInstance.interceptors.response.use((response) => {
+    return response
+  }, async function (error) {
+    const originalRequest = error.config;
+    if (error.response.status === 403 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const token = await store.dispatch(setUserWithNewToken())
+      originalRequest.headers["Authorization"] = `Bearer ${token}`
+      return apisauceInstance.axiosInstance(originalRequest);
+    }
+    return Promise.reject(error);
   });
 
   return apisauceInstance;
