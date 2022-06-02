@@ -2,6 +2,7 @@ import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
 import { useEffect, useCallback } from "react";
+import { AppState, AppStateStatus } from "react-native"
 import { useSelector } from "react-redux";
 import { firebaseAuth } from "../services/firebaseAuth";
 
@@ -13,9 +14,9 @@ import BottomTabNavigator from "./BottomTabNavigator";
 import { LoggedOutStackNavigator } from "./LoggedOutStackNavigator";
 
 import NetInfo from "@react-native-community/netinfo";
-import { setIsOnline } from "../store/slices/ui";
-import useSync from '../hooks/useSync';
-import { theme } from '../theme';
+import { setIsActive, setIsOnline } from "../store/slices/ui";
+import useSync from "../hooks/useSync";
+import { theme } from "../theme";
 
 const OceanScanTheme = {
   ...DefaultTheme,
@@ -23,7 +24,7 @@ const OceanScanTheme = {
     ...DefaultTheme.colors,
     card: theme.color.palette.dark,
     primary: theme.color.palette.cyan,
-    text: theme.color.palette.white
+    text: theme.color.palette.white,
   },
 };
 
@@ -31,9 +32,9 @@ const OceanScanTheme = {
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation() {
   return (
-    <NavigationContainer ref={navigationRef} theme={OceanScanTheme}>
-      <RootNavigator />
-    </NavigationContainer>
+      <NavigationContainer ref={navigationRef} theme={OceanScanTheme}>
+        <RootNavigator/>
+      </NavigationContainer>
   );
 }
 
@@ -46,30 +47,42 @@ const Stack = createStackNavigator<{
 function RootNavigator() {
   const dispatch = useThunkDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
- 
+  const isActive = useSelector((state: RootState) => state.ui.isActive)
+
   useEffect(() => {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
-      user
+        user,
     ) {
-      if (user) dispatch(setUserWithNewToken());      
+      if (user) dispatch(setUserWithNewToken());
     });
-    
+
     const unsubscribeNetInfo = NetInfo.addEventListener((state) => dispatch(setIsOnline(state.isConnected)));
+
+    const appStateListener = (newState: AppStateStatus) => {
+      if (isActive && newState.match(/background|inactive/)) {
+        dispatch(setIsActive(false))
+      } else if (!isActive && newState.match(/active/)) {
+        dispatch(setIsActive(true))
+        NetInfo.fetch().then(netInfoState => dispatch(setIsOnline(netInfoState.isConnected)))
+      }
+    }
+    AppState.addEventListener("change", appStateListener)
 
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
+      AppState.removeEventListener("change", appStateListener)
     };
-  }, []);
-  
+  }, [isActive]);
+
   // Custom sync hook
   useSync();
 
-  if (!isLoggedIn) return <LoggedOutStackNavigator />;
+  if (!isLoggedIn) return <LoggedOutStackNavigator/>;
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Root" component={BottomTabNavigator}/>
-    </Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Root" component={BottomTabNavigator}/>
+      </Stack.Navigator>
   );
 }
