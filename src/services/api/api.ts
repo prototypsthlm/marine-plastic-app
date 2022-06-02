@@ -23,7 +23,7 @@ const createBaseApi = () => {
     return response
   }, async function (error) {
     const originalRequest = error.config;
-    if (error.response.status === 403 && !originalRequest._retry) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const token = await store.dispatch(setUserWithNewToken())
       originalRequest.headers["Authorization"] = `Bearer ${token}`
