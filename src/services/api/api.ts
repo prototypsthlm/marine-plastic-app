@@ -14,7 +14,7 @@ const createBaseApi = () => {
   });
 
   apisauceInstance.addMonitor((response) => {
-    console.log("MONITORING_RESPONSE: ", response);
+    console.trace("MONITORING_RESPONSE: ", response);
   });
 
   return apisauceInstance;
