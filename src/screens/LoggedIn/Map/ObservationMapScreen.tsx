@@ -69,9 +69,15 @@ export default function ObservationMapScreen({navigation}: NavigationProps) {
                 ios:
                     <CalloutImage resizeMode={"cover"} source={{uri: imageUrl}}/>,
                 android:
-                    // Using a workaround: https://github.com/react-native-maps/react-native-maps/issues/2633#issuecomment-686165281
+                // Using a workaround: https://github.com/react-native-maps/react-native-maps/issues/2633#issuecomment-686165281
                     <CalloutImageWrapper>
-                      <WebView style={{height: 50, width: 50}} source={{uri: imageUrl}}/>
+                      <WebView
+                          style={{height: 50, width: 50}}
+                          originWhitelist={[imageUrl]}
+                          source={{
+                            html:
+                                `<img src="${imageUrl}" style="width: 250px; height: 250px;" />`,
+                          }}/>
                     </CalloutImageWrapper>,
               })
       )}
