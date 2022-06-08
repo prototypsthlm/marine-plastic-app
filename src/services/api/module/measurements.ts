@@ -18,10 +18,15 @@ export const measurementsModule = {
     };
     console.log(params);
 
-    const response: HttpResponse<PagedResponse<Measurement>> =
-      await baseApi.get(measurementsPath, params);
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<PagedResponse<Measurement>> =
+        await baseApi.get(measurementsPath, params);
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
   async postMeasurement(measurement: Measurement) {
     const params = {
@@ -41,10 +46,15 @@ export const measurementsModule = {
       comments: measurement.comments,
       material: measurement.material,
     };
-    const response: HttpResponse<SingleResponse<Measurement>> =
-      await baseApi.post(measurementPath, params);
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<Measurement>> =
+        await baseApi.post(measurementPath, params);
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
   async patchMeasurement(
     measurement: Measurement,
@@ -53,18 +63,28 @@ export const measurementsModule = {
     const params = {
       ...fieldsToUpdate,
     };
-    const response: HttpResponse<SingleResponse<Measurement>> =
-      await baseApi.patch(measurementPath + "/" + measurement.id, params);
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<Measurement>> =
+        await baseApi.patch(measurementPath + "/" + measurement.id, params);
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
   async deleteMeasurement(measurement: Measurement) {
     const measurementId = measurement.id;
-    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
-      measurementPath + "/" + measurementId
-    );
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+        measurementPath + "/" + measurementId
+      );
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
 
   // ObservationImages
@@ -86,22 +106,32 @@ export const measurementsModule = {
       type: "image/" + fileExt === "jpg" ? "jpeg" : fileExt,
     });
 
-    const response: HttpResponse<SingleResponse<ObservationImage>> =
-      await baseApi.post(observationImagePath, form, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      });
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<ObservationImage>> =
+        await baseApi.post(observationImagePath, form, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        });
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
   async deleteFeatureImage(observationImage: ObservationImage) {
     const observationImageId = observationImage.id;
-    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
-      observationImagePath + "/" + observationImageId
-    );
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+        observationImagePath + "/" + observationImageId
+      );
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
 };

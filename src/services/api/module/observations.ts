@@ -36,10 +36,15 @@ export const observationsModule = {
       isControlled: observation.isControlled,
       isAbsence: observation.isAbsence,
     };
-    const response: HttpResponse<SingleResponse<Observation>> =
-      await baseApi.post(observationPath, params);
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<Observation>> =
+        await baseApi.post(observationPath, params);
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
   async patchObservation(
     observation: Observation,
@@ -55,10 +60,15 @@ export const observationsModule = {
   },
   async deleteObservation(observation: Observation) {
     const observationId = observation.id;
-    const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
-      observationPath + "/" + observationId
-    );
-    if (!response.ok) return createGenericProblem(response);
-    return response;
+    try {
+      const response: HttpResponse<SingleResponse<null>> = await baseApi.delete(
+        observationPath + "/" + observationId
+      );
+      if (!response.ok) return createGenericProblem(response);
+      return response;
+    } catch (e: any) {
+      // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
+      return { ok: false, problem: "cannot-connect", temporary: true };
+    }
   },
 };
