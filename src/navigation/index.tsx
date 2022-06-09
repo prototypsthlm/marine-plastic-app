@@ -18,6 +18,8 @@ import { setIsActive, setIsOnline } from "../store/slices/ui";
 import useSync from "../hooks/useSync";
 import { theme } from "../theme";
 
+const CHECK_CONNECTION_INTERVAL_MS = 5000
+
 const OceanScanTheme = {
   ...DefaultTheme,
   colors: {
@@ -48,6 +50,33 @@ function RootNavigator() {
   const dispatch = useThunkDispatch();
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const isActive = useSelector((state: RootState) => state.ui.isActive)
+  const isOnline = useSelector((state: RootState) => state.ui.isOnline)
+
+  const setUpPeriodicNetworkCheck = async (isOnline: boolean) => {
+    const noOp = () => {
+    };
+    if (!isOnline) {
+      return await NetInfo.fetch()
+                          .then(netInfoState => netInfoState.isConnected && netInfoState.isInternetReachable)
+                          .then((isConnected) => {
+                            if (isConnected) {
+                              dispatch(setIsOnline(isConnected))
+                              return noOp
+                            } else {
+                              const periodicNetworkCheck = () => {
+                                NetInfo.fetch()
+                                       .then(netInfoState => dispatch(setIsOnline(netInfoState.isConnected)))
+                              }
+                              const unsubscribePeriodicNetworkCheck = setInterval(periodicNetworkCheck, CHECK_CONNECTION_INTERVAL_MS)
+                              return () => {
+                                clearInterval(unsubscribePeriodicNetworkCheck)
+                              }
+                            }
+                          })
+    } else {
+      return Promise.resolve(noOp)
+    }
+  }
 
   useEffect(() => {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
@@ -68,12 +97,15 @@ function RootNavigator() {
     }
     AppState.addEventListener("change", appStateListener)
 
+    const unsubscribePeriodicNetworkCheck = setUpPeriodicNetworkCheck(isOnline)
+
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
       AppState.removeEventListener("change", appStateListener)
+      unsubscribePeriodicNetworkCheck.then(fn => fn())
     };
-  }, [isActive]);
+  }, [isActive, isOnline]);
 
   // Custom sync hook
   useSync();
