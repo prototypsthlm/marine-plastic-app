@@ -99,7 +99,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
         [{ resize: { width: 1000 } }],
-        { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+        { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
 
       onChange && onChange({ ...result, uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
@@ -132,7 +132,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       const manipResult = await ImageManipulator.manipulateAsync(
         result.uri,
         [{ resize: { width: 1000 } }],
-        { compress: 0.1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
+        { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
 
       onChange && onChange({ ...result, uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
