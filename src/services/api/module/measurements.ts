@@ -89,34 +89,20 @@ export const measurementsModule = {
 
   // ObservationImages
   async postObservationImage(observationImage: ObservationImage) {
-    const imageUri = observationImage.url || "";
-
-    const form = new FormData();
-    form.append("id", observationImage.id);
-    form.append(
-      "creatorApp",
-      observationImage.creatorApp || CreatorApps.DATA_COLLECTION_APP
-    );
-    form.append("observationId", observationImage.observationId);
-
-    const fileExt = imageUri.split(".").pop() || "jpg";
-    form.append("image", {
-      name: observationImage.id + "-observationImage." + fileExt,
-      uri: imageUri,
-      type: "image/" + fileExt === "jpg" ? "jpeg" : fileExt,
-    });
+    const params = {
+      id: observationImage.id,
+      creatorApp: observationImage.creatorApp || CreatorApps.DATA_COLLECTION_APP,
+      observationId: observationImage.observationId,
+      image: observationImage.url
+    }
 
     try {
       const response: HttpResponse<SingleResponse<ObservationImage>> =
-        await baseApi.post(observationImagePath, form, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        await baseApi.post(observationImagePath, params);
       if (!response.ok) return createGenericProblem(response);
       return response;
     } catch (e: any) {
+      console.log("image fail", e)
       // hotfix waiting for thsi to reslove https://github.com/infinitered/apisauce/issues/295
       return { ok: false, problem: "cannot-connect", temporary: true };
     }
