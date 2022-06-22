@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Pressable, Modal, StyleSheet, TouchableWithoutFeedback, View, Text } from "react-native";
 import { theme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
-
+import * as Linking from "expo-linking"
 
 
 
@@ -14,6 +14,10 @@ export const ModalComponent = (props: {
   popupTitle: string;
   popupText: string;
 }) => {
+  const onPress = useCallback( async () => {
+    Linking.openURL('https://www.oceanscan.org/faqs')
+  }, []);
+
   return (
     <View style={styles.centeredView}>
       <Modal
@@ -34,6 +38,7 @@ export const ModalComponent = (props: {
               >
               <Text style={styles.textStyle}>Thanks!</Text>
             </Pressable>
+            <Text style={{marginTop: 20, textAlign: "left"}}>Read more: <Text style={styles.link} onPress={onPress}>https://www.oceanscan.org/faqs</Text></Text>
           </View>
         </View>
       </Modal>
@@ -112,6 +117,9 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 20,
     textAlign: "left"
+  },
+  link: {
+    color: "#2196F3"
   },
   modalTitle: {
     marginBottom: 15,

@@ -7,13 +7,13 @@ import * as Linking from "expo-linking"
 export default function SettingsHelperButton() {
   
   const onPress = useCallback( async () => {
-    Linking.openURL('https://www.oceanscan.org/url/to/helper/page/about/settings')
+    Linking.openURL('https://www.oceanscan.org/mobile-app')
   }, []);
 
   return (<BasicHeaderButtons>
     <Item
-      title="Help"
-      iconName="ios-help-buoy-outline"
+      title="Settings"
+      iconName="ios-settings-sharp"
       color={theme.color.palette.cyan}
       onPress={onPress}
     />
