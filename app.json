@@ -3,7 +3,7 @@
     "name": "Ocean Scan",
     "slug": "ocean-scan",
     "owner": "prototypsthlm",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "oceanscan",
@@ -22,11 +22,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "se.prototyp.oceanscanapp",
-      "buildNumber": "1.0.11"
+      "buildNumber": "1.0.12"
     },
     "android": {
       "package": "se.prototyp.oceanscanapp",
-      "versionCode": 11,
+      "versionCode": 12,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#2C3339"
