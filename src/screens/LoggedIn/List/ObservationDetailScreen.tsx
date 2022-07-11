@@ -295,7 +295,7 @@ export default function ObservationDetailScreen({
                   ) : null}
                   {observationEntry.estimatedFilamentLengthM ? (
                     <Text style={styles.detailsView}>
-                      Estimated filament area{" "}
+                      Estimated filament length{" "}
                       <Text bold>
                         {observationEntry.estimatedFilamentLengthM} m
                       </Text>
