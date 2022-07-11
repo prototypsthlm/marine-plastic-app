@@ -36,16 +36,9 @@ export const EmailPasswordLoginScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={{ width: "100%", height: "100%" }}
+      style={{ width: "100%", height: "100%", flex: 1 }}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
     >
-      <View style={{ flex: 1, justifyContent: "flex-start", width: "100%" }}>
-        <Image
-          resizeMode={"contain"}
-          source={require("../../assets/images/icon_w_background.png")}
-          style={{ maxWidth: "90%" }}
-        />
-      </View>
       <Formik
         initialValues={initialFormValues}
         onSubmit={onSubmit}
@@ -63,6 +56,11 @@ export const EmailPasswordLoginScreen = () => {
           touched,
         }) => (
           <InputWrapper>
+            <Image
+                resizeMode={"contain"}
+                source={require("../../assets/images/icon_w_background.png")}
+                style={{ flex: 1, justifyContent: "flex-start", maxWidth: "90%" }}
+              />
             <InputField
               invertColors
               label="Email"
@@ -102,9 +100,11 @@ export const EmailPasswordLoginScreen = () => {
 
 const InputWrapper = styled.View`
   justify-content: flex-start;
-  flex: 2;
+  flex: 1;
   padding: 0 32px;
-  padding-top: 184px;
+  padding-top: 10%;
+  padding-bottom: 20%;
+  height: 100%;
   width: 100%;
 `;
 
