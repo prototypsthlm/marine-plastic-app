@@ -16,6 +16,19 @@ import {
   resetPagination as resetObservationPagination,
 } from "../observations";
 
+export const clearCacheCampaignsIfOnline: Thunk = () => async (_dispatch, getState, { localDB }) => {
+  if (getState().ui.isOnline) {
+    try {
+      const campaignEntries: Array<Campaign> = await localDB.getEntities<Campaign>(
+        EntityType.Campaign
+      );
+      await localDB.deleteEntities(campaignEntries.map(c => c.id))
+    } catch (e) {
+      console.log({ e });
+    }
+  }
+}
+
 export const fetchCampaigns: Thunk<{ forceRefresh?: boolean }> = (
   options
 ) => async (dispatch, getState, { api, localDB }) => {

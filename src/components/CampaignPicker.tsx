@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Campaign } from "../models";
-import { fetchCampaigns, setSelectedCampaign } from "../store/slices/campaigns";
+import { clearCacheCampaignsIfOnline, fetchCampaigns, setSelectedCampaign } from "../store/slices/campaigns";
 import { RootState, useThunkDispatch } from "../store/store";
 import { theme } from "../theme";
 import { ListItem, SectionHeader, Text, FlexColumn } from "./elements";
@@ -9,6 +9,10 @@ import { FlatList } from "react-native";
 
 export default function CampaignPicker() {
   const dispatch = useThunkDispatch();
+
+  useEffect(() => {
+    dispatch(clearCacheCampaignsIfOnline())
+  }, []);
 
   const campaignEntries = useSelector<RootState, Array<Campaign>>(
     (state) => state.campaigns.campaignEntries
