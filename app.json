@@ -3,7 +3,7 @@
     "name": "Ocean Scan",
     "slug": "ocean-scan",
     "owner": "prototypsthlm",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "orientation": "portrait",
     "icon": "./src/assets/images/icon.png",
     "scheme": "oceanscan",
@@ -22,11 +22,16 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "se.prototyp.oceanscanapp",
-      "buildNumber": "1.0.12"
+      "buildNumber": "1.0.13",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Enable Camera access so that you can take pictures for the observation and extract the location and timestamp data",
+        "NSLocationWhenInUseUsageDescription": "Enable Location to use in case the photo provided doesn't have location data",
+        "NSPhotoLibraryUsageDescription": "Enable access to your Photo Library so you can upload them and extract the location and timestamp data"
+      }
     },
     "android": {
       "package": "se.prototyp.oceanscanapp",
-      "versionCode": 12,
+      "versionCode": 13,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#2C3339"
