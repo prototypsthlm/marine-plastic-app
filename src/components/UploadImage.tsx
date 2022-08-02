@@ -59,7 +59,20 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     (async () => {
       await requestMediaLibrary();
       await requestCamera();
-      await requestLocation();
+      let status = await Location.getForegroundPermissionsAsync()
+      if (Platform.OS === "android" && !status.granted)
+        Alert.alert(
+          "Location access",
+          "Location data is only used for filling up the location of the observation if the picture doesn't have the required metadata.",
+          [
+            {
+              text: "Grant",
+              onPress: async () => await requestLocation(),
+            },
+          ]
+        );
+      else await requestLocation();
+      
     })();
   }, []);
 
