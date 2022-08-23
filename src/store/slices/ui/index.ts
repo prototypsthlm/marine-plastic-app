@@ -11,7 +11,7 @@ const initialState: UiState = {
   isOnline: false,
   isSyncing: false,
   isActive: true,
-  isWelcomeMessageVisible: true,
+  isWelcomeMessageVisible: false,
 };
 
 export const uiSlice = createSlice({

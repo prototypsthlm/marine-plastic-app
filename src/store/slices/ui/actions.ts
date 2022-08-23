@@ -12,7 +12,8 @@ export const loadSettings: Thunk = () => async (
     if (settings) {
         dispatch(setIsWelcomeMessageVisible(settings.isWelcomeMessageVisible));
     }
-  
+    else dispatch(setIsWelcomeMessageVisible(true))
+    
   };
   
 
