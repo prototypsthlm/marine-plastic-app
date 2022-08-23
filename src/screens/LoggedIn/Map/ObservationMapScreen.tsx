@@ -8,7 +8,7 @@ import { RootState, useThunkDispatch } from "../../../store/store";
 import { Geometry, Observation, User } from "../../../models";
 import { theme } from "../../../theme";
 import { NavigationProps } from "../../../navigation/types";
-import { fetchObservationCreator, selectObservationDetails } from "../../../store/slices/observations";
+import { fetchObservationCreator, selectFilteredObservationsByCampaign, selectObservationDetails } from "../../../store/slices/observations";
 import { getLatLng, isValidMapPoint } from "../../../utils/geoUtils";
 
 const getPoint = (observation: Observation) : Array<number> => {
@@ -27,9 +27,7 @@ export default function ObservationMapScreen({navigation}: NavigationProps) {
       (state) => state.account.user,
   );
 
-  const observationsEntries = useSelector<RootState, Array<Observation>>(
-      (state) => state.observations.observationEntries,
-  );
+  const observationsEntries = useSelector(selectFilteredObservationsByCampaign);
 
   const observationUsers = useSelector<RootState, Array<User>>(
       (state) => state.observations.observationUsers,
