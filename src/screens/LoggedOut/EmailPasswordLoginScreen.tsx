@@ -6,7 +6,7 @@ import { loginWithEmailAndPassword } from "../../store/slices/session";
 import styled from "../../styled";
 import { RootState, useThunkDispatch } from "../../store/store";
 import { useSelector } from "react-redux";
-import { Image, View, KeyboardAvoidingView, Platform } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, Linking, Text } from "react-native";
 
 interface InitialFormValues {
   email: string;
@@ -32,6 +32,10 @@ export const EmailPasswordLoginScreen = () => {
 
   const onSubmit = useCallback((values) => {
     dispatch(loginWithEmailAndPassword(values));
+  }, []);
+
+  const onRegisterPress = useCallback( async () => {
+    Linking.openURL('https://www.oceanscan.org/register')
   }, []);
 
   return (
@@ -91,6 +95,7 @@ export const EmailPasswordLoginScreen = () => {
               // TODO: Get rid of any
               onPress={handleSubmit as any}
             />
+            <Text style={{color: "#2196F3", textAlign: "center", marginTop: 10}} onPress={onRegisterPress}>No account? Register on the website</Text>
           </InputWrapper>
         )}
       </Formik>

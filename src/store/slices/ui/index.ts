@@ -4,12 +4,14 @@ interface UiState {
   isOnline: boolean;
   isSyncing: boolean;
   isActive: boolean;
+  isWelcomeMessageVisible: boolean;
 }
 
 const initialState: UiState = {
   isOnline: false,
   isSyncing: false,
-  isActive: true
+  isActive: true,
+  isWelcomeMessageVisible: true,
 };
 
 export const uiSlice = createSlice({
@@ -24,10 +26,13 @@ export const uiSlice = createSlice({
     },
     setIsActive: (state, {payload}) => {
       state.isActive = payload
+    },
+    setIsWelcomeMessageVisible: (state, {payload}) => {
+      state.isWelcomeMessageVisible = payload
     }
   },
 });
 
-export const { setIsOnline, setIsSyncing, setIsActive } = uiSlice.actions;
+export const { setIsOnline, setIsSyncing, setIsActive, setIsWelcomeMessageVisible } = uiSlice.actions;
 
 export default uiSlice.reducer;

@@ -3,11 +3,16 @@ import { Item } from "react-navigation-header-buttons"
 import { theme } from "../theme"
 import BasicHeaderButtons from "./BasicHeaderButtons"
 import * as Linking from "expo-linking"
+import { Platform } from "react-native"
 
 export default function SettingsHelperButton() {
   
   const onPress = useCallback( async () => {
-    Linking.openURL('https://www.oceanscan.org/mobile-app')
+    if (Platform.OS === 'ios') {
+      Linking.openURL('https://www.oceanscan.org/configuring-your-ios-app')
+    } else {
+      Linking.openURL('https://www.oceanscan.org/configuring-your-android-app')
+    }
   }, []);
 
   return (<BasicHeaderButtons>

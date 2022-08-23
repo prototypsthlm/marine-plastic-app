@@ -17,6 +17,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { setIsActive, setIsOnline } from "../store/slices/ui";
 import useSync from "../hooks/useSync";
 import { theme } from "../theme";
+import { loadSettings } from "../store/slices/ui/actions";
 
 const CHECK_CONNECTION_INTERVAL_MS = 5000
 
@@ -79,6 +80,8 @@ function RootNavigator() {
   }
 
   useEffect(() => {
+    dispatch(loadSettings())
+    
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
         user,
     ) {

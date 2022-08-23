@@ -25,9 +25,15 @@ import {
 } from "../../../components/elements";
 import { theme } from "../../../theme";
 import { Ionicons } from "@expo/vector-icons";
+import { WelcomePopup } from "../../../components/WelcomePopup";
+import { disbaleWelcomeMessage } from "../../../store/slices/ui/actions";
 
 export default function ObservationListScreen({ navigation }: NavigationProps) {
   const dispatch = useThunkDispatch();
+
+  const isWelcomeMessageVisible = useSelector<RootState, boolean>(
+    (state) => state.ui.isWelcomeMessageVisible
+  );
 
   const isOnline = useSelector<RootState, boolean>(
     (state) => state.ui.isOnline
@@ -178,6 +184,10 @@ export default function ObservationListScreen({ navigation }: NavigationProps) {
         )}
         onEndReached={() => dispatch(fetchObservations({}))}
         onEndReachedThreshold={0.1}
+      />
+      <WelcomePopup
+        visibilityState={isWelcomeMessageVisible}
+        setVisibilityFunction={() => dispatch(disbaleWelcomeMessage())}
       />
     </Screen>
   );
