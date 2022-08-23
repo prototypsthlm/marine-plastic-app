@@ -8,12 +8,17 @@ const selectCurrentCampaign = (state: RootState) =>
 const selectObservationEntries = (state: RootState) =>
   state.observations.observationEntries;
 
+const currentUser = (state: RootState) =>
+  state.account.user;
+
 export const selectFilteredObservationsByCampaign = createSelector(
   selectCurrentCampaign,
   selectObservationEntries,
-  (selectedCampaign, observationEntries): Array<Observation> =>
+  currentUser,
+  (selectedCampaign, observationEntries, currentUser): Array<Observation> =>
     observationEntries.filter(
       (observationEntry) =>
-        observationEntry.campaignId === (selectedCampaign?.id || null)
+      selectedCampaign?.id? observationEntry.campaignId === selectedCampaign.id :
+      (observationEntry.campaignId === null && observationEntry.creatorId === currentUser?.id)
     )
 );
