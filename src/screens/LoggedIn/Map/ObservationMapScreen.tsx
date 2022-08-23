@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import WebView from "react-native-webview"
 import styled from "../../../styled";
-import MapView, { Callout, Marker } from "react-native-maps";
+import MapView, { Callout, Geojson, Marker } from "react-native-maps";
 import { Dimensions, View, Image, Platform } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState, useThunkDispatch } from "../../../store/store";
@@ -10,6 +10,12 @@ import { theme } from "../../../theme";
 import { NavigationProps } from "../../../navigation/types";
 import { fetchObservationCreator, selectObservationDetails } from "../../../store/slices/observations";
 import { getLatLng, isValidMapPoint } from "../../../utils/geoUtils";
+
+const getPoint = (observation: Observation) : Array<number> => {
+  if (observation.geometry.type === 'Point') return observation.geometry.coordinates as Array<number>
+  else if (observation.geometry.type === 'LineString') return observation.geometry.coordinates[0] as Array<number>
+  else if (observation.geometry.type === 'Polygon') return observation.geometry.coordinates[0][0] as Array<number>
+}
 
 export default function ObservationMapScreen({navigation}: NavigationProps) {
 
@@ -99,20 +105,29 @@ export default function ObservationMapScreen({navigation}: NavigationProps) {
     </>
   }, [observationUsers]);
 
+  const mapRef = useRef(null)
+
+  useEffect(() => {
+    if (mapRef && mapRef.current) {
+      const map : MapView = mapRef.current as MapView
+      map.fitToElements()
+    }
+  }, [observationsEntries])
 
   return (
       <Screen>
         <MapView
+            ref={mapRef}
             style={{
               width: Dimensions.get("window").width,
               height: Dimensions.get("window").height,
             }}
         >
           {observationsEntries.map((observationEntry, index) => {
-            if (isValidMapPoint(observationEntry.geometry)) {
+            if (observationEntry.geometry.type) {
               return <Marker
                   key={index}
-                  coordinate={getLatLng(observationEntry.geometry.coordinates)}
+                  coordinate={getLatLng(getPoint(observationEntry))}
                   onPress={() => handleOnPinPress(index)}
                   onCalloutPress={handleOnCalloutPress}
                   pinColor={theme.color.palette.cyan}
