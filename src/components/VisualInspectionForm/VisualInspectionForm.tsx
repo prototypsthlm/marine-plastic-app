@@ -13,7 +13,7 @@ export const visualInspectionTypes: Array<{
   value: string | undefined;
 }> = [
   {
-    label: "No litter / Only organic matter",
+    label: "No litter present",
     value: ClassVisualInspectionEnum.NO_LITTER_PRESENT,
   },
   {
