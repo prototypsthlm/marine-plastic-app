@@ -22,9 +22,8 @@ export const WelcomePopup = (props: {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View>
-              <Text style={styles.modalTitle}>Welcome!</Text>
-              <Text style={{marginTop: 10, textAlign: "left"}}>Welcome to Ocean Scan mobile app.</Text>
-              <Text style={{marginBottom: 20, textAlign: "left"}}>Read more on how to use the app here: <Text style={styles.link} onPress={onPress}>https://www.oceanscan.org/mobile-app</Text></Text>
+              <Text style={styles.modalTitle}>Welcome to Ocean Scan community!</Text>
+              <Text style={styles.modalText}>Upload observations from your phone and contribute in the fight against marine litter!</Text>
             </View>
             <Pressable
               style={[styles.button, styles.buttonClose]}
@@ -32,6 +31,7 @@ export const WelcomePopup = (props: {
               >
               <Text style={styles.textStyle}>Thanks!</Text>
             </Pressable>
+            <Text style={{marginTop: 20, textAlign: "left"}}>Read more on how to use the app here: <Text style={styles.link} onPress={onPress}>https://www.oceanscan.org/mobile-app</Text></Text>
           </View>
         </View>
       </Modal>
