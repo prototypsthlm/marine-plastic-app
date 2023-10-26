@@ -7,7 +7,7 @@ interface SessionState {
   email?: string;
 }
 
-const initialState: SessionState = {
+export const initialState: SessionState = {
   status: "READY",
   errorMessage: undefined,
   token: undefined,
@@ -25,9 +25,13 @@ export const sessionSlice = createSlice({
       state.errorMessage = payload;
       state.status = "READY";
     },
-    userLoggedIn: (state, { payload }: PayloadAction<string>) => {
+    userLoggedIn: (
+      state,
+      { payload }: PayloadAction<{ token: string; email: string }>
+    ) => {
+      state.email = payload.email;
       state.errorMessage = undefined;
-      state.token = payload;
+      state.token = payload.token;
       state.status = "READY";
     },
     userLoggedOut: () => {
