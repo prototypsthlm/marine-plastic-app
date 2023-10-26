@@ -25,6 +25,14 @@ export const sessionSlice = createSlice({
       state.errorMessage = payload;
       state.status = "READY";
     },
+    userLoggedInOffline: (
+      state,
+      { payload }: PayloadAction<{ email: string }>
+    ) => {
+      state.email = payload.email;
+      state.errorMessage = undefined;
+      state.status = "READY";
+    },
     userLoggedIn: (
       state,
       { payload }: PayloadAction<{ token: string; email: string }>
@@ -42,6 +50,7 @@ export const sessionSlice = createSlice({
 
 export const {
   sessionError,
+  userLoggedInOffline,
   userLoggedIn,
   userLoggedOut,
   waitingForAuthentication,
