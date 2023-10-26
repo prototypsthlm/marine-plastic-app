@@ -1,13 +1,13 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { useEffect, useCallback } from "react";
+import { useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import { useSelector } from "react-redux";
 import { firebaseAuth } from "../services/firebaseAuth";
 
 import { navigationRef } from "../services/navigation";
-import { selectIsLoggedIn, setUserWithNewToken } from "../store/slices/session";
+import { setUserWithNewToken } from "../store/slices/session";
 import { RootState, useThunkDispatch } from "../store/store";
 
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -94,7 +94,7 @@ function RootNavigator() {
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
       user
     ) {
-      if (user) dispatch(setUserWithNewToken());
+      if (user && isOnline) dispatch(setUserWithNewToken());
     });
 
     const unsubscribeNetInfo = NetInfo.addEventListener((state) =>
