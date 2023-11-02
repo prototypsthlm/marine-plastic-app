@@ -1,13 +1,13 @@
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as React from "react";
-import { useEffect, useCallback } from "react";
-import { AppState, AppStateStatus } from "react-native"
+import { useEffect } from "react";
+import { AppState, AppStateStatus } from "react-native";
 import { useSelector } from "react-redux";
 import { firebaseAuth } from "../services/firebaseAuth";
 
 import { navigationRef } from "../services/navigation";
-import { selectIsLoggedIn, setUserWithNewToken } from "../store/slices/session";
+import { setUserWithNewToken } from "../store/slices/session";
 import { RootState, useThunkDispatch } from "../store/store";
 
 import BottomTabNavigator from "./BottomTabNavigator";
@@ -18,8 +18,9 @@ import { setIsActive, setIsOnline } from "../store/slices/ui";
 import useSync from "../hooks/useSync";
 import { theme } from "../theme";
 import { loadSettings } from "../store/slices/ui/actions";
+import { useLogoutDetection } from "../hooks/useLogoutDetection";
 
-const CHECK_CONNECTION_INTERVAL_MS = 5000
+const CHECK_CONNECTION_INTERVAL_MS = 5000;
 
 const OceanScanTheme = {
   ...DefaultTheme,
@@ -35,9 +36,9 @@ const OceanScanTheme = {
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation() {
   return (
-      <NavigationContainer ref={navigationRef} theme={OceanScanTheme}>
-        <RootNavigator/>
-      </NavigationContainer>
+    <NavigationContainer ref={navigationRef} theme={OceanScanTheme}>
+      <RootNavigator />
+    </NavigationContainer>
   );
 }
 
@@ -49,75 +50,87 @@ const Stack = createStackNavigator<{
 
 function RootNavigator() {
   const dispatch = useThunkDispatch();
-  const isLoggedIn = useSelector(selectIsLoggedIn);
-  const isActive = useSelector((state: RootState) => state.ui.isActive)
-  const isOnline = useSelector((state: RootState) => state.ui.isOnline)
+
+  const isActive = useSelector((state: RootState) => state.ui.isActive);
+  const isOnline = useSelector((state: RootState) => state.ui.isOnline);
+
+  const isLoggedOut = useLogoutDetection({ isOnline });
 
   const setUpPeriodicNetworkCheck = async (isOnline: boolean) => {
-    const noOp = () => {
-    };
+    const noOp = () => {};
     if (!isOnline) {
       return await NetInfo.fetch()
-                          .then(netInfoState => netInfoState.isConnected && netInfoState.isInternetReachable)
-                          .then((isConnected) => {
-                            if (isConnected) {
-                              dispatch(setIsOnline(isConnected))
-                              return noOp
-                            } else {
-                              const periodicNetworkCheck = () => {
-                                NetInfo.fetch()
-                                       .then(netInfoState => dispatch(setIsOnline(netInfoState.isConnected)))
-                              }
-                              const unsubscribePeriodicNetworkCheck = setInterval(periodicNetworkCheck, CHECK_CONNECTION_INTERVAL_MS)
-                              return () => {
-                                clearInterval(unsubscribePeriodicNetworkCheck)
-                              }
-                            }
-                          })
+        .then(
+          (netInfoState) =>
+            netInfoState.isConnected && netInfoState.isInternetReachable
+        )
+        .then((isConnected) => {
+          if (isConnected) {
+            dispatch(setIsOnline(isConnected));
+            return noOp;
+          } else {
+            const periodicNetworkCheck = () => {
+              NetInfo.fetch().then((netInfoState) =>
+                dispatch(setIsOnline(netInfoState.isConnected))
+              );
+            };
+            const unsubscribePeriodicNetworkCheck = setInterval(
+              periodicNetworkCheck,
+              CHECK_CONNECTION_INTERVAL_MS
+            );
+            return () => {
+              clearInterval(unsubscribePeriodicNetworkCheck);
+            };
+          }
+        });
     } else {
-      return Promise.resolve(noOp)
+      return Promise.resolve(noOp);
     }
-  }
+  };
 
   useEffect(() => {
-    dispatch(loadSettings())
-    
+    dispatch(loadSettings());
+
     const unsubscribeFirebaseAuth = firebaseAuth.onAuthStateChanged(function (
-        user,
+      user
     ) {
-      if (user) dispatch(setUserWithNewToken());
+      if (user && isOnline) dispatch(setUserWithNewToken());
     });
 
-    const unsubscribeNetInfo = NetInfo.addEventListener((state) => dispatch(setIsOnline(state.isConnected)));
+    const unsubscribeNetInfo = NetInfo.addEventListener((state) =>
+      dispatch(setIsOnline(state.isConnected))
+    );
 
     const appStateListener = (newState: AppStateStatus) => {
       if (isActive && newState.match(/background|inactive/)) {
-        dispatch(setIsActive(false))
+        dispatch(setIsActive(false));
       } else if (!isActive && newState.match(/active/)) {
-        dispatch(setIsActive(true))
-        NetInfo.fetch().then(netInfoState => dispatch(setIsOnline(netInfoState.isConnected)))
+        dispatch(setIsActive(true));
+        NetInfo.fetch().then((netInfoState) =>
+          dispatch(setIsOnline(netInfoState.isConnected))
+        );
       }
-    }
-    AppState.addEventListener("change", appStateListener)
+    };
+    AppState.addEventListener("change", appStateListener);
 
-    const unsubscribePeriodicNetworkCheck = setUpPeriodicNetworkCheck(isOnline)
+    const unsubscribePeriodicNetworkCheck = setUpPeriodicNetworkCheck(isOnline);
 
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
-      AppState.removeEventListener("change", appStateListener)
-      unsubscribePeriodicNetworkCheck.then(fn => fn())
+      AppState.removeEventListener("change", appStateListener);
+      unsubscribePeriodicNetworkCheck.then((fn) => fn());
     };
   }, [isActive, isOnline]);
 
   // Custom sync hook
   useSync();
 
-  if (!isLoggedIn) return <LoggedOutStackNavigator/>;
+  if (isLoggedOut) return <LoggedOutStackNavigator />;
 
   return (
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Root" component={BottomTabNavigator}/>
-      </Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Root" component={BottomTabNavigator} />
+    </Stack.Navigator>
   );
 }
