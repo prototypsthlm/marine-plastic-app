@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 0.53.1"
+    "version": ">= 0.56.0"
   },
   "build": {
     "development": {
@@ -17,7 +17,7 @@
         "APP_ID": "1:***REMOVED***:web:***REMOVED***"
       },
       "ios": {
-        "image": "latest"
+        "image": "macos-monterey-12.4-xcode-13.4"
       }
     },
     "preview": {
@@ -33,7 +33,7 @@
         "APP_ID": "1:***REMOVED***:web:***REMOVED***"
       },
       "ios": {
-        "image": "latest"
+        "image": "macos-monterey-12.4-xcode-13.4"
       }
     },
     "production": {
@@ -48,7 +48,7 @@
         "APP_ID": "1:***REMOVED***:web:***REMOVED***"
       },
       "ios": {
-        "image": "latest"
+        "image": "macos-monterey-12.4-xcode-13.4"
       }
     }
   },
