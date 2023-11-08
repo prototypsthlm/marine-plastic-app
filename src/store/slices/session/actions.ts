@@ -19,45 +19,44 @@ export const loginWithEmailAndPassword: Thunk<
     password: string;
   },
   Promise<boolean>
-> = ({ email, password }) => async (dispatch, _, { firebaseAuth }) => {
-  try {
-    dispatch(waitingForAuthentication());
-    await firebaseAuth.signInWithEmailAndPassword(email, password);
-    dispatch(setUserWithNewToken());
-    return true;
-  } catch (error: any) {
-    console.log(error);
-    dispatch(sessionError(error.message));
+> =
+  ({ email, password }) =>
+  async (dispatch, _, { firebaseAuth }) => {
+    try {
+      dispatch(waitingForAuthentication());
+      await firebaseAuth.signInWithEmailAndPassword(email, password);
+      dispatch(setUserWithNewToken());
+      return true;
+    } catch (error: any) {
+      console.log(error);
+      dispatch(sessionError(error.message));
 
-    if (error.code === "auth/invalid-email")
-      throw new ActionError("Invalid email");
-    if (error.code === "auth/wrong-password")
-      throw new ActionError("Worng password");
-    if (error.code === "auth/user-not-found")
-      throw new ActionError("User not found");
+      if (error.code === "auth/invalid-email")
+        throw new ActionError("Invalid email");
+      if (error.code === "auth/wrong-password")
+        throw new ActionError("Worng password");
+      if (error.code === "auth/user-not-found")
+        throw new ActionError("User not found");
 
-    return false;
-  }
-};
+      return false;
+    }
+  };
 
-export const setUserWithNewToken: Thunk<undefined, Promise<string>> = () => async (
-  dispatch,
-  _,
-  { firebaseAuth }
-) => {
-  const token = await firebaseAuth.currentUser?.getIdToken();
+export const setUserWithNewToken: Thunk<undefined, Promise<string>> =
+  () =>
+  async (dispatch, _, { firebaseAuth }) => {
+    const token = await firebaseAuth.currentUser?.getIdToken();
+    const email = firebaseAuth.currentUser?.email ?? "empty";
 
-  if (token === undefined) throw new ActionError("User wasn't stored");
+    if (token === undefined) throw new ActionError("User wasn't stored");
 
-  addTokenToRequestPayloads(token);
-  dispatch(userLoggedIn(token));
-  dispatch(setUserInfo());
-  return token;
-};
+    addTokenToRequestPayloads(token);
+    dispatch(userLoggedIn({ token, email }));
+    dispatch(setUserInfo());
+    return token;
+  };
 
-export const logOut: Thunk = () => (
-  dispatch
-  ) => {
+export const logOut: Thunk = () => (dispatch) => {
   clearTokenFromRequestPayloads();
   dispatch(clearOfflineEntries());
   dispatch(userLoggedOut());

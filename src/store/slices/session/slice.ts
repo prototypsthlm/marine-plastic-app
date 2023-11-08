@@ -7,7 +7,7 @@ interface SessionState {
   email?: string;
 }
 
-const initialState: SessionState = {
+export const initialState: SessionState = {
   status: "READY",
   errorMessage: undefined,
   token: undefined,
@@ -25,9 +25,21 @@ export const sessionSlice = createSlice({
       state.errorMessage = payload;
       state.status = "READY";
     },
-    userLoggedIn: (state, { payload }: PayloadAction<string>) => {
+    userLoggedInOffline: (
+      state,
+      { payload }: PayloadAction<{ email: string }>
+    ) => {
+      state.email = payload.email;
       state.errorMessage = undefined;
-      state.token = payload;
+      state.status = "READY";
+    },
+    userLoggedIn: (
+      state,
+      { payload }: PayloadAction<{ token: string; email: string }>
+    ) => {
+      state.email = payload.email;
+      state.errorMessage = undefined;
+      state.token = payload.token;
       state.status = "READY";
     },
     userLoggedOut: () => {
@@ -38,6 +50,7 @@ export const sessionSlice = createSlice({
 
 export const {
   sessionError,
+  userLoggedInOffline,
   userLoggedIn,
   userLoggedOut,
   waitingForAuthentication,

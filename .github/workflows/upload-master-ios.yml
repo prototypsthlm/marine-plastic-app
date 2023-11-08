@@ -33,7 +33,7 @@ jobs:
           node-version: 16.x
       - uses: actions/setup-ruby@v1
         with:
-          ruby-version: "2.6"
+          ruby-version: "2.7"
       - uses: expo/expo-github-action@v5
         with:
           expo-packager: yarn

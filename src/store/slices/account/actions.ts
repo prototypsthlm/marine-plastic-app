@@ -3,25 +3,36 @@ import { ActionError } from "../../errors/ActionError";
 import { Thunk } from "../../store";
 import { setUser } from "./slice";
 
-export const setUserInfo: Thunk = () => async (
-  dispatch,
-  _,
-  { api, localStorage, firebaseAuth }
-) => {
-  let user: User | null = await localStorage.getUser();
+export const setUserInfoOffline: Thunk =
+  () =>
+  async (dispatch, _, { localStorage }) => {
+    let user: User | null = await localStorage.getUser();
+    if (user) {
+      dispatch(setUser(user));
+    }
+  };
 
-  const userEmail = firebaseAuth.currentUser?.email;
+export const setUserInfo: Thunk =
+  () =>
+  async (dispatch, _, { api, localStorage, firebaseAuth }) => {
+    let user: User | null = await localStorage.getUser();
 
-  if (user === null || user.email !== userEmail) {
-    const result = await api.getUserMe();
+    const userEmail = firebaseAuth.currentUser?.email;
 
-    if (!result.ok || !result.data?.result)
-      throw new ActionError(`Couldn't get user info: ${result.problem ?? result.problem} ${ result.originalError ?? result.originalError.message}`);
+    if (user === null || user.email !== userEmail) {
+      const result = await api.getUserMe();
 
-    user = result.data?.result;
+      if (!result.ok || !result.data?.result)
+        throw new ActionError(
+          `Couldn't get user info: ${result.problem ?? result.problem} ${
+            result.originalError ?? result.originalError.message
+          }`
+        );
 
-    await localStorage.saveUser(user);
-  }
+      user = result.data?.result;
 
-  dispatch(setUser(user));
-};
+      await localStorage.saveUser(user);
+    }
+
+    dispatch(setUser(user));
+  };
