@@ -38,7 +38,7 @@ export default function PictureSection({
 
     onImageUriChange && onImageUriChange(image.uri);
     onLocationChange && onLocationChange(imageLocation);
-    onTimestampChange && onTimestampChange(imageTimestamp)
+    onTimestampChange && imageTimestamp && onTimestampChange(imageTimestamp)
   };
 
   return (
