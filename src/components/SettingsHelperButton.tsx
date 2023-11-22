@@ -21,6 +21,7 @@ export default function SettingsHelperButton() {
       iconName="ios-settings-sharp"
       color={theme.color.palette.cyan}
       onPress={onPress}
+      style={{paddingLeft: 12}}
     />
   </BasicHeaderButtons>)
 }

@@ -1,5 +1,4 @@
 /// <reference path="global.d.ts"/>
-import { StatusBar } from "expo-status-bar";
 import React from "react";
 import {
   SafeAreaProvider,
@@ -11,17 +10,13 @@ import { Provider } from "react-redux";
 import store from "./store/store";
 
 import Navigation from "./navigation";
-import { OverflowMenuProvider } from "react-navigation-header-buttons";
 
 export default function Main() {
   return (
     <Provider store={store}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <ThemeProvider theme={theme}>
-          <OverflowMenuProvider>
-            <Navigation />
-          </OverflowMenuProvider>
-          <StatusBar />
+          <Navigation />
         </ThemeProvider>
       </SafeAreaProvider>
     </Provider>
