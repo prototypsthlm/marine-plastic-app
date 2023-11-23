@@ -96,26 +96,26 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       exif: true,
     });
 
-    if (!result.cancelled) {
-      if (!result.exif || !result.exif.GPSLongitude)
+    if (!result.canceled && result.assets.length > 0) {
+      if (!result.assets[0].exif || !result.assets[0].exif.GPSLongitude)
         Alert.alert(
           "We can't tell where you are!",
           "This image lacks geolocation metadata. Please provide this data manually."
         );
 
-      if (!result.exif || !result.exif.DateTimeOriginal)
+      if (!result.assets[0].exif || !result.assets[0].exif.DateTimeOriginal)
         Alert.alert(
           "No timestamp metadata",
           "This image lacks timestamp metadata. The device current time will be used instead."
         );
 
       const manipResult = await ImageManipulator.manipulateAsync(
-        result.uri,
+        result.assets[0].uri,
         [{ resize: { width: 1000 } }],
         { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
 
-      onChange && onChange({ ...result, uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
+      onChange && onChange({ ...result.assets[0], uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
     }
 
     setIsLoading(false);
@@ -141,14 +141,14 @@ export default function UploadImage({ onChange }: UploadImageProps) {
       exif: true,
     });
 
-    if (!result.cancelled) {
+    if (!result.canceled) {
       const manipResult = await ImageManipulator.manipulateAsync(
-        result.uri,
+        result.assets[0].uri,
         [{ resize: { width: 1000 } }],
         { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
 
-      onChange && onChange({ ...result, uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
+      onChange && onChange({ ...result.assets[0], uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
     }
 
     setIsLoading(false);
