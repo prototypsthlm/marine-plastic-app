@@ -15,9 +15,6 @@
         "STORAGE_BUCKET": "***REMOVED***.appspot.com",
         "MESSAGE_SENDER_ID": "***REMOVED***",
         "APP_ID": "1:***REMOVED***:web:***REMOVED***"
-      },
-      "ios": {
-        "image": "macos-monterey-12.4-xcode-13.4"
       }
     },
     "preview": {
@@ -31,9 +28,6 @@
         "STORAGE_BUCKET": "***REMOVED***.appspot.com",
         "MESSAGE_SENDER_ID": "***REMOVED***",
         "APP_ID": "1:***REMOVED***:web:***REMOVED***"
-      },
-      "ios": {
-        "image": "macos-monterey-12.4-xcode-13.4"
       }
     },
     "production": {
@@ -46,9 +40,6 @@
         "STORAGE_BUCKET": "***REMOVED***.appspot.com",
         "MESSAGE_SENDER_ID": "***REMOVED***",
         "APP_ID": "1:***REMOVED***:web:***REMOVED***"
-      },
-      "ios": {
-        "image": "macos-monterey-12.4-xcode-13.4"
       }
     }
   },
