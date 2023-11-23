@@ -49,6 +49,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
   const getLastOrCurrentPosition =
     async (): Promise<Location.LocationObject> => {
       const lastLocation = await Location.getLastKnownPositionAsync({
+        maxAge: 60 * 1000 * 2,
         requiredAccuracy: locationAccuracy,
       } as Location.LocationLastKnownOptions);
       if (lastLocation) return lastLocation;
