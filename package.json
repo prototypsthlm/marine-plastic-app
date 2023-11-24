@@ -76,7 +76,6 @@
     "@types/styled-components-react-native": "^5.1.0",
     "@types/uuid": "^8.3.0",
     "@types/yup": "^0.29.11",
-    "babel-plugin-dotenv-import": "^2.1.0",
     "jest-expo": "~49.0.0",
     "metro-react-native-babel-preset": "^0.77.0",
     "react-devtools": "^4.22.0",

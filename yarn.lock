@@ -3964,13 +3964,6 @@ babel-jest@^29.2.1:
     graceful-fs "^4.2.9"
     slash "^3.0.0"
 
-babel-plugin-dotenv-import@^2.1.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/babel-plugin-dotenv-import/-/babel-plugin-dotenv-import-2.2.0.tgz#fde16c1e01f4a6ad4e3963f0633d22f5f3b9c666"
-  integrity sha512-y6IMz6iqAV5oNgS8Tnbeap9bsWGcOB08ykT/7dVUM4DQ+S+xEuh56Xlpi7L56ueXfX8TpuoJyR/RVUy86bhMBQ==
-  dependencies:
-    dotenv "^8.0.0"
-
 babel-plugin-dynamic-import-node@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/babel-plugin-dynamic-import-node/-/babel-plugin-dynamic-import-node-2.3.3.tgz#84fda19c976ec5c6defef57f9427b3def66e17a3"
@@ -5192,11 +5185,6 @@ dotenv@16.0.3, dotenv@~16.0.3:
   version "16.0.3"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.0.3.tgz#115aec42bac5053db3c456db30cc243a5a836a07"
   integrity sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==
-
-dotenv@^8.0.0:
-  version "8.6.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.6.0.tgz#061af664d19f7f4d8fc6e4ff9b584ce237adcb8b"
-  integrity sha512-IrPdXQsk2BbzvCBGBOTmmSH5SodmqZNt4ERAZDmW4CT+tL8VtvinqywuANaFu4bOMWki16nqf0e4oC0QIaDr/g==
 
 dtrace-provider@~0.8:
   version "0.8.8"
