@@ -5,7 +5,6 @@ import * as ImageManipulator from "expo-image-manipulator";
 import * as Location from "expo-location";
 import styled from "../styled";
 import { LocationObject } from "expo-location";
-import { ListItem, Text } from "./elements";
 import { theme } from "../theme";
 import { Ionicons } from "@expo/vector-icons";
 import LongButton from "./elements/LongButton";
@@ -15,6 +14,10 @@ interface UploadImageProps {
 }
 
 export default function UploadImage({ onChange }: UploadImageProps) {
+  // Accuracy value for position detection, try to lower if it takes too long to find a current position.
+  // Balanced seems to be enough...
+  const locationAccuracy = Location.Accuracy.Low;
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [canUseMediaLibrary, setCanUseMediaLibrary] = useState<boolean>(false);
   const [canUseCamera, setCanUseCamera] = useState<boolean>(false);
@@ -43,6 +46,21 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     }
   };
 
+  const getLastOrCurrentPosition =
+    async (): Promise<Location.LocationObject> => {
+      const lastLocation = await Location.getLastKnownPositionAsync({
+        maxAge: 60 * 1000 * 2,
+        requiredAccuracy: locationAccuracy,
+      } as Location.LocationLastKnownOptions);
+      if (lastLocation) return lastLocation;
+      else {
+        const currentLocation = await Location.getCurrentPositionAsync({
+          accuracy: locationAccuracy,
+        } as Location.LocationOptions);
+        return currentLocation;
+      }
+    };
+
   const requestLocation = async () => {
     if (Platform.OS !== "web") {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,7 +68,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         alert("Permission to access location was denied");
         return;
       } else setCanUseLocation(true);
-      const loc = await Location.getLastKnownPositionAsync();
+      const loc = await getLastOrCurrentPosition();
       setLocation(loc);
     }
   };
@@ -59,7 +77,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     (async () => {
       await requestMediaLibrary();
       await requestCamera();
-      let status = await Location.getForegroundPermissionsAsync()
+      let status = await Location.getForegroundPermissionsAsync();
       if (Platform.OS === "android" && !status.granted)
         Alert.alert(
           "Location access",
@@ -72,7 +90,6 @@ export default function UploadImage({ onChange }: UploadImageProps) {
           ]
         );
       else await requestLocation();
-      
     })();
   }, []);
 
@@ -85,7 +102,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     setIsLoading(true);
 
     if (canUseLocation) {
-      const loc = await Location.getLastKnownPositionAsync();
+      const loc = await getLastOrCurrentPosition();
       setLocation(loc);
     }
 
@@ -115,7 +132,12 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
 
-      onChange && onChange({ ...result.assets[0], uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
+      onChange &&
+        onChange({
+          ...result.assets[0],
+          uri: `data:image/jpeg;base64,${manipResult.base64}`,
+          location,
+        });
     }
 
     setIsLoading(false);
@@ -130,7 +152,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
     setIsLoading(true);
 
     if (canUseLocation) {
-      const loc = await Location.getLastKnownPositionAsync();
+      const loc = await getLastOrCurrentPosition();
       setLocation(loc);
     }
 
@@ -148,7 +170,12 @@ export default function UploadImage({ onChange }: UploadImageProps) {
         { compress: 1, format: ImageManipulator.SaveFormat.JPEG, base64: true }
       );
 
-      onChange && onChange({ ...result.assets[0], uri: `data:image/jpeg;base64,${manipResult.base64}`, location });
+      onChange &&
+        onChange({
+          ...result.assets[0],
+          uri: `data:image/jpeg;base64,${manipResult.base64}`,
+          location,
+        });
     }
 
     setIsLoading(false);
