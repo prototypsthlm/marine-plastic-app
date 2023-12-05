@@ -359,6 +359,7 @@ export const processSubmitObservation = async (
         // Store offline
         if (
           response.problem === "cannot-connect" ||
+          response.problem === "unknown" ||
           response.problem === "timeout"
         ) {
           await localDB.upsertEntities(
@@ -427,7 +428,7 @@ export const deleteObservation: Thunk =
       if (ids.length > 0) await localDB.deleteEntities(ids);
 
       dispatch(fetchCachedObservations());
-      navigation.goBack(); 
+      navigation.goBack();
       navigation.goBack(); // go back twice, otherwise the deletet Observation will be shown again
     }
   };
