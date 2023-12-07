@@ -11,12 +11,6 @@ Make sure you have [Node.js v16.x](https://nodejs.org/en/download/) and [Yarn v1
 
 Create `.env` file at the root of the project. Vars are in 1Password under `Marine-Plastic/Ocean-Scan App Environment Variables` note.
 
-**Note:** If you run into problems like environment changes not being picked up, try clearing the cache ([more info](https://github.com/tusbar/babel-plugin-dotenv-import#caveats)). Alternatively, try `yarn start --clear` to start with a clear cache.
-
-```bash
-$ rm -rf node_modules/.cache/babel-loader/*
-```
-
 ### Installing dependencies
 
 ```bash
@@ -91,14 +85,14 @@ This is the entry point to the app. It's the main component which renders the re
 
 The GitHub Actions workflows can be found inside the `.github/workflows` directory.
 
-### Master - `master.yml`
+### EAS Update - `eas-update.yml`
 
 For every commit made to the `master` branch it will build a JavaScript bundle that is then published to the dev app on Expo.
 
-## Build and upload native app to Apple Connect and TestFlight
+## EAS Build & Submit - `eas-build-and-submit.yml`
 
-We use workflows in GitHub Actions to build and upload IPA packages to Apple Connect. These workflows are triggered manually from the [Actions tab](https://github.com/prototypsthlm/marine-plastic-app/actions). Select the workflow you want to run and then click the "Run workflow" dropdown on the right and choose which branch to base it off.
+We only need to build if there is some changes to the native part of the app. If we only changing javascript code, it would update over the air with `EAS Update`.
 
-Available actions:
+EAS Build will build the .ipa and .apk and EAS Submit will publish them into the respective app stores.
 
-- Upload native master build to TestFlight - `upload-master-ios.yml`
+To trigger this action, we need to bump the versions in package.json & app.json and then create a github release.

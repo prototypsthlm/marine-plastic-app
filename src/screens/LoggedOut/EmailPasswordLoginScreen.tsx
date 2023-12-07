@@ -30,7 +30,7 @@ export const EmailPasswordLoginScreen = () => {
   const isAuthPending = authStatus === "PENDING";
   const dispatch = useThunkDispatch();
 
-  const onSubmit = useCallback((values) => {
+  const onSubmit = useCallback((values: InitialFormValues) => {
     dispatch(loginWithEmailAndPassword(values));
   }, []);
 

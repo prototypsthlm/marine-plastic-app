@@ -1,8 +1,8 @@
-import { API_URL } from "@env";
 import { create } from "apisauce";
 import { setUserWithNewToken } from "../../store/slices/session";
 import store from "../../store/store";
 
+const API_URL = process.env.EXPO_PUBLIC_API_URL
 
 const createBaseApi = () => {
   console.log("Creating baseApi with: ", API_URL);

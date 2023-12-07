@@ -20,11 +20,12 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="observationList"
-      tabBarOptions={{ 
-        activeTintColor: theme.color.palette.cyan, 
-        inactiveTintColor: theme.color.palette.white,
-        activeBackgroundColor: theme.color.palette.gray,
-        labelStyle: styles.bottomTabLabel
+      screenOptions={{
+        tabBarActiveTintColor: theme.color.palette.cyan, 
+        tabBarInactiveTintColor: theme.color.palette.white,
+        tabBarActiveBackgroundColor: theme.color.palette.gray,
+        tabBarLabelStyle: styles.bottomTabLabel,
+        headerShown: false
       }}
     >
       <BottomTab.Screen
