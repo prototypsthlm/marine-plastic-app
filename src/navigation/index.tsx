@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { AppState, AppStateStatus } from "react-native";
 import { useSelector } from "react-redux";
 import { firebaseAuth } from "../services/firebaseAuth";
+import { StatusBar } from "expo-status-bar";
+import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import { navigationRef } from "../services/navigation";
 import { setUserWithNewToken } from "../store/slices/session";
@@ -37,7 +39,10 @@ const OceanScanTheme = {
 export default function Navigation() {
   return (
     <NavigationContainer ref={navigationRef} theme={OceanScanTheme}>
-      <RootNavigator />
+      <StatusBar />
+      <HeaderButtonsProvider stackType="js">
+        <RootNavigator />
+      </HeaderButtonsProvider>
     </NavigationContainer>
   );
 }
@@ -111,14 +116,14 @@ function RootNavigator() {
         );
       }
     };
-    AppState.addEventListener("change", appStateListener);
+    const appStateSubscription = AppState.addEventListener("change", appStateListener);
 
     const unsubscribePeriodicNetworkCheck = setUpPeriodicNetworkCheck(isOnline);
 
     return () => {
       unsubscribeFirebaseAuth();
       unsubscribeNetInfo();
-      AppState.removeEventListener("change", appStateListener);
+      appStateSubscription.remove();
       unsubscribePeriodicNetworkCheck.then((fn) => fn());
     };
   }, [isActive, isOnline]);
@@ -129,7 +134,7 @@ function RootNavigator() {
   if (isLoggedOut) return <LoggedOutStackNavigator />;
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator screenOptions={{ headerShown: false }} >
       <Stack.Screen name="Root" component={BottomTabNavigator} />
     </Stack.Navigator>
   );

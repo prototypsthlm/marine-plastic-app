@@ -194,6 +194,7 @@ export const processSubmitMeasurements = async (
 
         if (
           response.problem === "cannot-connect" ||
+          response.problem === "unknown" ||
           response.problem === "timeout"
         ) {
           await localDB.upsertEntities(
@@ -244,6 +245,7 @@ export const processSubmitObservationImages = async (
           // Store offline
           if (
             response.problem === "cannot-connect" ||
+            response.problem === "unknown" ||
             response.problem === "timeout"
           ) {
             await localDB.upsertEntities(
@@ -298,6 +300,6 @@ export const deleteMeasurement: Thunk =
 
       navigation.goBack();
       navigation.goBack(); // go back twice, to the observation details
-      dispatch(fetchMeasurements({forceRefresh: true})); // and refresh so that the deleted measurement is gone
+      dispatch(fetchMeasurements({ forceRefresh: true })); // and refresh so that the deleted measurement is gone
     }
   };

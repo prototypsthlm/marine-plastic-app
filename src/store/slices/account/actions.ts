@@ -1,7 +1,10 @@
+import { ApiOkResponse } from "apisauce";
 import { User } from "../../../models";
+import { UserResponse } from "../../../services/api/types";
 import { ActionError } from "../../errors/ActionError";
 import { Thunk } from "../../store";
 import { setUser } from "./slice";
+import { GenericApiProblem } from "../../../services/api/genericTypes";
 
 export const setUserInfoOffline: Thunk =
   () =>
@@ -20,7 +23,7 @@ export const setUserInfo: Thunk =
     const userEmail = firebaseAuth.currentUser?.email;
 
     if (user === null || user.email !== userEmail) {
-      const result = await api.getUserMe();
+      const result = await api.getUserMe() as ApiOkResponse<UserResponse> | GenericApiProblem;
 
       if (!result.ok || !result.data?.result)
         throw new ActionError(

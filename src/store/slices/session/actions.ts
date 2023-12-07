@@ -1,3 +1,4 @@
+import { signInWithEmailAndPassword } from "firebase/auth";
 import {
   addTokenToRequestPayloads,
   clearTokenFromRequestPayloads,
@@ -24,7 +25,7 @@ export const loginWithEmailAndPassword: Thunk<
   async (dispatch, _, { firebaseAuth }) => {
     try {
       dispatch(waitingForAuthentication());
-      await firebaseAuth.signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(firebaseAuth, email, password);
       dispatch(setUserWithNewToken());
       return true;
     } catch (error: any) {
