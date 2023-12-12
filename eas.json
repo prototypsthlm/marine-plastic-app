@@ -4,6 +4,7 @@
   },
   "build": {
     "production": {
+      "node": "18.17.1",
       "env": {
         "API_URL": "https://api.oceanscan.org/api/dca-v0",
         "API_KEY": "***REMOVED***",
