@@ -18,7 +18,7 @@ export default function OfflineModeBanner() {
         <Ionicons
           size={24}
           style={{ color: "white", marginHorizontal: 6 }}
-          name="ios-cloud-offline"
+          name="cloud-offline"
         />
       </Row>
     </Banner>

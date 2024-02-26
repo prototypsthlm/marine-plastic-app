@@ -191,7 +191,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
           <Ionicons
             size={30}
             style={{ color: theme.color.palette.curiousBlue }}
-            name="ios-image"
+            name="image"
           />
         }
       />
@@ -203,7 +203,7 @@ export default function UploadImage({ onChange }: UploadImageProps) {
           <Ionicons
             size={30}
             style={{ color: theme.color.palette.curiousBlue }}
-            name="ios-camera"
+            name="camera"
           />
         }
       />

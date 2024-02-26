@@ -43,7 +43,7 @@ export default function LocationPicker({
                   <Ionicons
                     size={30}
                     style={{ color: theme.color.palette.curiousBlue }}
-                    name="ios-close-sharp"
+                    name="close-sharp"
                   />
                 }
               />
@@ -55,7 +55,7 @@ export default function LocationPicker({
                   <Ionicons
                     size={30}
                     style={{ color: theme.color.palette.curiousBlue }}
-                    name="ios-checkmark"
+                    name="checkmark"
                   />
                 }
               />
@@ -89,7 +89,7 @@ export default function LocationPicker({
           <Ionicons
             size={30}
             style={{ color: theme.color.palette.curiousBlue }}
-            name="ios-location-sharp"
+            name="location"
           />
         }
       />

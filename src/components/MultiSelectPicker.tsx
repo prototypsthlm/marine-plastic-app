@@ -32,7 +32,7 @@ function OptionItem({
             color: theme.color.palette.gray,
             marginRight: theme.spacing.medium,
           }}
-          name="ios-checkmark"
+          name="checkmark"
         />
       )}
     </ListItem>

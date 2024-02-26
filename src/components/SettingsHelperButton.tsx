@@ -18,7 +18,7 @@ export default function SettingsHelperButton() {
   return (<BasicHeaderButtons>
     <Item
       title="Settings"
-      iconName="ios-settings-sharp"
+      iconName="settings-sharp"
       color={theme.color.palette.cyan}
       onPress={onPress}
       style={{paddingLeft: 12}}
