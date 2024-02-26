@@ -17,7 +17,9 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/c0a1e426-7056-416f-b872-fe40e170cf15"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "se.prototyp.oceanscanapp",
@@ -59,6 +61,9 @@
     },
     "runtimeVersion": {
       "policy": "appVersion"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
