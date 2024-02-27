@@ -19,7 +19,7 @@ export default function DeleteButton({
           color: theme.color.palette.white,
           marginRight: 5,
         }}
-        name="ios-trash"
+        name="trash"
       />
       <Text
         style={{

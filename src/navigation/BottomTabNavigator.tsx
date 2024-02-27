@@ -33,7 +33,7 @@ export default function BottomTabNavigator() {
         component={ListNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-list" color={color} />
+            <TabBarIcon name="list" color={color} />
           ),
           tabBarLabel: "List",
         }}
@@ -43,7 +43,7 @@ export default function BottomTabNavigator() {
         component={MapNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-map" color={color} />
+            <TabBarIcon name="map" color={color} />
           ),
           tabBarLabel: "Map",
         }}
@@ -53,7 +53,7 @@ export default function BottomTabNavigator() {
         component={AddNavigator}
         options={{
           tabBarIcon: ({ color }) => (
-            <TabBarIcon name="ios-add-circle" color={color} />
+            <TabBarIcon name="add-circle" color={color} />
           ),
           tabBarLabel: "Add",
         }}
