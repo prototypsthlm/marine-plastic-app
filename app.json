@@ -28,6 +28,9 @@
         "NSCameraUsageDescription": "Enable Camera access so that you can take pictures for the observation and extract the location and timestamp data",
         "NSLocationWhenInUseUsageDescription": "Enable Location to use in case the photo provided doesn't have location data",
         "NSPhotoLibraryUsageDescription": "Enable access to your Photo Library so you can upload them and extract the location and timestamp data"
+      },
+      "config": {
+        "usesNonExemptEncryption": false
       }
     },
     "android": {
