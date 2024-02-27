@@ -56,7 +56,7 @@ const EditObservationForm = ({ navigation }: NavigationProps) => {
         <BasicHeaderButtons>
           <Item
             title="Save"
-            iconName="ios-checkmark"
+            iconName="checkmark"
             onPress={() => handleSubmit()}
           />
         </BasicHeaderButtons>
